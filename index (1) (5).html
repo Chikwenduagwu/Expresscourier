@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SwiftEx — Fast. Reliable. Delivered.</title>
+  <link rel="stylesheet" href="assets/css/main.css" />
+  <link rel="stylesheet" href="assets/css/landing.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════
+     NAVBAR
+══════════════════════════════════════════════ -->
+<nav class="navbar" id="navbar">
+  <div class="navbar-inner">
+    <a href="index.html" class="navbar-logo">
+      <span class="logo-text">Swift<span>Ex</span></span>
+    </a>
+    <div class="navbar-links desktop-only">
+      <a href="#services" class="nav-link">Services</a>
+      <a href="#track-section" class="nav-link">Track</a>
+      <a href="#about" class="nav-link">About</a>
+      <a href="#contact" class="nav-link">Contact</a>
+    </div>
+    <div class="navbar-actions">
+      <a href="admin/index.html" class="nav-btn desktop-only">Admin Login</a>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+  <!-- Mobile menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#services" class="mobile-link">Services</a>
+    <a href="#track-section" class="mobile-link">Track</a>
+    <a href="#about" class="mobile-link">About</a>
+    <a href="#contact" class="mobile-link">Contact</a>
+    <a href="admin/index.html" class="mobile-link mobile-admin">Admin Login</a>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════════════
+     HERO
+══════════════════════════════════════════════ -->
+<section class="hero">
+  <div class="hero-bg">
+    <div class="hero-gradient"></div>
+    <div class="hero-pattern"></div>
+  </div>
+  <div class="hero-content">
+    <div class="hero-badge">
+      <span class="badge-dot"></span>
+      Trusted by 50,000+ businesses worldwide
+    </div>
+    <h1 class="hero-title">Deliver <span class="hero-highlight">Faster.</span><br>Track <span class="hero-highlight">Smarter.</span></h1>
+    <p class="hero-subtitle">Enterprise-grade courier tracking with real-time updates, AI-powered support, and instant email notifications — all in one platform.</p>
+
+    <!-- Track form in hero -->
+    <div class="hero-track-form">
+      <div class="track-input-wrap">
+        <svg class="track-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        <input type="text" id="heroTrackInput" placeholder="Enter 12-character Tracking ID" maxlength="12" autocomplete="off" />
+      </div>
+      <button class="hero-track-btn" onclick="trackPackage()">
+        TRACK
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+    <p class="hero-track-hint">Example: <span onclick="fillExample()" style="cursor:pointer;text-decoration:underline;opacity:0.8">ABC123XYZ789</span></p>
+  </div>
+
+  <!-- Floating stats -->
+  <div class="hero-stats">
+    <div class="stat-pill">
+      <span class="stat-num">2M+</span>
+      <span class="stat-label">Packages Delivered</span>
+    </div>
+    <div class="stat-pill">
+      <span class="stat-num">99.8%</span>
+      <span class="stat-label">On-Time Rate</span>
+    </div>
+    <div class="stat-pill">
+      <span class="stat-num">180+</span>
+      <span class="stat-label">Countries Served</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     SERVICE TABS (FedEx-style 3-column)
+══════════════════════════════════════════════ -->
+<section class="service-tabs" id="services">
+  <div class="tab-bar">
+    <div class="tab-item" onclick="setTab(this,'rate')">
+      <div class="tab-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><path d="M7 8h2m0 0v4m0-4h2m2 0h2"/></svg>
+      </div>
+      <span>RATE & TRANSIT TIMES</span>
+    </div>
+    <div class="tab-item active" onclick="setTab(this,'track')">
+      <div class="tab-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><circle cx="11" cy="11" r="3"/></svg>
+      </div>
+      <span>TRACK</span>
+    </div>
+    <div class="tab-item" onclick="setTab(this,'ship')">
+      <div class="tab-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 17H3a2 2 0 01-2-2V5a2 2 0 012-2h11a2 2 0 012 2v3"/><rect x="9" y="11" width="14" height="10" rx="1"/><circle cx="12" cy="21" r="1"/><circle cx="20" cy="21" r="1"/></svg>
+      </div>
+      <span>SHIP</span>
+    </div>
+  </div>
+
+  <!-- Tab panels -->
+  <div class="tab-panels">
+    <div class="tab-panel" id="tab-rate">
+      <div class="panel-content">
+        <h3>Calculate Shipping Rates</h3>
+        <p>Get instant quotes for domestic and international shipments.</p>
+        <div class="rate-form">
+          <div class="rate-row">
+            <input type="text" placeholder="From (City or ZIP)" class="form-input" />
+            <input type="text" placeholder="To (City or ZIP)" class="form-input" />
+          </div>
+          <div class="rate-row">
+            <input type="text" placeholder="Package weight (kg)" class="form-input" />
+            <select class="form-input">
+              <option>Standard</option>
+              <option>Express</option>
+              <option>Overnight</option>
+            </select>
+          </div>
+          <button class="btn-orange">Get Quote →</button>
+        </div>
+      </div>
+    </div>
+    <div class="tab-panel active" id="tab-track">
+      <div class="panel-content" id="track-section">
+        <h3>Track Your Shipment</h3>
+        <p>Enter your tracking ID to get real-time status updates.</p>
+        <div class="track-form-panel">
+          <input type="text" id="panelTrackInput" placeholder="Enter Tracking ID (12 characters)" maxlength="12" class="form-input track-input-big" autocomplete="off" />
+          <button class="btn-orange" onclick="trackFromPanel()">TRACK →</button>
+        </div>
+        <p class="hint-text">Need help? <a href="#contact" class="link-orange">Contact support</a></p>
+      </div>
+    </div>
+    <div class="tab-panel" id="tab-ship">
+      <div class="panel-content">
+        <h3>Create a Shipment</h3>
+        <p>Send packages locally or internationally with ease.</p>
+        <div class="ship-options">
+          <div class="ship-option">
+            <div class="ship-icon">📦</div>
+            <h4>Standard</h4>
+            <p>3–5 business days</p>
+          </div>
+          <div class="ship-option">
+            <div class="ship-icon">⚡</div>
+            <h4>Express</h4>
+            <p>1–2 business days</p>
+          </div>
+          <div class="ship-option">
+            <div class="ship-icon">🚀</div>
+            <h4>Overnight</h4>
+            <p>Next business day</p>
+          </div>
+        </div>
+        <button class="btn-orange">Start Shipping →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     NOTICE BANNER (like FedEx important note)
+══════════════════════════════════════════════ -->
+<section class="notice-section">
+  <div class="container">
+    <div class="notice-card">
+      <div class="notice-icon">⚠️</div>
+      <div class="notice-body">
+        <h4>Important Notice</h4>
+        <p>Holiday shipping deadlines are approaching. Please submit your international shipments early to ensure on-time delivery. Express options available for urgent packages.</p>
+        <a href="#" class="link-orange">VIEW SHIPPING DEADLINES →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     MANAGE SHIPMENTS
+══════════════════════════════════════════════ -->
+<section class="manage-section" id="about">
+  <div class="container">
+    <h2 class="section-title">Manage Your Shipments</h2>
+    <p class="section-sub">Everything you need to send, track, and receive packages — in one place.</p>
+    <div class="manage-grid">
+      <div class="manage-card">
+        <div class="manage-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        </div>
+        <h4>SCHEDULE PICKUP</h4>
+        <p>Book a courier pickup from your location at your preferred time.</p>
+      </div>
+      <div class="manage-card">
+        <div class="manage-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        </div>
+        <h4>FIND LOCATIONS</h4>
+        <p>Locate nearby drop-off points and service centers.</p>
+      </div>
+      <div class="manage-card">
+        <div class="manage-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l2 2"/><path d="M8 12h1"/></svg>
+        </div>
+        <h4>FUEL SURCHARGE</h4>
+        <p>View current fuel surcharge rates for all service types.</p>
+      </div>
+      <div class="manage-card">
+        <div class="manage-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/></svg>
+        </div>
+        <h4>FAQs</h4>
+        <p>Get answers to common shipping and tracking questions.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     BUSINESS RESOURCE SECTION
+══════════════════════════════════════════════ -->
+<section class="business-section">
+  <div class="container">
+    <h2 class="section-title">Your Business Resource</h2>
+    <div class="business-cards">
+      <div class="biz-card">
+        <div class="biz-img biz-img-1"></div>
+        <div class="biz-body">
+          <h3>Customs Made Easier</h3>
+          <p>Access all the tools you need for shipping across borders. Prepare international documents, estimate duties and taxes, search country profiles, and much more.</p>
+          <a href="#" class="link-teal">SEE SOLUTIONS →</a>
+        </div>
+      </div>
+      <div class="biz-card">
+        <div class="biz-img biz-img-2"></div>
+        <div class="biz-body">
+          <h3>International Priority Express</h3>
+          <p>More delivery time options available for your international shipments. Fast, reliable, and fully tracked from origin to destination.</p>
+          <a href="#" class="link-teal">LEARN MORE →</a>
+        </div>
+      </div>
+      <div class="biz-card">
+        <div class="biz-img biz-img-3"></div>
+        <div class="biz-body">
+          <h3>Sustainable Shipping</h3>
+          <p>View your carbon emissions to help you manage your carbon footprint. Understand your shipping patterns and environmental impact.</p>
+          <a href="#" class="link-teal">VIEW EMISSIONS →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     CTA BANNER
+══════════════════════════════════════════════ -->
+<section class="cta-banner">
+  <div class="cta-inner">
+    <div class="cta-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 7H4a2 2 0 00-2 2v6a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z"/><path d="M16 3H8v4h8V3z"/><circle cx="12" cy="13" r="2"/></svg>
+    </div>
+    <div class="cta-text">
+      <h2>Sign up now to enjoy personalized shipping rates!</h2>
+      <p>Benefit from our services and get exclusive member discounts, priority support, and advanced tracking.</p>
+    </div>
+    <a href="#" class="cta-btn">GET STARTED FREE</a>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     FOOTER
+══════════════════════════════════════════════ -->
+<footer class="footer" id="contact">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="footer-logo">Swift<span>Ex</span></div>
+      <p>Fast, reliable, and fully tracked courier services for individuals and businesses worldwide.</p>
+      <div class="footer-social">
+        <a href="#" class="social-link" aria-label="Facebook">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+        </a>
+        <a href="#" class="social-link" aria-label="Instagram">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.5" fill="currentColor"/></svg>
+        </a>
+        <a href="#" class="social-link" aria-label="Twitter/X">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        </a>
+        <a href="#" class="social-link" aria-label="YouTube">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M22.54 6.42a2.78 2.78 0 00-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 00-1.95 1.96A29 29 0 001 12a29 29 0 00.46 5.58A2.78 2.78 0 003.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.4a2.78 2.78 0 001.95-1.96A29 29 0 0023 12a29 29 0 00-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="white"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="footer-cols">
+      <div class="footer-col">
+        <h5>HELPFUL LINKS</h5>
+        <ul>
+          <li><a href="#">Contact Us</a></li>
+          <li><a href="#">FAQs</a></li>
+          <li><a href="#">Site Index</a></li>
+          <li><a href="#">Feedback</a></li>
+          <li><a href="#">Careers</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>SERVICES</h5>
+        <ul>
+          <li><a href="#">Standard Shipping</a></li>
+          <li><a href="#">Express Delivery</a></li>
+          <li><a href="#">Overnight Service</a></li>
+          <li><a href="#">International</a></li>
+          <li><a href="#">Freight</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>COMPANY</h5>
+        <ul>
+          <li><a href="#">About SwiftEx</a></li>
+          <li><a href="#">Newsroom</a></li>
+          <li><a href="#">Service Updates</a></li>
+          <li><a href="#">Sustainability</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>LEGAL</h5>
+        <ul>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms of Use</a></li>
+          <li><a href="#">Accessibility</a></li>
+          <li><a href="#">Cookie Policy</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>Copyright &copy; <span id="year"></span> SwiftEx. All Rights Reserved.</p>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="assets/js/config.js"></script>
+<script src="assets/js/main.js"></script>
+<script src="assets/js/landing.js"></script>
+</body>
+</html>
