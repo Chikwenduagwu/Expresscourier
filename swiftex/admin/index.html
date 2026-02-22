@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Login — SwiftEx</title>
+  <link rel="stylesheet" href="../assets/css/admin.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+</head>
+<body class="auth-body">
+
+<div class="auth-page">
+  <div class="auth-left">
+    <div class="auth-brand">
+      <div class="auth-logo">Swift<span>Ex</span></div>
+      <p class="auth-tagline">Admin Control Center</p>
+    </div>
+    <div class="auth-graphic">
+      <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="100" cy="100" r="80" stroke="rgba(255,255,255,0.1)" stroke-width="2"/>
+        <circle cx="100" cy="100" r="55" stroke="rgba(255,255,255,0.1)" stroke-width="2"/>
+        <circle cx="100" cy="100" r="30" fill="rgba(255,98,0,0.2)" stroke="rgba(255,98,0,0.4)" stroke-width="2"/>
+        <path d="M60 100 L100 60 L140 100 L100 140 Z" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" fill="none"/>
+        <circle cx="100" cy="100" r="8" fill="#FF6200"/>
+        <circle cx="60" cy="100" r="5" fill="rgba(255,255,255,0.5)"/>
+        <circle cx="140" cy="100" r="5" fill="rgba(255,255,255,0.5)"/>
+        <circle cx="100" cy="60" r="5" fill="rgba(255,255,255,0.5)"/>
+        <circle cx="100" cy="140" r="5" fill="rgba(255,255,255,0.5)"/>
+      </svg>
+    </div>
+    <div class="auth-features">
+      <div class="auth-feature">
+        <span>📦</span>
+        <span>Manage all shipments in one place</span>
+      </div>
+      <div class="auth-feature">
+        <span>📧</span>
+        <span>Auto email notifications to customers</span>
+      </div>
+      <div class="auth-feature">
+        <span>🤖</span>
+        <span>AI-powered customer support</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="auth-right">
+    <div class="auth-card">
+      <div class="auth-card-header">
+        <h1>Welcome back</h1>
+        <p>Sign in to your admin account</p>
+      </div>
+
+      <div id="loginError" class="alert alert-error" style="display:none"></div>
+
+      <div class="form-group">
+        <label>Email address</label>
+        <div class="input-wrap">
+          <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          <input type="email" id="loginEmail" placeholder="admin@swiftex.com" autocomplete="email" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Password</label>
+        <div class="input-wrap">
+          <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+          <input type="password" id="loginPassword" placeholder="Enter your password" autocomplete="current-password" />
+          <button class="toggle-pw" onclick="togglePassword()" tabindex="-1">
+            <svg id="eyeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <button class="btn-login" id="loginBtn" onclick="doLogin()">
+        <span id="loginBtnText">Sign In</span>
+        <div class="btn-spinner" id="loginSpinner" style="display:none"></div>
+      </button>
+
+      <div class="auth-footer-note">
+        <a href="../index.html">← Back to SwiftEx</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="../assets/js/config.js"></script>
+<script>
+// ── Check if already logged in ──
+(async () => {
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  if (session) window.location.href = 'dashboard.html';
+})();
+
+async function doLogin() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const password = document.getElementById('loginPassword').value;
+  const btn = document.getElementById('loginBtn');
+  const errEl = document.getElementById('loginError');
+
+  if (!email || !password) {
+    showError('Please enter both email and password.');
+    return;
+  }
+
+  btn.disabled = true;
+  document.getElementById('loginBtnText').style.display = 'none';
+  document.getElementById('loginSpinner').style.display = 'block';
+  errEl.style.display = 'none';
+
+  const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+
+  if (error) {
+    showError('Invalid email or password. Please try again.');
+    btn.disabled = false;
+    document.getElementById('loginBtnText').style.display = 'block';
+    document.getElementById('loginSpinner').style.display = 'none';
+    return;
+  }
+
+  window.location.href = 'dashboard.html';
+}
+
+function showError(msg) {
+  const el = document.getElementById('loginError');
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+
+function togglePassword() {
+  const pw = document.getElementById('loginPassword');
+  pw.type = pw.type === 'password' ? 'text' : 'password';
+}
+
+// Enter key
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter') doLogin();
+});
+</script>
+</body>
+</html>

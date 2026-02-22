@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shipments — SwiftEx Admin</title>
+  <link rel="stylesheet" href="../assets/css/admin.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+</head>
+<body class="admin-body">
+
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">Swift<span>Ex</span></div>
+  <nav class="sidebar-nav">
+    <a href="dashboard.html" class="sidebar-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      Dashboard
+    </a>
+    <a href="shipments.html" class="sidebar-link active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 17H3a2 2 0 01-2-2V5a2 2 0 012-2h11a2 2 0 012 2v3m0 0h3l3 3v4a2 2 0 01-2 2h-1"/><circle cx="7" cy="20" r="2"/><circle cx="17" cy="20" r="2"/></svg>
+      Shipments
+    </a>
+    <a href="chat.html" class="sidebar-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+      Customer Chat
+    </a>
+    <div class="sidebar-divider"></div>
+    <button class="sidebar-link sidebar-logout" onclick="doLogout()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      Sign Out
+    </button>
+  </nav>
+</aside>
+
+<div class="admin-main">
+  <header class="admin-topbar">
+    <div class="topbar-left">
+      <button class="sidebar-toggle" onclick="toggleSidebar()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <h1 class="page-title">All Shipments</h1>
+      <span id="shipmentCount" style="font-size:0.82rem;color:#9ca3af;font-weight:500;"></span>
+    </div>
+    <div class="topbar-right">
+      <button class="btn-create" onclick="window.location.href='dashboard.html'">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        New Shipment
+      </button>
+    </div>
+  </header>
+
+  <!-- Filters bar -->
+  <div class="filters-bar">
+    <div class="filters-left">
+      <input type="text" id="searchInput" placeholder="Search tracking ID, recipient, origin…" class="search-input" oninput="applyFilters()" />
+      <select id="statusFilter" class="filter-select" onchange="applyFilters()">
+        <option value="">All Statuses</option>
+        <option value="pending">Pending</option>
+        <option value="picked_up">Picked Up</option>
+        <option value="in_transit">In Transit</option>
+        <option value="out_for_delivery">Out for Delivery</option>
+        <option value="delivered">Delivered</option>
+        <option value="exception">Exception</option>
+      </select>
+      <select id="serviceFilter" class="filter-select" onchange="applyFilters()">
+        <option value="">All Services</option>
+        <option value="standard">Standard</option>
+        <option value="express">Express</option>
+        <option value="overnight">Overnight</option>
+      </select>
+      <select id="sortFilter" class="filter-select" onchange="applyFilters()">
+        <option value="newest">Newest First</option>
+        <option value="oldest">Oldest First</option>
+        <option value="status">By Status</option>
+      </select>
+    </div>
+    <div class="filters-right">
+      <button class="btn-secondary" onclick="clearFilters()">Clear Filters</button>
+    </div>
+  </div>
+
+  <!-- Status quick-tabs -->
+  <div class="status-tabs-bar">
+    <button class="status-tab active" onclick="quickFilter('', this)">All <span class="tab-count" id="tab-all">0</span></button>
+    <button class="status-tab" onclick="quickFilter('pending', this)">Pending <span class="tab-count" id="tab-pending">0</span></button>
+    <button class="status-tab" onclick="quickFilter('in_transit', this)">In Transit <span class="tab-count" id="tab-in_transit">0</span></button>
+    <button class="status-tab" onclick="quickFilter('out_for_delivery', this)">Out for Delivery <span class="tab-count" id="tab-out_for_delivery">0</span></button>
+    <button class="status-tab" onclick="quickFilter('delivered', this)">Delivered <span class="tab-count" id="tab-delivered">0</span></button>
+    <button class="status-tab tab-exception" onclick="quickFilter('exception', this)">Exception <span class="tab-count" id="tab-exception">0</span></button>
+  </div>
+
+  <div style="padding:0 24px 24px;">
+    <div class="card">
+      <div class="table-wrap">
+        <table class="data-table" id="shipmentsTable">
+          <thead>
+            <tr>
+              <th>Tracking ID</th>
+              <th>Recipient</th>
+              <th>Origin</th>
+              <th>Destination</th>
+              <th>Service</th>
+              <th>Status</th>
+              <th>Est. Delivery</th>
+              <th>Created</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="shipmentsBody">
+            <tr><td colspan="9" class="table-loading">Loading shipments…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.filters-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  background: #fff;
+  border-bottom: 1.5px solid #f3f4f6;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.filters-left { display: flex; gap: 10px; flex-wrap: wrap; flex: 1; }
+.filters-right { display: flex; gap: 8px; }
+.status-tabs-bar {
+  display: flex;
+  gap: 4px;
+  padding: 12px 24px;
+  background: #fff;
+  border-bottom: 1.5px solid #f3f4f6;
+  overflow-x: auto;
+}
+.status-tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: 7px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #6b7280;
+  background: none;
+  border: 1.5px solid transparent;
+  white-space: nowrap;
+  transition: all 0.15s;
+}
+.status-tab:hover { background: #f3f4f6; }
+.status-tab.active { background: #f3eeff; color: #4D148C; border-color: #c084fc; }
+.tab-exception.active { background: #fef2f2; color: #b91c1c; border-color: #fecaca; }
+.tab-count {
+  background: #e5e7eb;
+  color: #6b7280;
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 100px;
+}
+.status-tab.active .tab-count { background: #4D148C; color: #fff; }
+.tab-exception.active .tab-count { background: #dc2626; color: #fff; }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="../assets/js/config.js"></script>
+<script>
+let allShipments = [];
+let quickFilterValue = '';
+
+(async () => {
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  if (!session) { window.location.href = 'index.html'; return; }
+  loadShipments();
+})();
+
+async function loadShipments() {
+  const { data } = await supabaseClient
+    .from('shipments')
+    .select('*')
+    .order('created_at', { ascending: false });
+
+  allShipments = data || [];
+  updateTabCounts(allShipments);
+  applyFilters();
+}
+
+function updateTabCounts(data) {
+  document.getElementById('tab-all').textContent = data.length;
+  ['pending','in_transit','out_for_delivery','delivered','exception'].forEach(s => {
+    const el = document.getElementById(`tab-${s}`);
+    if (el) el.textContent = data.filter(d => d.status === s).length;
+  });
+}
+
+function applyFilters() {
+  const search = document.getElementById('searchInput').value.toLowerCase();
+  const status = quickFilterValue || document.getElementById('statusFilter').value;
+  const service = document.getElementById('serviceFilter').value;
+  const sort = document.getElementById('sortFilter').value;
+
+  let filtered = allShipments.filter(s => {
+    const matchSearch = !search ||
+      s.tracking_id?.toLowerCase().includes(search) ||
+      s.recipient_name?.toLowerCase().includes(search) ||
+      s.origin?.toLowerCase().includes(search) ||
+      s.destination?.toLowerCase().includes(search) ||
+      s.recipient_email?.toLowerCase().includes(search);
+    const matchStatus = !status || s.status === status;
+    const matchService = !service || s.service_type === service;
+    return matchSearch && matchStatus && matchService;
+  });
+
+  if (sort === 'oldest') filtered.sort((a,b) => new Date(a.created_at) - new Date(b.created_at));
+  else if (sort === 'status') filtered.sort((a,b) => a.status.localeCompare(b.status));
+
+  document.getElementById('shipmentCount').textContent = `${filtered.length} shipment${filtered.length !== 1 ? 's' : ''}`;
+  renderTable(filtered);
+}
+
+function quickFilter(status, btn) {
+  quickFilterValue = status;
+  document.querySelectorAll('.status-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('statusFilter').value = status;
+  applyFilters();
+}
+
+function clearFilters() {
+  document.getElementById('searchInput').value = '';
+  document.getElementById('statusFilter').value = '';
+  document.getElementById('serviceFilter').value = '';
+  document.getElementById('sortFilter').value = 'newest';
+  quickFilterValue = '';
+  document.querySelectorAll('.status-tab').forEach((t,i) => t.classList.toggle('active', i === 0));
+  applyFilters();
+}
+
+function renderTable(data) {
+  const tbody = document.getElementById('shipmentsBody');
+  if (!data.length) {
+    tbody.innerHTML = '<tr><td colspan="9" class="table-empty">No shipments match your filters.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = data.map(s => `
+    <tr onclick="goShipment('${s.tracking_id}')" style="cursor:pointer">
+      <td><code class="tracking-code">${s.tracking_id}</code></td>
+      <td>
+        <div style="font-weight:500;font-size:0.875rem;">${s.recipient_name || '—'}</div>
+        ${s.recipient_email ? `<div style="font-size:0.75rem;color:#9ca3af;">${s.recipient_email}</div>` : ''}
+      </td>
+      <td style="font-size:0.82rem;">${s.origin || '—'}</td>
+      <td style="font-size:0.82rem;">${s.destination || '—'}</td>
+      <td><span class="badge-service">${capitalize(s.service_type || 'standard')}</span></td>
+      <td><span class="status-pill status-${s.status}">${statusLabel(s.status)}</span></td>
+      <td style="font-size:0.82rem;color:#6b7280;">${s.estimated_delivery ? formatDate(s.estimated_delivery) : '—'}</td>
+      <td style="font-size:0.78rem;color:#9ca3af;">${formatDate(s.created_at)}</td>
+      <td onclick="event.stopPropagation()">
+        <div class="row-actions">
+          <button class="action-btn" onclick="goShipment('${s.tracking_id}')" title="Manage">✏️</button>
+          <button class="action-btn" onclick="window.open('../track.html?id=${s.tracking_id}','_blank')" title="View public">👁️</button>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function goShipment(id) { window.location.href = `shipment.html?id=${id}`; }
+function toggleSidebar() { document.getElementById('sidebar').classList.toggle('collapsed'); }
+async function doLogout() { await supabaseClient.auth.signOut(); window.location.href = 'index.html'; }
+function capitalize(s) { return s?.replace(/_/g,' ').replace(/\b\w/g, l=>l.toUpperCase()) || ''; }
+function statusLabel(s) {
+  const m={pending:'Pending',picked_up:'Picked Up',in_transit:'In Transit',out_for_delivery:'Out for Delivery',delivered:'Delivered',exception:'Exception'};
+  return m[s]||capitalize(s);
+}
+function formatDate(d) {
+  if (!d) return '—';
+  return new Date(d).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+}
+</script>
+</body>
+</html>
