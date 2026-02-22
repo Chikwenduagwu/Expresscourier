@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — SwiftEx Admin</title>
+  <link rel="stylesheet" href="../assets/css/admin.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+</head>
+<body class="admin-body">
+
+<!-- ══════ SIDEBAR ══════ -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">Swift<span>Ex</span></div>
+  <nav class="sidebar-nav">
+    <a href="dashboard.html" class="sidebar-link active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      Dashboard
+    </a>
+    <a href="shipments.html" class="sidebar-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 17H3a2 2 0 01-2-2V5a2 2 0 012-2h11a2 2 0 012 2v3m0 0h3l3 3v4a2 2 0 01-2 2h-1"/><circle cx="7" cy="20" r="2"/><circle cx="17" cy="20" r="2"/></svg>
+      Shipments
+    </a>
+    <a href="chat.html" class="sidebar-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+      Customer Chat
+      <span class="badge" id="chatBadge" style="display:none">0</span>
+    </a>
+    <div class="sidebar-divider"></div>
+    <button class="sidebar-link sidebar-logout" onclick="doLogout()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      Sign Out
+    </button>
+  </nav>
+</aside>
+
+<!-- ══════ MAIN ══════ -->
+<div class="admin-main">
+  <!-- Topbar -->
+  <header class="admin-topbar">
+    <div class="topbar-left">
+      <button class="sidebar-toggle" onclick="toggleSidebar()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <h1 class="page-title">Dashboard</h1>
+    </div>
+    <div class="topbar-right">
+      <button class="btn-create" onclick="openCreateModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        New Shipment
+      </button>
+      <div class="admin-avatar" id="adminAvatar">A</div>
+    </div>
+  </header>
+
+  <!-- Stats -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-label">Total Shipments</div>
+      <div class="stat-value" id="statTotal">—</div>
+      <div class="stat-icon stat-purple">📦</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">In Transit</div>
+      <div class="stat-value" id="statTransit">—</div>
+      <div class="stat-icon stat-blue">🚚</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Out for Delivery</div>
+      <div class="stat-value" id="statOFD">—</div>
+      <div class="stat-icon stat-orange">🛵</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Delivered Today</div>
+      <div class="stat-value" id="statDelivered">—</div>
+      <div class="stat-icon stat-green">✅</div>
+    </div>
+  </div>
+
+  <!-- Recent Shipments Table -->
+  <div class="card">
+    <div class="card-header">
+      <h2>Recent Shipments</h2>
+      <div class="card-actions">
+        <input type="text" id="searchInput" placeholder="Search tracking ID, recipient…" class="search-input" oninput="filterShipments()" />
+        <select id="statusFilter" class="filter-select" onchange="filterShipments()">
+          <option value="">All Statuses</option>
+          <option value="pending">Pending</option>
+          <option value="picked_up">Picked Up</option>
+          <option value="in_transit">In Transit</option>
+          <option value="out_for_delivery">Out for Delivery</option>
+          <option value="delivered">Delivered</option>
+          <option value="exception">Exception</option>
+        </select>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table class="data-table" id="shipmentsTable">
+        <thead>
+          <tr>
+            <th>Tracking ID</th>
+            <th>Recipient</th>
+            <th>Origin → Destination</th>
+            <th>Service</th>
+            <th>Status</th>
+            <th>Est. Delivery</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="shipmentsBody">
+          <tr><td colspan="7" class="table-loading">Loading shipments…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ CREATE SHIPMENT MODAL ══════ -->
+<div class="modal-backdrop" id="createModal" style="display:none" onclick="closeOnBackdrop(event, 'createModal')">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Create New Shipment</h2>
+      <button class="modal-close" onclick="closeCreateModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <div id="createError" class="alert alert-error" style="display:none"></div>
+      <div id="createSuccess" class="alert alert-success" style="display:none"></div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Recipient Name <span class="req">*</span></label>
+          <input type="text" id="cRecipient" placeholder="John Doe" />
+        </div>
+        <div class="form-group">
+          <label>Recipient Email</label>
+          <input type="email" id="cEmail" placeholder="john@example.com" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Sender Name</label>
+          <input type="text" id="cSender" placeholder="Sender Company" />
+        </div>
+        <div class="form-group">
+          <label>Service Type</label>
+          <select id="cService">
+            <option value="standard">Standard (3–5 days)</option>
+            <option value="express">Express (1–2 days)</option>
+            <option value="overnight">Overnight</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Origin <span class="req">*</span></label>
+          <input type="text" id="cOrigin" placeholder="LAGOS, NG" />
+        </div>
+        <div class="form-group">
+          <label>Destination <span class="req">*</span></label>
+          <input type="text" id="cDestination" placeholder="LONDON, GB" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Weight</label>
+          <input type="text" id="cWeight" placeholder="2.5 kg" />
+        </div>
+        <div class="form-group">
+          <label>Estimated Delivery</label>
+          <input type="date" id="cEstDelivery" />
+        </div>
+      </div>
+
+      <div class="generated-id-box" id="generatedIdBox" style="display:none">
+        <span>Generated Tracking ID:</span>
+        <strong id="generatedId">—</strong>
+        <button onclick="copyGeneratedId()" class="copy-btn">Copy</button>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeCreateModal()">Cancel</button>
+      <button class="btn-primary-admin" id="createBtn" onclick="createShipment()">Create Shipment</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="../assets/js/config.js"></script>
+<script>
+let allShipments = [];
+
+// ── Auth guard ──
+(async () => {
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  if (!session) { window.location.href = 'index.html'; return; }
+  document.getElementById('adminAvatar').textContent = session.user.email[0].toUpperCase();
+  loadDashboard();
+})();
+
+async function loadDashboard() {
+  const { data: shipments } = await supabaseClient
+    .from('shipments')
+    .select('*')
+    .order('created_at', { ascending: false });
+
+  allShipments = shipments || [];
+  renderStats(allShipments);
+  renderTable(allShipments);
+  loadChatBadge();
+}
+
+function renderStats(data) {
+  document.getElementById('statTotal').textContent = data.length;
+  document.getElementById('statTransit').textContent = data.filter(s => s.status === 'in_transit').length;
+  document.getElementById('statOFD').textContent = data.filter(s => s.status === 'out_for_delivery').length;
+  const today = new Date().toDateString();
+  document.getElementById('statDelivered').textContent = data.filter(s =>
+    s.status === 'delivered' && new Date(s.updated_at || s.created_at).toDateString() === today
+  ).length;
+}
+
+function renderTable(data) {
+  const tbody = document.getElementById('shipmentsBody');
+  if (!data.length) {
+    tbody.innerHTML = '<tr><td colspan="7" class="table-empty">No shipments found.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = data.map(s => `
+    <tr onclick="goShipment('${s.tracking_id}')" style="cursor:pointer">
+      <td><code class="tracking-code">${s.tracking_id}</code></td>
+      <td>${s.recipient_name || '—'}</td>
+      <td class="route-cell">${s.origin || '—'} <span class="arrow">→</span> ${s.destination || '—'}</td>
+      <td><span class="badge-service">${capitalize(s.service_type || 'standard')}</span></td>
+      <td><span class="status-pill status-${s.status}">${statusLabel(s.status)}</span></td>
+      <td>${s.estimated_delivery ? formatDate(s.estimated_delivery) : '—'}</td>
+      <td onclick="event.stopPropagation()">
+        <div class="row-actions">
+          <button class="action-btn" onclick="goShipment('${s.tracking_id}')" title="Manage">✏️</button>
+          <button class="action-btn" onclick="viewPublic('${s.tracking_id}')" title="View public">👁️</button>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function filterShipments() {
+  const search = document.getElementById('searchInput').value.toLowerCase();
+  const status = document.getElementById('statusFilter').value;
+  const filtered = allShipments.filter(s => {
+    const matchSearch = !search ||
+      s.tracking_id?.toLowerCase().includes(search) ||
+      s.recipient_name?.toLowerCase().includes(search) ||
+      s.origin?.toLowerCase().includes(search) ||
+      s.destination?.toLowerCase().includes(search);
+    const matchStatus = !status || s.status === status;
+    return matchSearch && matchStatus;
+  });
+  renderTable(filtered);
+}
+
+// ── Create Shipment ──
+function openCreateModal() {
+  document.getElementById('createModal').style.display = 'flex';
+  document.getElementById('generatedIdBox').style.display = 'none';
+  document.getElementById('createError').style.display = 'none';
+  document.getElementById('createSuccess').style.display = 'none';
+  // Set default estimated delivery to 5 days from now
+  const d = new Date();
+  d.setDate(d.getDate() + 5);
+  document.getElementById('cEstDelivery').value = d.toISOString().split('T')[0];
+}
+function closeCreateModal() {
+  document.getElementById('createModal').style.display = 'none';
+}
+
+async function createShipment() {
+  const recipient = document.getElementById('cRecipient').value.trim();
+  const origin = document.getElementById('cOrigin').value.trim();
+  const destination = document.getElementById('cDestination').value.trim();
+
+  if (!recipient || !origin || !destination) {
+    document.getElementById('createError').textContent = 'Recipient name, origin and destination are required.';
+    document.getElementById('createError').style.display = 'block';
+    return;
+  }
+
+  const btn = document.getElementById('createBtn');
+  btn.disabled = true;
+  btn.textContent = 'Creating…';
+
+  const trackingId = generateTrackingId();
+
+  const { error } = await supabaseClient.from('shipments').insert({
+    tracking_id: trackingId,
+    recipient_name: recipient,
+    recipient_email: document.getElementById('cEmail').value.trim(),
+    sender_name: document.getElementById('cSender').value.trim(),
+    service_type: document.getElementById('cService').value,
+    origin: origin.toUpperCase(),
+    destination: destination.toUpperCase(),
+    weight: document.getElementById('cWeight').value.trim(),
+    estimated_delivery: document.getElementById('cEstDelivery').value || null,
+    status: 'pending',
+  });
+
+  btn.disabled = false;
+  btn.textContent = 'Create Shipment';
+
+  if (error) {
+    document.getElementById('createError').textContent = 'Error creating shipment: ' + error.message;
+    document.getElementById('createError').style.display = 'block';
+    return;
+  }
+
+  document.getElementById('generatedId').textContent = trackingId;
+  document.getElementById('generatedIdBox').style.display = 'flex';
+  document.getElementById('createSuccess').textContent = '✓ Shipment created successfully!';
+  document.getElementById('createSuccess').style.display = 'block';
+  document.getElementById('createError').style.display = 'none';
+
+  // Add initial event
+  await supabaseClient.from('tracking_events').insert({
+    tracking_id: trackingId,
+    title: 'Label Created',
+    description: 'Shipping label created and shipment registered.',
+    event_type: 'label_created',
+  });
+
+  loadDashboard();
+}
+
+function generateTrackingId() {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let id = '';
+  for (let i = 0; i < 12; i++) id += chars[Math.floor(Math.random() * chars.length)];
+  return id;
+}
+
+function copyGeneratedId() {
+  navigator.clipboard.writeText(document.getElementById('generatedId').textContent);
+}
+
+async function loadChatBadge() {
+  const { data } = await supabaseClient
+    .from('chat_messages')
+    .select('id')
+    .eq('role', 'user')
+    .gte('created_at', new Date(Date.now() - 86400000).toISOString());
+  const badge = document.getElementById('chatBadge');
+  if (data?.length > 0) {
+    badge.textContent = data.length;
+    badge.style.display = 'inline-block';
+  }
+}
+
+function goShipment(id) { window.location.href = `shipment.html?id=${id}`; }
+function viewPublic(id) { window.open(`../track.html?id=${id}`, '_blank'); }
+function toggleSidebar() { document.getElementById('sidebar').classList.toggle('collapsed'); }
+async function doLogout() {
+  await supabaseClient.auth.signOut();
+  window.location.href = 'index.html';
+}
+function closeOnBackdrop(e, id) { if (e.target.id === id) document.getElementById(id).style.display = 'none'; }
+function capitalize(s) { return s?.replace(/_/g,' ').replace(/\b\w/g, l=>l.toUpperCase()) || ''; }
+function statusLabel(s) {
+  const m = {pending:'Pending',picked_up:'Picked Up',in_transit:'In Transit',out_for_delivery:'Out for Delivery',delivered:'Delivered',exception:'Exception'};
+  return m[s] || capitalize(s);
+}
+function formatDate(d) { return new Date(d).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}); }
+</script>
+</body>
+</html>

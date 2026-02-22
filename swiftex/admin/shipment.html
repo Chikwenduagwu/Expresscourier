@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Manage Shipment — SwiftEx Admin</title>
+  <link rel="stylesheet" href="../assets/css/admin.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+</head>
+<body class="admin-body">
+
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">Swift<span>Ex</span></div>
+  <nav class="sidebar-nav">
+    <a href="dashboard.html" class="sidebar-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      Dashboard
+    </a>
+    <a href="shipments.html" class="sidebar-link active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 17H3a2 2 0 01-2-2V5a2 2 0 012-2h11a2 2 0 012 2v3m0 0h3l3 3v4a2 2 0 01-2 2h-1"/><circle cx="7" cy="20" r="2"/><circle cx="17" cy="20" r="2"/></svg>
+      Shipments
+    </a>
+    <a href="chat.html" class="sidebar-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+      Customer Chat
+    </a>
+    <div class="sidebar-divider"></div>
+    <button class="sidebar-link sidebar-logout" onclick="doLogout()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      Sign Out
+    </button>
+  </nav>
+</aside>
+
+<div class="admin-main">
+  <header class="admin-topbar">
+    <div class="topbar-left">
+      <button class="sidebar-toggle" onclick="toggleSidebar()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <a href="dashboard.html" class="back-link">← Dashboard</a>
+      <h1 class="page-title" id="pageTitle">Shipment</h1>
+    </div>
+    <div class="topbar-right">
+      <button class="btn-view-public" id="viewPublicBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        View Public Page
+      </button>
+    </div>
+  </header>
+
+  <div class="shipment-layout" id="shipmentLayout" style="display:none">
+
+    <!-- LEFT: Shipment info + Push update -->
+    <div class="shipment-left">
+
+      <!-- Shipment Info -->
+      <div class="card">
+        <div class="card-header"><h2>Shipment Details</h2>
+          <span class="status-pill" id="shipStatusPill">—</span>
+        </div>
+        <div class="detail-grid" id="detailGrid">
+          <!-- populated by JS -->
+        </div>
+
+        <div class="detail-actions">
+          <button class="btn-secondary" onclick="openEditModal()">Edit Details</button>
+          <button class="btn-danger-sm" onclick="confirmDelete()">Delete Shipment</button>
+        </div>
+      </div>
+
+      <!-- Push Update Form -->
+      <div class="card push-card">
+        <div class="card-header">
+          <h2>Push Tracking Update</h2>
+          <span class="card-hint">Subscribers will receive an email notification</span>
+        </div>
+
+        <div id="pushSuccess" class="alert alert-success" style="display:none"></div>
+        <div id="pushError" class="alert alert-error" style="display:none"></div>
+
+        <div class="form-group">
+          <label>Update Status <span class="req">*</span></label>
+          <select id="pushStatus">
+            <option value="">— Keep current status —</option>
+            <option value="pending">Pending</option>
+            <option value="picked_up">Picked Up</option>
+            <option value="in_transit">In Transit</option>
+            <option value="out_for_delivery">Out for Delivery</option>
+            <option value="delivered">Delivered</option>
+            <option value="exception">Exception</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Event Type <span class="req">*</span></label>
+          <select id="pushEventType">
+            <option value="label_created">Label Created</option>
+            <option value="picked_up">Picked Up</option>
+            <option value="in_transit">In Transit / Hub Scan</option>
+            <option value="customs">Customs Clearance</option>
+            <option value="out_for_delivery">Out for Delivery</option>
+            <option value="delivered">Delivered</option>
+            <option value="exception">Exception / Delay</option>
+          </select>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Event Title <span class="req">*</span></label>
+            <input type="text" id="pushTitle" placeholder="e.g. On the Way" />
+          </div>
+          <div class="form-group">
+            <label>Location</label>
+            <input type="text" id="pushLocation" placeholder="e.g. MEMPHIS, TN" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Description</label>
+          <textarea id="pushDescription" rows="3" placeholder="Additional details about this update…"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Custom Date/Time <span class="label-hint">(leave blank for now)</span></label>
+          <input type="datetime-local" id="pushTimestamp" />
+        </div>
+
+        <!-- Quick presets -->
+        <div class="presets">
+          <span class="preset-label">Quick presets:</span>
+          <button class="preset-btn" onclick="applyPreset('picked_up')">📦 Picked Up</button>
+          <button class="preset-btn" onclick="applyPreset('in_transit')">🚚 In Transit</button>
+          <button class="preset-btn" onclick="applyPreset('out_for_delivery')">🛵 Out for Delivery</button>
+          <button class="preset-btn" onclick="applyPreset('delivered')">✅ Delivered</button>
+        </div>
+
+        <button class="btn-push" id="pushBtn" onclick="pushUpdate()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg>
+          Push Update & Notify Customers
+        </button>
+
+        <p class="push-hint" id="subscriberCount">Loading subscriber count…</p>
+      </div>
+    </div>
+
+    <!-- RIGHT: Event timeline + Subscribers -->
+    <div class="shipment-right">
+
+      <!-- Event timeline -->
+      <div class="card">
+        <div class="card-header">
+          <h2>Event History</h2>
+          <span class="event-count" id="eventCount">0 events</span>
+        </div>
+        <div class="event-list" id="eventList">
+          <div class="table-loading">Loading events…</div>
+        </div>
+      </div>
+
+      <!-- Subscribers -->
+      <div class="card">
+        <div class="card-header"><h2>Email Subscribers</h2></div>
+        <div class="subscriber-list" id="subscriberList">
+          <div class="table-loading">Loading…</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="loading-state" id="loadingState">
+    <div class="loader-ring"></div>
+    <p>Loading shipment…</p>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="../assets/js/config.js"></script>
+<script>
+let currentShipment = null;
+const PRESETS = {
+  picked_up:        { status:'picked_up',        eventType:'picked_up',        title:'We Have Your Package', desc:'Shipment has been picked up and is in our possession.' },
+  in_transit:       { status:'in_transit',        eventType:'in_transit',       title:'On the Way',           desc:'Package is in transit to the destination facility.' },
+  out_for_delivery: { status:'out_for_delivery',  eventType:'out_for_delivery', title:'Out for Delivery',     desc:'Your package is out for delivery and will arrive today.' },
+  delivered:        { status:'delivered',         eventType:'delivered',        title:'Delivered',            desc:'Package has been delivered successfully.' },
+};
+
+(async () => {
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  if (!session) { window.location.href = 'index.html'; return; }
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get('id');
+  if (!id) { window.location.href = 'dashboard.html'; return; }
+  loadShipment(id);
+})();
+
+async function loadShipment(trackingId) {
+  const { data: shipment } = await supabaseClient.from('shipments').select('*').eq('tracking_id', trackingId).single();
+  if (!shipment) { window.location.href = 'dashboard.html'; return; }
+  currentShipment = shipment;
+
+  document.getElementById('pageTitle').textContent = shipment.tracking_id;
+  document.getElementById('viewPublicBtn').onclick = () => window.open(`../track.html?id=${shipment.tracking_id}`, '_blank');
+  document.title = `${shipment.tracking_id} — SwiftEx Admin`;
+
+  const statusPill = document.getElementById('shipStatusPill');
+  statusPill.className = `status-pill status-${shipment.status}`;
+  statusPill.textContent = statusLabel(shipment.status);
+
+  document.getElementById('detailGrid').innerHTML = `
+    <div class="detail-item"><span>Tracking ID</span><strong>${shipment.tracking_id}</strong></div>
+    <div class="detail-item"><span>Recipient</span><strong>${shipment.recipient_name || '—'}</strong></div>
+    <div class="detail-item"><span>Recipient Email</span><strong>${shipment.recipient_email || '—'}</strong></div>
+    <div class="detail-item"><span>Sender</span><strong>${shipment.sender_name || '—'}</strong></div>
+    <div class="detail-item"><span>Origin</span><strong>${shipment.origin || '—'}</strong></div>
+    <div class="detail-item"><span>Destination</span><strong>${shipment.destination || '—'}</strong></div>
+    <div class="detail-item"><span>Service</span><strong>${capitalize(shipment.service_type)}</strong></div>
+    <div class="detail-item"><span>Weight</span><strong>${shipment.weight || '—'}</strong></div>
+    <div class="detail-item"><span>Est. Delivery</span><strong>${shipment.estimated_delivery ? formatDate(shipment.estimated_delivery) : '—'}</strong></div>
+    <div class="detail-item"><span>Created</span><strong>${formatDate(shipment.created_at)}</strong></div>
+  `;
+
+  document.getElementById('loadingState').style.display = 'none';
+  document.getElementById('shipmentLayout').style.display = 'grid';
+
+  loadEvents(trackingId);
+  loadSubscribers(trackingId);
+}
+
+async function loadEvents(trackingId) {
+  const { data: events } = await supabaseClient
+    .from('tracking_events').select('*').eq('tracking_id', trackingId)
+    .order('timestamp', { ascending: false });
+
+  document.getElementById('eventCount').textContent = `${events?.length || 0} event${events?.length !== 1 ? 's' : ''}`;
+
+  if (!events?.length) {
+    document.getElementById('eventList').innerHTML = '<div class="empty-state">No events yet.</div>';
+    return;
+  }
+
+  document.getElementById('eventList').innerHTML = events.map(e => `
+    <div class="event-item">
+      <div class="event-dot event-${e.event_type}"></div>
+      <div class="event-body">
+        <div class="event-title">${e.title}</div>
+        ${e.description ? `<div class="event-desc">${e.description}</div>` : ''}
+        ${e.location ? `<div class="event-loc">📍 ${e.location}</div>` : ''}
+        <div class="event-time">${formatDateTime(e.timestamp)}</div>
+      </div>
+      <button class="delete-event-btn" onclick="deleteEvent('${e.id}')" title="Delete">×</button>
+    </div>
+  `).join('');
+}
+
+async function loadSubscribers(trackingId) {
+  const { data: subs } = await supabaseClient
+    .from('email_subscribers').select('*').eq('tracking_id', trackingId).eq('is_active', true);
+
+  const count = subs?.length || 0;
+  document.getElementById('subscriberCount').textContent =
+    `${count} subscriber${count !== 1 ? 's' : ''} will receive an email notification.`;
+
+  document.getElementById('subscriberList').innerHTML = count
+    ? subs.map(s => `
+        <div class="subscriber-item">
+          <span class="sub-email">${s.email}</span>
+          <span class="sub-date">${formatDate(s.subscribed_at)}</span>
+          <button class="unsub-btn" onclick="unsubscribe('${s.id}', '${trackingId}')">Remove</button>
+        </div>
+      `).join('')
+    : '<div class="empty-state">No subscribers yet.</div>';
+}
+
+async function pushUpdate() {
+  const title = document.getElementById('pushTitle').value.trim();
+  const eventType = document.getElementById('pushEventType').value;
+  if (!title) {
+    document.getElementById('pushError').textContent = 'Event title is required.';
+    document.getElementById('pushError').style.display = 'block';
+    return;
+  }
+
+  const btn = document.getElementById('pushBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span>Pushing update…</span>';
+
+  const newStatus = document.getElementById('pushStatus').value;
+  const ts = document.getElementById('pushTimestamp').value;
+
+  try {
+    // Insert tracking event
+    const { error: evtErr } = await supabaseClient.from('tracking_events').insert({
+      tracking_id: currentShipment.tracking_id,
+      title,
+      description: document.getElementById('pushDescription').value.trim(),
+      location: document.getElementById('pushLocation').value.trim().toUpperCase(),
+      event_type: eventType,
+      timestamp: ts ? new Date(ts).toISOString() : new Date().toISOString(),
+    });
+    if (evtErr) throw evtErr;
+
+    // Update shipment status if changed
+    if (newStatus) {
+      await supabaseClient.from('shipments').update({ status: newStatus }).eq('tracking_id', currentShipment.tracking_id);
+      currentShipment.status = newStatus;
+      document.getElementById('shipStatusPill').className = `status-pill status-${newStatus}`;
+      document.getElementById('shipStatusPill').textContent = statusLabel(newStatus);
+    }
+
+    // Trigger email notifications via API
+    // (SMTP_CONFIGURED check happens server-side — safe to call even if not configured)
+    try {
+      await fetch('/api/notify-subscribers', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          trackingId: currentShipment.tracking_id,
+          eventTitle: title,
+          eventDescription: document.getElementById('pushDescription').value.trim(),
+          eventLocation: document.getElementById('pushLocation').value.trim(),
+          newStatus: newStatus || currentShipment.status,
+        })
+      });
+    } catch (_) { /* SMTP not configured yet — silently skip */ }
+
+    document.getElementById('pushSuccess').textContent = '✓ Update pushed! Customers have been notified.';
+    document.getElementById('pushSuccess').style.display = 'block';
+    document.getElementById('pushError').style.display = 'none';
+
+    // Clear form
+    ['pushTitle','pushDescription','pushLocation','pushTimestamp'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('pushStatus').value = '';
+    document.getElementById('pushEventType').value = 'in_transit';
+
+    loadEvents(currentShipment.tracking_id);
+    loadSubscribers(currentShipment.tracking_id);
+    setTimeout(() => document.getElementById('pushSuccess').style.display = 'none', 4000);
+
+  } catch (err) {
+    document.getElementById('pushError').textContent = 'Error: ' + err.message;
+    document.getElementById('pushError').style.display = 'block';
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg> Push Update & Notify Customers';
+  }
+}
+
+function applyPreset(key) {
+  const p = PRESETS[key];
+  if (!p) return;
+  document.getElementById('pushStatus').value = p.status;
+  document.getElementById('pushEventType').value = p.eventType;
+  document.getElementById('pushTitle').value = p.title;
+  document.getElementById('pushDescription').value = p.desc;
+}
+
+async function deleteEvent(eventId) {
+  if (!confirm('Delete this event?')) return;
+  await supabaseClient.from('tracking_events').delete().eq('id', eventId);
+  loadEvents(currentShipment.tracking_id);
+}
+
+async function unsubscribe(subId, trackingId) {
+  await supabaseClient.from('email_subscribers').update({ is_active: false }).eq('id', subId);
+  loadSubscribers(trackingId);
+}
+
+async function confirmDelete() {
+  if (!confirm(`Delete shipment ${currentShipment.tracking_id}? This cannot be undone.`)) return;
+  await supabaseClient.from('tracking_events').delete().eq('tracking_id', currentShipment.tracking_id);
+  await supabaseClient.from('email_subscribers').delete().eq('tracking_id', currentShipment.tracking_id);
+  await supabaseClient.from('shipments').delete().eq('tracking_id', currentShipment.tracking_id);
+  window.location.href = 'dashboard.html';
+}
+
+function toggleSidebar() { document.getElementById('sidebar').classList.toggle('collapsed'); }
+async function doLogout() { await supabaseClient.auth.signOut(); window.location.href = 'index.html'; }
+function capitalize(s) { return s?.replace(/_/g,' ').replace(/\b\w/g, l=>l.toUpperCase()) || ''; }
+function statusLabel(s) {
+  const m={pending:'Pending',picked_up:'Picked Up',in_transit:'In Transit',out_for_delivery:'Out for Delivery',delivered:'Delivered',exception:'Exception'};
+  return m[s]||capitalize(s);
+}
+function formatDate(d) { return new Date(d).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}); }
+function formatDateTime(ts) {
+  if (!ts) return '—';
+  const d = new Date(ts);
+  return d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'2-digit'}) + ' ' +
+    d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',hour12:true});
+}
+</script>
+</body>
+</html>
