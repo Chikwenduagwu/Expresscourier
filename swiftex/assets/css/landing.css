@@ -392,36 +392,68 @@
 .link-orange { color: #FF6200; font-weight: 600; }
 .link-orange:hover { text-decoration: underline; }
 
-/* ── NOTICE SECTION (Postmark style) ── */
-.notice-section { 
-  padding: 40px 24px; 
-  background: #d9edf7; 
+/* ── NOTICE SECTION ── */
+.notice-section {
+  padding: 0;
+  background: #d9edf7;
 }
 .notice-card {
   display: flex;
-  gap: 28px;
-  background: #d9edf7;
-  border-left: 5px solid #2980b9;
-  border-radius: 0;
-  padding: 24px 28px;
   align-items: center;
-  max-width: 780px;
-  margin: 0 auto;
+  gap: 28px;
+  min-height: 130px;
+}
+.notice-stripe {
+  width: 10px;
+  min-height: 130px;
+  align-self: stretch;
+  background: #1a5276;
+  flex-shrink: 0;
 }
 .notice-postmark {
   flex-shrink: 0;
-  width: 110px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  padding: 20px 0;
 }
 .postmark-img {
-  width: 100px;
-  height: 100px;
+  width: 90px;
+  height: 90px;
   object-fit: contain;
-  filter: grayscale(20%) opacity(0.85);
+}
+.notice-body {
+  flex: 1;
+  padding: 20px 24px 20px 0;
+}
+.notice-body p {
+  font-size: 0.95rem;
+  color: #1a1a1a;
+  line-height: 1.7;
+  margin: 0;
+  font-family: 'DM Sans', sans-serif;
+}
+.notice-body strong {
+  font-weight: 700;
+  color: #1a1a1a;
+}
+.link-blue {
+  color: #2980b9;
+  font-weight: 500;
+  text-decoration: underline;
+}
+.link-blue:hover {
+  color: #1a6fa8;
 }
 
+@media (max-width: 600px) {
+  .notice-card {
+    gap: 16px;
+  }
+  .notice-postmark {
+    display: none;
+  }
+  .notice-body {
+    padding: 20px 16px 20px 0;
+  }
+}
 /* Fallback hand-drawn postmark */
 .postmark-fallback {
   width: 100px;
