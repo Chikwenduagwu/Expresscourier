@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Track Shipment — SwiftEx</title>
+  <link rel="stylesheet" href="assets/css/tracking.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════
+     NAVBAR
+══════════════════════════════════════════════ -->
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a href="index.html" class="logo-text">Swift<span>Ex</span></a>
+    <div class="nav-center desktop-only">
+      <div class="nav-search-wrap">
+        <input type="text" id="navSearchInput" placeholder="Enter Tracking ID" maxlength="12" />
+        <button onclick="searchFromNav()">TRACK</button>
+      </div>
+    </div>
+    <div class="nav-right">
+      <span class="nav-label desktop-only">Sign Up or Log In</span>
+      <div class="nav-avatar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+      </div>
+      <button class="hamburger" id="hamburger">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════════════
+     MAIN CONTENT
+══════════════════════════════════════════════ -->
+<main class="tracking-main">
+
+  <!-- ── Loading State ── -->
+  <div class="loading-state" id="loadingState">
+    <div class="loader-ring"></div>
+    <p>Fetching shipment details…</p>
+  </div>
+
+  <!-- ── Error State ── -->
+  <div class="error-state" id="errorState" style="display:none">
+    <div class="error-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+    </div>
+    <h2>Tracking ID Not Found</h2>
+    <p>We couldn't find a shipment with that tracking ID. Please check the number and try again.</p>
+    <a href="index.html" class="btn-back">← Back to Home</a>
+  </div>
+
+  <!-- ── Tracking Results ── -->
+  <div class="tracking-results" id="trackingResults" style="display:none">
+
+    <!-- Tracking ID header bar -->
+    <div class="tracking-header-bar">
+      <div class="tracking-header-inner">
+        <div class="tracking-id-row">
+          <span class="tracking-id-label">Tracking ID:</span>
+          <span class="tracking-id-value" id="displayTrackingId">—</span>
+          <button class="icon-btn" onclick="copyTrackingId()" title="Copy">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          </button>
+          <button class="icon-btn" onclick="shareTracking()" title="Share">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+          </button>
+          <div class="dot-menu-wrap">
+            <button class="icon-btn" onclick="toggleDotMenu()" title="More options">
+              <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>
+            </button>
+            <div class="dot-dropdown" id="dotDropdown">
+              <a href="#">Print details</a>
+              <a href="#">Report issue</a>
+              <a href="index.html">Track another</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="results-body">
+
+      <!-- LEFT COLUMN: Status + Timeline -->
+      <div class="results-left">
+
+        <!-- Status Card -->
+        <div class="status-card" id="statusCard">
+          <div class="status-top">
+            <div class="status-badge" id="statusBadge">
+              <span class="status-icon" id="statusIcon"></span>
+              <span class="status-text" id="statusText">—</span>
+            </div>
+            <div class="status-datetime" id="statusDatetime">—</div>
+          </div>
+          <div class="status-signed" id="statusSigned" style="display:none">
+            <span>Signed for by:</span>
+            <strong id="signedBy">—</strong>
+          </div>
+          <div class="status-actions">
+            <a href="#timeline" class="action-link">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              View more details
+            </a>
+            <a href="#" class="action-link" onclick="downloadPOD(event)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Obtain proof of delivery
+            </a>
+            <a href="#" class="action-link action-warn" onclick="reportMissing(event)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              Report missing package
+            </a>
+          </div>
+        </div>
+
+        <!-- Route Card -->
+        <div class="route-card">
+          <div class="route-row">
+            <div class="route-col">
+              <span class="route-label">From</span>
+              <span class="route-value" id="routeFrom">—</span>
+            </div>
+            <div class="route-arrow">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+            <div class="route-col">
+              <span class="route-label">To</span>
+              <span class="route-value" id="routeTo">—</span>
+            </div>
+          </div>
+          <div class="route-meta">
+            <div class="meta-item">
+              <span class="meta-label">Service</span>
+              <span class="meta-value" id="serviceType">—</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Est. Delivery</span>
+              <span class="meta-value" id="estDelivery">—</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Weight</span>
+              <span class="meta-value" id="shipWeight">—</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Delivery Details -->
+        <div class="delivery-details-card" id="deliveryDetailsCard" style="display:none">
+          <h4 class="section-label">DELIVERY DETAILS</h4>
+          <p id="deliveryDetailsText"></p>
+        </div>
+
+        <!-- Timeline -->
+        <div class="timeline-section" id="timeline">
+          <h4 class="section-label">SHIPMENT PROGRESS</h4>
+          <div class="timeline" id="timelineContainer">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT COLUMN: Subscription + Package Info -->
+      <div class="results-right">
+
+        <!-- Get Updates -->
+        <div class="updates-card" id="updatesCard">
+          <div class="updates-header">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+            <span>Get updates</span>
+            <button class="toggle-btn" onclick="toggleUpdates()" id="updatesToggle">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 15l-6-6-6 6"/></svg>
+            </button>
+          </div>
+          <div class="updates-body" id="updatesBody">
+            <p class="updates-desc">Receive email notifications for every status update on this shipment.</p>
+            <div class="subscribe-form">
+              <label>Email address <span>*</span></label>
+              <div class="subscribe-row">
+                <input type="email" id="subscribeEmail" placeholder="your@email.com" />
+                <button onclick="subscribeEmail()" class="submit-btn">SUBMIT</button>
+              </div>
+              <div class="subscribe-feedback" id="subscribeFeedback"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Package Info Card -->
+        <div class="info-card">
+          <h4 class="section-label">PACKAGE INFORMATION</h4>
+          <div class="info-row"><span>Recipient</span><strong id="recipientName">—</strong></div>
+          <div class="info-row"><span>Sender</span><strong id="senderName">—</strong></div>
+          <div class="info-row"><span>Service Type</span><strong id="serviceTypeSide">—</strong></div>
+          <div class="info-row"><span>Weight</span><strong id="weightSide">—</strong></div>
+          <div class="info-row"><span>Tracking Created</span><strong id="createdAt">—</strong></div>
+        </div>
+
+        <!-- Promo card -->
+        <div class="promo-card">
+          <div class="promo-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><circle cx="11" cy="11" r="3"/></svg>
+          </div>
+          <h4>Want to know when your package will arrive?</h4>
+          <p>Take more control of your delivery with SwiftEx Delivery Manager.</p>
+          <a href="#" class="promo-btn">SIGN UP FOR FREE</a>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Divider -->
+    <div class="gradient-divider"></div>
+
+  </div>
+</main>
+
+<!-- ══════════════════════════════════════════════
+     CHAT WIDGET
+══════════════════════════════════════════════ -->
+<div class="chat-widget" id="chatWidget">
+  <!-- Closed state: pill button -->
+  <button class="chat-pill" id="chatPill" onclick="toggleChat()">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+    <span>ASK SWIFTEX</span>
+  </button>
+
+  <!-- Open state: chat panel -->
+  <div class="chat-panel" id="chatPanel">
+    <div class="chat-header">
+      <div class="chat-header-left">
+        <div class="chat-avatar">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a5 5 0 015 5 5 5 0 01-5 5 5 5 0 01-5-5 5 5 0 015-5m0 12c5.33 0 8 2.67 8 4v2H4v-2c0-1.33 2.67-4 8-4z"/></svg>
+        </div>
+        <div>
+          <div class="chat-name">SwiftEx Support</div>
+          <div class="chat-status-dot"><span></span> Online</div>
+        </div>
+      </div>
+      <div class="chat-header-right">
+        <button class="chat-mode-btn" id="agentBtn" onclick="requestAgent()" title="Talk to human agent">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+        </button>
+        <button class="chat-close-btn" onclick="toggleChat()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="chat-mode-bar" id="chatModeBar" style="display:none">
+      <span>🧑‍💼 You're now connected to a human agent</span>
+    </div>
+
+    <div class="chat-messages" id="chatMessages">
+      <div class="chat-message assistant">
+        <div class="msg-bubble">
+          Hi! I'm your SwiftEx AI assistant. I can answer questions about your shipment or connect you with a human agent. How can I help?
+        </div>
+        <div class="msg-time">Just now</div>
+      </div>
+    </div>
+
+    <div class="chat-typing" id="chatTyping" style="display:none">
+      <div class="typing-dots"><span></span><span></span><span></span></div>
+      <span>SwiftEx is typing…</span>
+    </div>
+
+    <div class="chat-input-area">
+      <input type="text" id="chatInput" placeholder="Type your message…" autocomplete="off" />
+      <button class="send-btn" onclick="sendChatMessage()" id="sendBtn">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast notification -->
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="assets/js/config.js"></script>
+<script src="assets/js/tracking.js"></script>
+<script src="assets/js/chat-widget.js"></script>
+</body>
+</html>
