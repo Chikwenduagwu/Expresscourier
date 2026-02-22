@@ -177,16 +177,33 @@
 </section>
 
 <!-- ══════════════════════════════════════════════
-     NOTICE BANNER (like FedEx important note)
+     POSTMARK NOTICE SECTION
 ══════════════════════════════════════════════ -->
 <section class="notice-section">
   <div class="container">
     <div class="notice-card">
-      <div class="notice-icon">⚠️</div>
+      <div class="notice-postmark">
+        <img 
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/US_postmark_example.svg/200px-US_postmark_example.svg.png" 
+          alt="Postmark stamp"
+          class="postmark-img"
+          onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+        />
+        <!-- Fallback drawn postmark if image fails to load -->
+        <div class="postmark-fallback" style="display:none;">
+          <div class="postmark-circle">
+            <div class="postmark-top">NEW YORK, NY</div>
+            <div class="postmark-mid">PM</div>
+            <div class="postmark-date">13 JAN</div>
+            <div class="postmark-year">2026</div>
+            <div class="postmark-lines">
+              <span></span><span></span><span></span>
+            </div>
+          </div>
+        </div>
+      </div>
       <div class="notice-body">
-        <h4>Important Notice</h4>
-        <p>Holiday shipping deadlines are approaching. Please submit your international shipments early to ensure on-time delivery. Express options available for urgent packages.</p>
-        <a href="#" class="link-orange">VIEW SHIPPING DEADLINES →</a>
+        <p><strong>Postmarks:</strong> If you want to ensure that your shipments receive a postmark on the day you send it, submit your international packages early to ensure on-time delivery. Express options available for urgent packages. <a href="#" class="link-blue">Learn more</a></p>
       </div>
     </div>
   </div>
