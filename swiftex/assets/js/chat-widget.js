@@ -64,18 +64,13 @@ async function sendChatMessage() {
 
     if (!response.ok) throw new Error('API error');
 
-    // Handle streaming response
-    const reader = response.body?.getReader();
-    if (reader) {
-      await handleStream(reader);
-    } else {
-      const data = await response.json();
-      const reply = data.reply || 'Sorry, I couldn\'t process that.';
-      appendMessage('assistant', reply);
-      messageHistory.push({ role: 'assistant', content: reply });
-      await saveChatMessage('assistant', reply);
-      checkEscalation(reply);
-    }
+    // Parse JSON response from /api/chat
+    const data = await response.json();
+    const reply = data.reply || "Sorry, I couldn't process that.";
+    appendMessage('assistant', reply);
+    messageHistory.push({ role: 'assistant', content: reply });
+    await saveChatMessage('assistant', reply);
+    checkEscalation(reply);
 
   } catch (err) {
     showTyping(false);
@@ -86,38 +81,7 @@ async function sendChatMessage() {
   }
 }
 
-// ── Handle streaming response ──
-async function handleStream(reader) {
-  const decoder = new TextDecoder();
-  let fullText = '';
-  const msgEl = appendMessage('assistant', '', true); // empty streaming bubble
-
-  while (true) {
-    const { done, value } = await reader.read();
-    if (done) break;
-    const chunk = decoder.decode(value, { stream: true });
-    // Parse SSE chunks
-    chunk.split('\n').forEach(line => {
-      if (line.startsWith('data: ')) {
-        const data = line.slice(6);
-        if (data === '[DONE]') return;
-        try {
-          const parsed = JSON.parse(data);
-          const token = parsed.choices?.[0]?.delta?.content || parsed.token || '';
-          fullText += token;
-          if (msgEl) msgEl.textContent = fullText;
-          scrollMessages();
-        } catch (_) {}
-      }
-    });
-  }
-
-  if (fullText) {
-    messageHistory.push({ role: 'assistant', content: fullText });
-    await saveChatMessage('assistant', fullText);
-    checkEscalation(fullText);
-  }
-}
+// (streaming removed — using standard JSON responses)
 
 // ── Check for escalation trigger ──
 function checkEscalation(text) {
