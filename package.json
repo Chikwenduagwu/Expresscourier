@@ -4,7 +4,7 @@
   "description": "SwiftEx — Full-featured courier tracking system with admin panel, AI chat, and email notifications",
   "private": true,
   "engines": {
-    "node": "24.x"
+    "node": "20.x"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.39.0",
