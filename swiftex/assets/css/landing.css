@@ -23,7 +23,7 @@
 .logo-text {
   font-family: 'Syne', sans-serif;
   font-size: 1.65rem;
-  font-weight: 800;
+  font-weight: 500;
   color: #fff;
   letter-spacing: -1px;
 }
@@ -649,62 +649,60 @@
   object-position: center top;
   display: block;
 }
+/* CTA Container (important for alignment) */
 .cta-content-side {
-  flex: 1;
-  background: #fff;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: left;
-  padding: 52px 48px;
-  position: relative;
-  overflow: hidden;
+  text-align: left;   /* Force left alignment */
 }
-.cta-content-side::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at 90% 10%, rgba(255,98,0,0.18) 0%, transparent 60%);
-  pointer-events: none;
-}
+
+/* Heading */
 .cta-content-side h2 {
   font-family: 'Syne', sans-serif;
   font-size: clamp(1.25rem, 2.2vw, 1.7rem);
   font-weight: 800;
-  color: darkblue;
+  color: #0a1f8f;     /* Better dark blue */
   line-height: 1.3;
-  margin-bottom: 1px;
-  position: ;
+  margin-bottom: 10px;
+  position: relative; /* FIXED */
   z-index: 1;
+  text-align: left;   /* Ensure left */
 }
+
+/* Paragraph */
 .cta-content-side p {
-  font-size: 0.92rem;
-  color: #000;
-  line-height: 1.65;
+  font-family: 'Syne', sans-serif;
+  font-size: 0.95rem;
+  color: #333;
+  line-height: 1.7;
   margin-bottom: 30px;
   position: relative;
   z-index: 1;
+  text-align: left;   /* Ensure left */
 }
+
+/* Button */
 .cta-btn {
   display: inline-block;
-  border-color: darkblue;
+  border: 2px solid #0a1f8f;  /* FIXED border */
   background: #fff;
-  color: #000;
+  color: #0a1f8f;
   font-family: 'Syne', sans-serif;
   font-size: 0.85rem;
   font-weight: 700;
   padding: 13px 28px;
-  border-radius: 1px;
+  border-radius: 4px;         /* Slightly smoother */
   letter-spacing: 0.04em;
   white-space: nowrap;
-  transition: all 0.18s;
-  box-shadow: 0 6px 20px rgba(255,98,0,0.4);
+  transition: all 0.2s ease;
+  box-shadow: 0 6px 20px rgba(255,98,0,0.25);
   position: relative;
   z-index: 1;
+  cursor: pointer;
 }
+
+/* Hover Effect (Professional Look) */
 .cta-btn:hover {
-  background: #e85800;
-  transform: translateY(-1px);
+  background: #0a1f8f;
+  color: #fff;
 }
 
 /* ── Responsive ── */
