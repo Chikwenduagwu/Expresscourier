@@ -818,7 +818,8 @@
 }
 .footer-brand { max-width: 260px; flex-shrink: 0; }
 .footer-logo {
-  font-family: 'Syne', sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 
+             'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   font-size: 1.5rem;
   font-weight: 800;
   color: #4D148C;
@@ -848,7 +849,8 @@
   gap: 24px;
 }
 .footer-col h5 {
-  font-family: 'Syne', sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 
+             'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   font-size: 0.72rem;
   font-weight: 800;
   letter-spacing: 0.1em;
