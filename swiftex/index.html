@@ -268,6 +268,105 @@
 
 </section>
 
+  
+<!-- ══════════════════════════════════════════════
+     SERVICES CAROUSEL
+══════════════════════════════════════════════ -->
+<section class="carousel-section">
+  <div class="carousel-wrapper">
+
+    <button class="carousel-arrow carousel-prev" onclick="moveSlide(-1)" aria-label="Previous">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+    </button>
+
+    <div class="carousel-track-container">
+      <div class="carousel-track" id="carouselTrack">
+
+        <!-- Slide 1 -->
+        <div class="carousel-slide">
+          <div class="slide-image">
+            <img src="https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?w=600&q=80" alt="Express Delivery" />
+          </div>
+          <div class="slide-content">
+            <h3 class="slide-title">Express<br>Delivery</h3>
+            <p class="slide-desc">Ship with SwiftEx Express<sup>®</sup> envelopes and boxes. Our supplies get you mailing and shipping in no time.</p>
+            <button class="slide-btn">Get Started</button>
+          </div>
+        </div>
+
+        <!-- Slide 2 -->
+        <div class="carousel-slide">
+          <div class="slide-image">
+            <img src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=600&q=80" alt="Standard Shipping" />
+          </div>
+          <div class="slide-content">
+            <h3 class="slide-title">Standard<br>Shipping</h3>
+            <p class="slide-desc">Reliable delivery across 180+ countries. Track every step of the journey with real-time updates sent straight to your inbox.</p>
+            <button class="slide-btn">Get Started</button>
+          </div>
+        </div>
+
+        <!-- Slide 3 -->
+        <div class="carousel-slide">
+          <div class="slide-image">
+            <img src="https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?w=600&q=80" alt="Overnight Service" />
+          </div>
+          <div class="slide-content">
+            <h3 class="slide-title">Overnight<br>Service</h3>
+            <p class="slide-desc">Need it there by tomorrow? Our overnight guarantee delivers your package to the door before the business day begins.</p>
+            <button class="slide-btn">Get Started</button>
+          </div>
+        </div>
+
+        <!-- Slide 4 -->
+        <div class="carousel-slide">
+          <div class="slide-image">
+            <img src="https://images.unsplash.com/photo-1612630741022-b29ec709c9e3?w=600&q=80" alt="International Freight" />
+          </div>
+          <div class="slide-content">
+            <h3 class="slide-title">International<br>Freight</h3>
+            <p class="slide-desc">Move large shipments across borders with ease. Full customs support, door-to-door tracking, and dedicated freight agents.</p>
+            <button class="slide-btn">Get Started</button>
+          </div>
+        </div>
+
+        <!-- Slide 5 -->
+        <div class="carousel-slide">
+          <div class="slide-image">
+            <img src="https://images.unsplash.com/photo-1553413077-190dd305871c?w=600&q=80" alt="Warehouse & Storage" />
+          </div>
+          <div class="slide-content">
+            <h3 class="slide-title">Warehouse<br>&amp; Storage</h3>
+            <p class="slide-desc">Store, pick, pack and ship — all from one place. Our fulfilment centres handle your inventory so you can focus on your business.</p>
+            <button class="slide-btn">Get Started</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <button class="carousel-arrow carousel-next" onclick="moveSlide(1)" aria-label="Next">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+    </button>
+
+  </div>
+
+  <!-- Dot indicators -->
+  <div class="carousel-dots" id="carouselDots">
+    <button class="dot active" onclick="goToSlide(0)"></button>
+    <button class="dot" onclick="goToSlide(1)"></button>
+    <button class="dot" onclick="goToSlide(2)"></button>
+    <button class="dot" onclick="goToSlide(3)"></button>
+    <button class="dot" onclick="goToSlide(4)"></button>
+  </div>
+
+  <!-- Progress bar -->
+  <div class="carousel-progress">
+    <div class="carousel-progress-bar" id="carouselProgress"></div>
+  </div>
+
+</section>
+  
 <!-- ══════════════════════════════════════════════
      CTA BANNER
 ══════════════════════════════════════════════ -->
