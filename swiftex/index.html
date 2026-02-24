@@ -18,7 +18,7 @@
 <nav class="navbar" id="navbar">
   <div class="navbar-inner">
     <a href="index.html" class="navbar-logo">
-      <span class="logo-text"><img src="assets/img/logo.png" width="50px" height="50px"/><span>CO</span></span>
+      <span class="logo-text">EXPRESS<span>CO</span></span>
     </a>
     <div class="navbar-links desktop-only">
       <a href="#services" class="nav-link">Services</a>
@@ -47,47 +47,76 @@
      HERO
 ══════════════════════════════════════════════ -->
 <section class="hero">
-  <div class="hero-bg">
-    <div class="hero-gradient"></div>
-    <div class="hero-pattern"></div>
-  </div>
-  <div class="hero-content">
-    <div class="hero-badge">
-      <span class="badge-dot"></span>
-      Trusted by 50,000+ businesses worldwide
-    </div>
-    <h1 class="hero-title">Deliver <span class="hero-highlight">Faster.</span><br>Track <span class="hero-highlight">Smarter.</span></h1>
-    <p class="hero-subtitle">Enterprise-grade courier tracking with real-time updates, AI-powered support, and instant email notifications — all in one platform.</p>
 
-    <!-- Track form in hero -->
-    <div class="hero-track-form">
-      <div class="track-input-wrap">
-        <svg class="track-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-        <input type="text" id="heroTrackInput" placeholder="Enter 12-character Tracking ID" maxlength="12" autocomplete="off" />
+  <!-- ── TOP: New design (white bg, text + ring + photo) ── -->
+  <div class="hero-top">
+    <div class="hero-text-col">
+      <div class="hero-badge">
+        <span class="badge-dot"></span>
+        Trusted by 50,000+ businesses worldwide
       </div>
-      <button class="hero-track-btn" onclick="trackPackage()">
-        TRACK
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-      </button>
+      <h1 class="hero-title">Fast and reliable<br>delivery</h1>
+      <p class="hero-subtitle">To any destination worldwide</p>
+      <a href="#track-section" class="hero-send-btn">Send now <span>›</span></a>
     </div>
-    <p class="hero-track-hint">Example: <span onclick="fillExample()" style="cursor:pointer;text-decoration:underline;opacity:0.8">ABC123XYZ789</span></p>
+    <div class="hero-graphic-col">
+      <svg class="hero-ring" viewBox="0 0 260 260" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="200" cy="60" r="140" fill="none" stroke="#FF6200" stroke-width="22" stroke-dasharray="290 180" stroke-dashoffset="0" stroke-linecap="round"/>
+        <circle cx="200" cy="60" r="140" fill="none" stroke="#4D148C" stroke-width="22" stroke-dasharray="130 340" stroke-dashoffset="-290" stroke-linecap="round"/>
+        <circle cx="200" cy="60" r="140" fill="none" stroke="#22c55e" stroke-width="22" stroke-dasharray="40 430" stroke-dashoffset="-420" stroke-linecap="round"/>
+        <circle cx="200" cy="60" r="140" fill="none" stroke="#1e3a8a" stroke-width="22" stroke-dasharray="60 410" stroke-dashoffset="-460" stroke-linecap="round"/>
+      </svg>
+    </div>
   </div>
 
-  <!-- Floating stats -->
-  <div class="hero-stats">
-    <div class="stat-pill">
-      <span class="stat-num">2M+</span>
-      <span class="stat-label">Packages Delivered</span>
-    </div>
-    <div class="stat-pill">
-      <span class="stat-num">99.8%</span>
-      <span class="stat-label">On-Time Rate</span>
-    </div>
-    <div class="stat-pill">
-      <span class="stat-num">180+</span>
-      <span class="stat-label">Countries Served</span>
+  <!-- ── PHOTO ── -->
+  <div class="hero-photo">
+    <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=1200&q=80" alt="Woman receiving parcel" class="hero-photo-img" />
+  </div>
+
+  <!-- ── BOTTOM: Track form + stats (purple bg) ── -->
+  <div class="hero-bottom" id="track-section">
+    <div class="hero-bottom-inner">
+
+      <div class="hero-track-wrap">
+        <p class="hero-track-label">Track your shipment</p>
+        <div class="hero-track-form">
+          <div class="track-input-wrap">
+            <svg class="track-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/>
+              <circle cx="12" cy="10" r="3"/>
+            </svg>
+            <input type="text" id="heroTrackInput" placeholder="Enter 12-character Tracking ID" maxlength="12" autocomplete="off" />
+          </div>
+          <button class="hero-track-btn" onclick="trackPackage()">
+            TRACK
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </button>
+        </div>
+        <p class="hero-track-hint">Example: <span onclick="fillExample()" style="cursor:pointer;text-decoration:underline;opacity:0.7">ABC123XYZ789</span></p>
+      </div>
+
+      <!-- Stats -->
+      <div class="hero-stats">
+        <div class="stat-pill">
+          <span class="stat-num">2M+</span>
+          <span class="stat-label">Packages Delivered</span>
+        </div>
+        <div class="stat-pill">
+          <span class="stat-num">99.8%</span>
+          <span class="stat-label">On-Time Rate</span>
+        </div>
+        <div class="stat-pill">
+          <span class="stat-num">180+</span>
+          <span class="stat-label">Countries Served</span>
+        </div>
+      </div>
+
     </div>
   </div>
+
 </section>
 
 <!-- ══════════════════════════════════════════════
@@ -195,34 +224,116 @@
     <h2 class="section-title">Manage Your Shipments</h2>
     <p class="section-sub">Everything you need to send, track, and receive packages — in one place.</p>
     <div class="manage-grid">
-      <div class="manage-card">
-        <div class="manage-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+
+      <!-- Card 1 -->
+      <div class="manage-card" style="--card-bg: #cc3300; --card-footer: #b02b00;">
+        <div class="manage-card-top">
+          <div class="manage-illus">
+            <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <!-- Envelope -->
+              <rect x="8" y="22" width="50" height="36" rx="4" fill="#f5e6c8" stroke="#e8d5a3" stroke-width="1.5"/>
+              <path d="M8 26l25 18L58 26" stroke="#e8d5a3" stroke-width="2" stroke-linecap="round"/>
+              <!-- Card sticking out -->
+              <rect x="28" y="12" width="38" height="30" rx="3" fill="#fff" stroke="#ddd" stroke-width="1.5" transform="rotate(8 28 12)"/>
+              <!-- Flowers -->
+              <circle cx="42" cy="18" r="4" fill="#e74c3c"/>
+              <circle cx="52" cy="15" r="3.5" fill="#9b59b6"/>
+              <circle cx="48" cy="26" r="3" fill="#2ecc71"/>
+              <circle cx="38" cy="24" r="3.5" fill="#f39c12"/>
+              <line x1="44" y1="30" x2="44" y2="42" stroke="#27ae60" stroke-width="2"/>
+              <line x1="40" y1="34" x2="36" y2="30" stroke="#27ae60" stroke-width="1.5"/>
+            </svg>
+          </div>
+          <h4>Send a letter or card</h4>
+          <p>The perfect way to brighten someone's day. Most of the cards you send today will be delivered tomorrow!</p>
         </div>
-        <h4>SCHEDULE PICKUP</h4>
-        <p>Book a courier pickup from your location at your preferred time.</p>
-      </div>
-      <div class="manage-card">
-        <div class="manage-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        <div class="manage-card-footer">
+          <a href="#">More about sending mail <span>›</span></a>
         </div>
-        <h4>FIND LOCATIONS</h4>
-        <p>Locate nearby drop-off points and service centers.</p>
       </div>
-      <div class="manage-card">
-        <div class="manage-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l2 2"/><path d="M8 12h1"/></svg>
+
+      <!-- Card 2 -->
+      <div class="manage-card" style="--card-bg: #4D148C; --card-footer: #3d1070;">
+        <div class="manage-card-top">
+          <div class="manage-illus">
+            <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <!-- Box -->
+              <rect x="14" y="28" width="44" height="38" rx="3" fill="#c8a165"/>
+              <rect x="14" y="28" width="44" height="12" rx="3" fill="#b8904f"/>
+              <!-- Tape strip -->
+              <rect x="30" y="22" width="12" height="20" rx="2" fill="#e8c87a"/>
+              <!-- Barcode lines -->
+              <rect x="22" y="50" width="2" height="10" fill="#7a5c2e"/>
+              <rect x="26" y="50" width="1" height="10" fill="#7a5c2e"/>
+              <rect x="29" y="50" width="3" height="10" fill="#7a5c2e"/>
+              <rect x="34" y="50" width="1" height="10" fill="#7a5c2e"/>
+              <rect x="37" y="50" width="2" height="10" fill="#7a5c2e"/>
+              <rect x="41" y="50" width="3" height="10" fill="#7a5c2e"/>
+              <rect x="46" y="50" width="1" height="10" fill="#7a5c2e"/>
+              <!-- Up arrow symbol -->
+              <path d="M36 34l4-4 4 4M40 30v8" stroke="#7a5c2e" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <h4>Send a parcel</h4>
+          <p>Larger items can easily be sent as a parcel. Choose from several shipping options!</p>
         </div>
-        <h4>FUEL SURCHARGE</h4>
-        <p>View current fuel surcharge rates for all service types.</p>
-      </div>
-      <div class="manage-card">
-        <div class="manage-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/></svg>
+        <div class="manage-card-footer">
+          <a href="#">More about sending parcels <span>›</span></a>
         </div>
-        <h4>FAQs</h4>
-        <p>Get answers to common shipping and tracking questions.</p>
       </div>
+
+      <!-- Card 3 -->
+      <div class="manage-card" style="--card-bg: #1a3a8c; --card-footer: #122d70;">
+        <div class="manage-card-top">
+          <div class="manage-illus">
+            <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <!-- Hand -->
+              <path d="M28 62c0 0 -4-2-4-8V42l4-2v12" fill="#c8956c"/>
+              <rect x="24" y="54" width="32" height="8" rx="4" fill="#c8956c"/>
+              <!-- Phone body -->
+              <rect x="28" y="16" width="26" height="44" rx="4" fill="#1a1a2e"/>
+              <rect x="30" y="20" width="22" height="34" rx="2" fill="#fff"/>
+              <!-- Screen content - tracking dots -->
+              <circle cx="36" cy="34" r="3" fill="#FF6200"/>
+              <line x1="39" y1="34" x2="52" y2="34" stroke="#e0e0e0" stroke-width="2" stroke-dasharray="3 2"/>
+              <circle cx="52" cy="34" r="2" fill="#e0e0e0"/>
+              <!-- Orange bar at top of screen -->
+              <rect x="30" y="20" width="22" height="7" rx="2" fill="#FF6200"/>
+            </svg>
+          </div>
+          <h4>Receiving a parcel</h4>
+          <p>Follow your parcel with track &amp; trace, also from abroad. Would you rather change the delivery time or place? It's easy to do it online!</p>
+        </div>
+        <div class="manage-card-footer">
+          <a href="#">More about receiving parcels <span>›</span></a>
+        </div>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="manage-card" style="--card-bg: #FF6200; --card-footer: #e05500;">
+        <div class="manage-card-top">
+          <div class="manage-illus">
+            <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <!-- Mailbox slot / letterbox -->
+              <rect x="10" y="28" width="52" height="36" rx="6" fill="#cc4400"/>
+              <rect x="10" y="28" width="52" height="36" rx="6" stroke="#ff8c42" stroke-width="1.5"/>
+              <!-- Slot opening -->
+              <rect x="20" y="44" width="32" height="6" rx="3" fill="#ff8c42"/>
+              <!-- Letter going in -->
+              <rect x="24" y="36" width="24" height="16" rx="2" fill="#fff" opacity="0.9"/>
+              <path d="M24 40l12 7 12-7" stroke="#e0e0e0" stroke-width="1.2"/>
+              <!-- Brand text on box -->
+              <rect x="14" y="56" width="14" height="4" rx="1" fill="#ff8c42" opacity="0.5"/>
+            </svg>
+          </div>
+          <h4>Find a drop-off point</h4>
+          <p>Locate your nearest drop-off point or service centre. Drop off parcels and letters quickly and easily.</p>
+        </div>
+        <div class="manage-card-footer">
+          <a href="#">Find locations near you <span>›</span></a>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
@@ -293,7 +404,7 @@
 <footer class="footer" id="contact">
   <div class="footer-inner">
     <div class="footer-brand">
-      <div class="footer-logo"><img src="assets/img/logo.png" width="50px" height="50px"/><span>COURIER</span></div>
+      <div class="footer-logo">EXPRESS<span>COURIER</span></div>
       <p>Fast, reliable, and fully tracked courier services for individuals and businesses worldwide.</p>
       <div class="footer-social">
         <a href="#" class="social-link" aria-label="Facebook">
