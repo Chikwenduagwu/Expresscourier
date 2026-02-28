@@ -6,6 +6,300 @@
   <title>Customer Chat — SwiftEx Admin</title>
   <link rel="stylesheet" href="../assets/css/admin.css" />
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Layout ── */
+    .chat-layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      height: calc(100vh - 60px);
+      overflow: hidden;
+    }
+
+    /* ── Sessions sidebar ── */
+    .chat-sessions {
+      border-right: 1px solid #e5e7eb;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .chat-sessions-header {
+      padding: 16px;
+      border-bottom: 1px solid #f3f4f6;
+      flex-shrink: 0;
+    }
+    .chat-sessions-header h3 {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #1f2937;
+      margin-bottom: 8px;
+    }
+    .sessions-filter { display: flex; gap: 4px; }
+    .filter-tab {
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: 6px;
+      border: 1.5px solid #e5e7eb;
+      color: #6b7280;
+      background: #fff;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .filter-tab.active { background: #4D148C; color: #fff; border-color: #4D148C; }
+    #sessionsList { flex: 1; overflow-y: auto; }
+    .session-placeholder {
+      padding: 24px;
+      text-align: center;
+      color: #9ca3af;
+      font-size: 0.85rem;
+    }
+
+    /* Session item */
+    .session-item {
+      display: flex;
+      flex-direction: column;
+      padding: 14px 16px;
+      border-bottom: 1px solid #f3f4f6;
+      cursor: pointer;
+      transition: background 0.15s;
+      position: relative;
+    }
+    .session-item:hover { background: #faf9ff; }
+    .session-item.active { background: #f3eeff; border-right: 3px solid #4D148C; }
+    .session-item.escalated { border-left: 3px solid #FF6200; }
+    .session-header { display: flex; justify-content: space-between; align-items: flex-start; }
+    .session-id {
+      font-family: 'Syne', monospace;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #4D148C;
+    }
+    .session-time { font-size: 0.7rem; color: #9ca3af; white-space: nowrap; margin-left: 8px; }
+    .session-preview {
+      font-size: 0.8rem;
+      color: #6b7280;
+      margin-top: 3px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 220px;
+    }
+    .session-tags { display: flex; gap: 4px; margin-top: 5px; flex-wrap: wrap; }
+    .session-tag {
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 4px;
+    }
+    .tag-escalated { background: #fff7ed; color: #c2410c; border: 1px solid #fed7aa; }
+    .tag-ai        { background: #f3eeff; color: #6b21a8; border: 1px solid #e9d5ff; }
+    .unread-dot {
+      width: 8px; height: 8px;
+      background: #FF6200;
+      border-radius: 50%;
+      position: absolute;
+      right: 16px; top: 16px;
+    }
+
+    /* ── Chat window ── */
+    .chat-window {
+      display: flex;
+      flex-direction: column;
+      background: #f9fafb;
+      overflow: hidden;
+      height: 100%;
+    }
+    .chat-empty {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #chatActive {
+      display: none;
+      flex-direction: column;
+      height: 100%;
+    }
+    .chat-window-header {
+      padding: 14px 20px;
+      background: #fff;
+      border-bottom: 1px solid #e5e7eb;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .chat-window-header h3 {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #1f2937;
+      margin-bottom: 2px;
+    }
+    .chat-tracking-link { font-size: 0.75rem; color: #9ca3af; }
+    .chat-tracking-link a { color: #4D148C; text-decoration: none; font-weight: 600; }
+
+    /* Messages area */
+    .chat-window-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-height: 0;
+    }
+    .chat-window-messages::-webkit-scrollbar { width: 4px; }
+    .chat-window-messages::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 2px; }
+
+    /* Message bubbles */
+    .agent-message {
+      display: flex;
+      flex-direction: column;
+      max-width: 72%;
+    }
+    .agent-message.agent-customer { align-self: flex-start; align-items: flex-start; }
+    .agent-message.agent-ai       { align-self: flex-start; align-items: flex-start; }
+    .agent-message.agent-me       { align-self: flex-end;   align-items: flex-end; }
+
+    .agent-label {
+      font-size: 0.68rem;
+      font-weight: 600;
+      color: #9ca3af;
+      margin-bottom: 3px;
+      padding: 0 4px;
+    }
+    .agent-bubble {
+      padding: 10px 14px;
+      border-radius: 14px;
+      font-size: 0.875rem;
+      line-height: 1.55;
+      word-break: break-word;
+      white-space: pre-wrap;       /* ← preserves line breaks */
+    }
+    .agent-message.agent-customer .agent-bubble {
+      background: #fff;
+      color: #1f2937;
+      border: 1.5px solid #e5e7eb;
+      border-bottom-left-radius: 4px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    }
+    .agent-message.agent-ai .agent-bubble {
+      background: #f0e8ff;
+      color: #3b0764;
+      border: 1.5px solid #e9d5ff;
+      border-bottom-left-radius: 4px;
+    }
+    .agent-message.agent-me .agent-bubble {
+      background: #4D148C;
+      color: #fff;
+      border-bottom-right-radius: 4px;
+    }
+    .agent-time {
+      font-size: 0.65rem;
+      color: #9ca3af;
+      margin-top: 3px;
+      padding: 0 4px;
+    }
+
+    /* Input row */
+    .chat-window-input {
+      display: flex;
+      gap: 8px;
+      padding: 14px 16px;
+      background: #fff;
+      border-top: 1px solid #e5e7eb;
+      flex-shrink: 0;
+    }
+    .chat-window-input input {
+      flex: 1;
+      padding: 10px 14px;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      font-family: 'DM Sans', sans-serif;
+      outline: none;
+      color: #1f2937;
+      transition: border-color 0.18s;
+    }
+    .chat-window-input input:focus { border-color: #4D148C; }
+    .chat-send-btn {
+      padding: 10px 20px;
+      background: #4D148C;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      font-weight: 700;
+      font-family: 'Syne', sans-serif;
+      cursor: pointer;
+      transition: background 0.18s;
+      white-space: nowrap;
+    }
+    .chat-send-btn:hover { background: #FF6200; }
+
+    /* Status pills */
+    .status-pill {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 100px;
+      letter-spacing: 0.03em;
+    }
+    .status-pending          { background:#fef3c7; color:#d97706; }
+    .status-picked_up        { background:#dbeafe; color:#1d4ed8; }
+    .status-in_transit       { background:#dbeafe; color:#1d4ed8; }
+    .status-out_for_delivery { background:#d1fae5; color:#059669; }
+    .status-delivered        { background:#d1fae5; color:#16a34a; }
+    .status-exception        { background:#fee2e2; color:#dc2626; }
+
+    /* Topbar extras */
+    .chat-live-badge {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #16a34a;
+      background: #dcfce7;
+      padding: 3px 10px;
+      border-radius: 100px;
+      letter-spacing: 0.04em;
+    }
+    .agent-status { font-size: 0.82rem; color: #6b7280; }
+    .agent-status strong { color: #4D148C; }
+    .btn-view-public {
+      font-size: 0.78rem;
+      padding: 6px 12px;
+      background: #fff;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 6px;
+      cursor: pointer;
+      color: #4b5563;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 600;
+      transition: all 0.15s;
+    }
+    .btn-view-public:hover { border-color: #4D148C; color: #4D148C; }
+
+    /* Mobile */
+    @media (max-width: 768px) {
+      .chat-layout {
+        grid-template-columns: 1fr;
+      }
+      .chat-sessions {
+        display: none;
+      }
+      .chat-sessions.show {
+        display: flex;
+        position: fixed;
+        inset: 60px 0 0 0;
+        z-index: 100;
+        width: 100%;
+      }
+    }
+  </style>
 </head>
 <body class="admin-body">
 
@@ -48,8 +342,8 @@
 
   <div class="chat-layout">
 
-    <!-- Sessions List -->
-    <div class="chat-sessions">
+    <!-- Sessions List (grouped by tracking_id) -->
+    <div class="chat-sessions" id="chatSessions">
       <div class="chat-sessions-header">
         <h3>Conversations</h3>
         <div class="sessions-filter">
@@ -71,21 +365,19 @@
         </div>
       </div>
 
-      <div id="chatActive" style="display:none;flex-direction:column;height:100%;">
+      <div id="chatActive" style="display:none">
         <div class="chat-window-header">
           <div>
             <h3 id="activeChatTitle">—</h3>
             <span class="chat-tracking-link" id="activeChatTrackingLink"></span>
           </div>
-          <div style="display:flex;gap:8px;align-items:center;">
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
             <span class="status-pill" id="activeChatStatus">—</span>
-            <button class="btn-view-public" onclick="viewPublicTracking()" id="viewTrackingBtn" style="font-size:0.78rem;padding:6px 12px;">View Tracking Page</button>
+            <button class="btn-view-public" onclick="viewPublicTracking()">View Tracking Page</button>
           </div>
         </div>
 
-        <div class="chat-window-messages" id="chatWindowMessages">
-          <!-- populated by JS -->
-        </div>
+        <div class="chat-window-messages" id="chatWindowMessages"></div>
 
         <div class="chat-window-input">
           <input type="text" id="agentInput" placeholder="Type your reply as agent…" autocomplete="off" />
@@ -97,64 +389,14 @@
   </div>
 </div>
 
-<style>
-.chat-live-badge {
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: #16a34a;
-  background: #dcfce7;
-  padding: 3px 10px;
-  border-radius: 100px;
-  letter-spacing: 0.04em;
-}
-.agent-status { font-size: 0.82rem; color: #6b7280; }
-.agent-status strong { color: #4D148C; }
-.sessions-filter { display: flex; gap: 4px; margin-top: 8px; }
-.filter-tab {
-  font-size: 0.75rem;
-  font-weight: 600;
-  padding: 4px 12px;
-  border-radius: 6px;
-  border: 1.5px solid #e5e7eb;
-  color: #6b7280;
-  background: #fff;
-  transition: all 0.15s;
-}
-.filter-tab.active { background: #4D148C; color: #fff; border-color: #4D148C; }
-.session-placeholder { padding: 24px; text-align: center; color: #9ca3af; font-size: 0.85rem; }
-.session-item {
-  display: flex;
-  flex-direction: column;
-  padding: 14px 16px;
-  border-bottom: 1px solid #f3f4f6;
-  cursor: pointer;
-  transition: background 0.15s;
-  position: relative;
-}
-.session-item:hover { background: #faf9ff; }
-.session-item.active { background: #f3eeff; border-right: 3px solid #4D148C; }
-.session-item.escalated { border-left: 3px solid #FF6200; }
-.session-header { display: flex; justify-content: space-between; align-items: flex-start; }
-.session-id { font-family: 'Syne', monospace; font-size: 0.8rem; font-weight: 700; color: #4D148C; }
-.session-time { font-size: 0.7rem; color: #9ca3af; white-space: nowrap; margin-left: 8px; }
-.session-preview { font-size: 0.8rem; color: #6b7280; margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 220px; }
-.session-tags { display: flex; gap: 4px; margin-top: 5px; }
-.session-tag { font-size: 0.65rem; font-weight: 700; padding: 2px 7px; border-radius: 4px; }
-.tag-escalated { background: #fff7ed; color: #c2410c; border: 1px solid #fed7aa; }
-.tag-ai { background: #f3eeff; color: #6b21a8; border: 1px solid #e9d5ff; }
-.unread-dot { width: 8px; height: 8px; background: #FF6200; border-radius: 50%; position: absolute; right: 16px; top: 16px; }
-.chat-tracking-link { font-size: 0.75rem; color: #9ca3af; }
-.chat-tracking-link a { color: #4D148C; }
-</style>
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="../assets/js/config.js"></script>
 <script>
-let allSessions = [];
-let activeSession = null;
-let agentEmail = '';
-let realtimeChannel = null;
-let messagesChannel = null;
+let allSessions   = [];
+let activeTracking = null;   // tracking_id of open conversation
+let agentEmail    = '';
+let realtimeChannel  = null;
+let messagesChannel  = null;
 let currentFilter = 'all';
 
 // ── Auth guard + boot ──
@@ -163,49 +405,54 @@ let currentFilter = 'all';
   if (!session) { window.location.href = 'index.html'; return; }
   agentEmail = session.user.email;
   document.getElementById('agentEmail').textContent = agentEmail;
-  loadSessions();
+  await loadSessions();
   subscribeToNewMessages();
 })();
 
-// ── Load all chat sessions ──
+// ── Load sessions grouped by tracking_id ──
 async function loadSessions() {
-  const { data: msgs } = await supabaseClient
+  // Fetch all messages, ordered newest first
+  const { data: msgs, error } = await supabaseClient
     .from('chat_messages')
-    .select('tracking_id, session_id, role, content, is_human_agent, created_at')
+    .select('tracking_id, role, content, is_human_agent, created_at')
     .order('created_at', { ascending: false });
 
-  if (!msgs) return;
+  if (error || !msgs) return;
 
-  // Group by session_id
-  const sessionMap = {};
+  // Group by tracking_id (one conversation per tracking code)
+  const map = {};
   msgs.forEach(m => {
-    if (!sessionMap[m.session_id]) {
-      sessionMap[m.session_id] = {
-        session_id: m.session_id,
-        tracking_id: m.tracking_id,
-        last_message: m.content,
-        last_time: m.created_at,
-        escalated: false,
+    const tid = m.tracking_id;
+    if (!tid) return;
+    if (!map[tid]) {
+      map[tid] = {
+        tracking_id:   tid,
+        last_message:  m.content,
+        last_time:     m.created_at,
+        escalated:     false,
         message_count: 0,
-        has_unread: false,
       };
     }
-    sessionMap[m.session_id].message_count++;
-    if (m.content === '[ESCALATED TO HUMAN]' || m.is_human_agent) {
-      sessionMap[m.session_id].escalated = true;
+    map[tid].message_count++;
+    // Mark escalated if any message was from human agent or had escalation content
+    if (m.is_human_agent || m.content === '[ESCALATED TO HUMAN]') {
+      map[tid].escalated = true;
+    }
+    // Use the most recent non-escalation message as preview
+    if (m.content !== '[ESCALATED TO HUMAN]' && map[tid].last_message === '[ESCALATED TO HUMAN]') {
+      map[tid].last_message = m.content;
     }
   });
 
-  allSessions = Object.values(sessionMap).sort((a, b) => new Date(b.last_time) - new Date(a.last_time));
-  renderSessions(allSessions);
+  allSessions = Object.values(map).sort((a, b) => new Date(b.last_time) - new Date(a.last_time));
+  renderSessions(currentFilter === 'escalated' ? allSessions.filter(s => s.escalated) : allSessions);
 }
 
 function filterSessions(type, btn) {
   currentFilter = type;
   document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
   btn.classList.add('active');
-  const filtered = type === 'escalated' ? allSessions.filter(s => s.escalated) : allSessions;
-  renderSessions(filtered);
+  renderSessions(type === 'escalated' ? allSessions.filter(s => s.escalated) : allSessions);
 }
 
 function renderSessions(sessions) {
@@ -215,71 +462,103 @@ function renderSessions(sessions) {
     return;
   }
   list.innerHTML = sessions.map(s => `
-    <div class="session-item ${s.escalated ? 'escalated' : ''} ${activeSession?.session_id === s.session_id ? 'active' : ''}"
-         onclick="openSession('${s.session_id}', '${s.tracking_id}')">
+    <div class="session-item ${s.escalated ? 'escalated' : ''} ${activeTracking === s.tracking_id ? 'active' : ''}"
+         onclick="openSession('${s.tracking_id}')">
       <div class="session-header">
         <span class="session-id">${s.tracking_id}</span>
         <span class="session-time">${timeAgo(s.last_time)}</span>
       </div>
       <div class="session-preview">${escapeHtml(s.last_message || '—')}</div>
       <div class="session-tags">
-        ${s.escalated ? '<span class="session-tag tag-escalated">🧑‍💼 Human needed</span>' : '<span class="session-tag tag-ai">🤖 AI chat</span>'}
+        ${s.escalated
+          ? '<span class="session-tag tag-escalated">🧑‍💼 Human needed</span>'
+          : '<span class="session-tag tag-ai">🤖 AI chat</span>'}
+        <span class="session-tag tag-ai" style="background:#f0fdf4;color:#166534;border-color:#bbf7d0">${s.message_count} msgs</span>
       </div>
-      ${s.has_unread ? '<div class="unread-dot"></div>' : ''}
     </div>
   `).join('');
 }
 
-// ── Open a session ──
-async function openSession(sessionId, trackingId) {
-  activeSession = { session_id: sessionId, tracking_id: trackingId };
-  document.getElementById('chatEmpty').style.display = 'none';
+// ── Open a conversation by tracking_id ──
+async function openSession(trackingId) {
+  activeTracking = trackingId;
+
+  document.getElementById('chatEmpty').style.display  = 'none';
   document.getElementById('chatActive').style.display = 'flex';
-  document.getElementById('activeChatTitle').textContent = `Session: ${sessionId.slice(0,18)}…`;
+  document.getElementById('activeChatTitle').textContent = `Tracking: ${trackingId}`;
   document.getElementById('activeChatTrackingLink').innerHTML =
-    `Tracking ID: <a href="../track.html?id=${trackingId}" target="_blank">${trackingId}</a>`;
-  document.getElementById('viewTrackingBtn').onclick = () => window.open(`../track.html?id=${trackingId}`, '_blank');
+    `<a href="../track.html?id=${trackingId}" target="_blank">View public tracking page →</a>`;
+
+  // Highlight active session in list
+  document.querySelectorAll('.session-item').forEach(el => el.classList.remove('active'));
+  event?.currentTarget?.classList.add('active');
 
   // Fetch shipment status
-  const { data: ship } = await supabaseClient.from('shipments').select('status').eq('tracking_id', trackingId).single();
+  const { data: ship } = await supabaseClient
+    .from('shipments')
+    .select('status, recipient_name')
+    .eq('tracking_id', trackingId)
+    .single();
+
   if (ship) {
     const pill = document.getElementById('activeChatStatus');
     pill.className = `status-pill status-${ship.status}`;
     pill.textContent = statusLabel(ship.status);
+    if (ship.recipient_name) {
+      document.getElementById('activeChatTitle').textContent =
+        `${ship.recipient_name} — ${trackingId}`;
+    }
   }
 
-  // Mark session as active in UI
-  document.querySelectorAll('.session-item').forEach(el => el.classList.remove('active'));
-  event?.currentTarget?.classList.add('active');
-
-  loadMessages(sessionId);
-  subscribeMessages(sessionId);
+  loadMessages(trackingId);
+  subscribeMessages(trackingId);
 }
 
-async function loadMessages(sessionId) {
-  const { data: msgs } = await supabaseClient
+// ── Load all messages for a tracking_id ──
+async function loadMessages(trackingId) {
+  const { data: msgs, error } = await supabaseClient
     .from('chat_messages')
     .select('*')
-    .eq('session_id', sessionId)
+    .eq('tracking_id', trackingId)
     .order('created_at', { ascending: true });
 
   const container = document.getElementById('chatWindowMessages');
   container.innerHTML = '';
 
-  (msgs || []).forEach(m => appendAgentMessage(m));
+  if (error || !msgs) {
+    container.innerHTML = '<p style="color:#9ca3af;padding:20px;font-size:0.85rem">Failed to load messages.</p>';
+    return;
+  }
+
+  if (msgs.length === 0) {
+    container.innerHTML = '<p style="color:#9ca3af;padding:20px;font-size:0.85rem;text-align:center">No messages yet for this tracking ID.</p>';
+    return;
+  }
+
+  msgs.forEach(m => appendMessage(m));
   container.scrollTop = container.scrollHeight;
 }
 
-function appendAgentMessage(m) {
-  const container = document.getElementById('chatWindowMessages');
-  const isMe = m.is_human_agent;
-  const isAI = m.role === 'assistant';
-  const isUser = m.role === 'user';
-
+// ── Render a single message bubble ──
+function appendMessage(m) {
+  // Skip internal escalation marker
   if (m.content === '[ESCALATED TO HUMAN]') return;
 
-  const cls = isMe ? 'agent-me' : isAI ? 'agent-ai' : 'agent-customer';
-  const label = isMe ? '🧑‍💼 You (Agent)' : isAI ? '🤖 AI Assistant' : '👤 Customer';
+  const container = document.getElementById('chatWindowMessages');
+
+  // Determine bubble style based on role
+  let cls, label;
+  if (m.is_human_agent || m.role === 'agent') {
+    cls   = 'agent-me';
+    label = `🧑‍💼 ${m.agent_name || 'Agent'}`;
+  } else if (m.role === 'assistant' || m.role === 'bot') {
+    cls   = 'agent-ai';
+    label = '🤖 AI Assistant';
+  } else {
+    // role === 'user' — the customer
+    cls   = 'agent-customer';
+    label = '👤 Customer';
+  }
 
   const div = document.createElement('div');
   div.className = `agent-message ${cls}`;
@@ -295,77 +574,86 @@ function appendAgentMessage(m) {
 // ── Send agent reply ──
 async function sendAgentMessage() {
   const input = document.getElementById('agentInput');
-  const text = input.value.trim();
-  if (!text || !activeSession) return;
+  const text  = input.value.trim();
+  if (!text || !activeTracking) return;
   input.value = '';
 
   const { error } = await supabaseClient.from('chat_messages').insert({
-    tracking_id: activeSession.tracking_id,
-    session_id: activeSession.session_id,
-    role: 'agent',
-    content: text,
+    tracking_id:    activeTracking,
+    session_id:     null,            // no longer required
+    role:           'agent',
+    content:        text,
     is_human_agent: true,
-    agent_name: agentEmail,
+    agent_name:     agentEmail,
   });
 
   if (error) console.error('Send error:', error);
+  // Message will appear via realtime subscription
 }
 
-// ── Subscribe to new messages in active session ──
-function subscribeMessages(sessionId) {
+// ── Realtime: new messages in active conversation ──
+function subscribeMessages(trackingId) {
   if (messagesChannel) supabaseClient.removeChannel(messagesChannel);
   messagesChannel = supabaseClient
-    .channel(`agent-chat-${sessionId}`)
+    .channel(`msgs-${trackingId}`)
     .on('postgres_changes', {
       event: 'INSERT',
       schema: 'public',
       table: 'chat_messages',
-      filter: `session_id=eq.${sessionId}`
+      filter: `tracking_id=eq.${trackingId}`
     }, (payload) => {
-      appendAgentMessage(payload.new);
+      appendMessage(payload.new);
     })
     .subscribe();
 }
 
-// ── Subscribe to any new messages (for session list refresh) ──
+// ── Realtime: refresh sessions list when any new message arrives ──
 function subscribeToNewMessages() {
   realtimeChannel = supabaseClient
-    .channel('agent-sessions')
+    .channel('all-chat-messages')
     .on('postgres_changes', {
       event: 'INSERT',
       schema: 'public',
       table: 'chat_messages',
-    }, () => {
-      loadSessions();
-    })
+    }, () => loadSessions())
     .subscribe();
 }
 
 // ── Helpers ──
 function viewPublicTracking() {
-  if (activeSession) window.open(`../track.html?id=${activeSession.tracking_id}`, '_blank');
+  if (activeTracking) window.open(`../track.html?id=${activeTracking}`, '_blank');
 }
 function statusLabel(s) {
-  const m={pending:'Pending',picked_up:'Picked Up',in_transit:'In Transit',out_for_delivery:'Out for Delivery',delivered:'Delivered',exception:'Exception'};
+  const m = {
+    pending:'Pending', picked_up:'Picked Up', in_transit:'In Transit',
+    out_for_delivery:'Out for Delivery', delivered:'Delivered', exception:'Exception'
+  };
   return m[s] || s;
 }
 function timeAgo(ts) {
   const diff = Date.now() - new Date(ts);
   const mins = Math.floor(diff / 60000);
-  if (mins < 1) return 'just now';
+  if (mins < 1)  return 'just now';
   if (mins < 60) return `${mins}m ago`;
   const hrs = Math.floor(mins / 60);
-  if (hrs < 24) return `${hrs}h ago`;
+  if (hrs < 24)  return `${hrs}h ago`;
   return `${Math.floor(hrs/24)}d ago`;
 }
 function formatTime(ts) {
   return new Date(ts).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
 }
 function escapeHtml(str) {
-  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  return String(str)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
-function toggleSidebar() { document.getElementById('sidebar').classList.toggle('collapsed'); }
-async function doLogout() { await supabaseClient.auth.signOut(); window.location.href = 'index.html'; }
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('collapsed');
+}
+async function doLogout() {
+  await supabaseClient.auth.signOut();
+  window.location.href = 'index.html';
+}
 
 // Enter to send
 document.getElementById('agentInput')?.addEventListener('keydown', e => {
