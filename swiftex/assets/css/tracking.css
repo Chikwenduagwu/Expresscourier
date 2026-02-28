@@ -29,7 +29,8 @@ input { font-family: inherit; outline: none; }
   gap: 16px;
 }
 .logo-text {
-  font-family: 'Syne', sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 
+             'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   font-size: 1.5rem;
   font-weight: 800;
   color: #fff;
@@ -58,7 +59,8 @@ input { font-family: inherit; outline: none; }
 .nav-search-wrap button {
   background: #FF6200;
   color: #fff;
-  font-family: 'Syne', sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 
+             'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   font-size: 0.78rem;
   font-weight: 700;
   padding: 0 18px;
@@ -246,7 +248,8 @@ input { font-family: inherit; outline: none; }
   flex-shrink: 0;
 }
 .status-text {
-  font-family: 'Syne', sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 
+             'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   font-size: 1.4rem;
   font-weight: 800;
   color: #1f2937;
@@ -328,7 +331,8 @@ input { font-family: inherit; outline: none; }
 
 /* ── SECTION LABEL ── */
 .section-label {
-  font-family: 'Syne', sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 
+             'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   font-size: 0.72rem;
   font-weight: 800;
   letter-spacing: 0.1em;
@@ -416,7 +420,8 @@ input { font-family: inherit; outline: none; }
   border: 1px solid #d8b4fe;
 }
 .timeline-title {
-  font-family: 'Syne', sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 
+             'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   font-size: 0.8rem;
   font-weight: 800;
   letter-spacing: 0.08em;
@@ -548,7 +553,8 @@ input { font-family: inherit; outline: none; }
 }
 .promo-icon svg { width: 28px; height: 28px; color: #fff; }
 .promo-card h4 {
-  font-family: 'Syne', sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 
+             'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   font-size: 0.95rem;
   font-weight: 700;
   color: #1f2937;
@@ -593,7 +599,8 @@ input { font-family: inherit; outline: none; }
   gap: 10px;
   background: #4D148C;
   color: #fff;
-  font-family: 'Syne', sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 
+             'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   font-size: 0.85rem;
   font-weight: 700;
   padding: 14px 22px;
