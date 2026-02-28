@@ -1,73 +1,114 @@
-// api/chat.js — Fireworks AI proxy (Vercel Serverless Function)
+// api/chat.js — Persistent chat with Supabase + Fireworks AI
+// Saves every message (user + bot) to chat_messages table
+// Tagged by shipment_id (tracking code) so admin can see per-shipment history
+
 const { createClient } = require('@supabase/supabase-js');
 
-module.exports = async function handler(req, res) {
-  if (req.method === 'OPTIONS') {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-    return res.status(200).end();
-  }
+const supabase = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_KEY
+);
+
+module.exports = async (req, res) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  const { message, trackingId, history = [], sessionId } = req.body;
-  if (!message) return res.status(400).json({ error: 'message is required' });
-
-  // Fetch shipment context
-  let shipmentContext = `Tracking ID: ${trackingId || 'unknown'}`;
   try {
-    const sb = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
-    const [{ data: shipment }, { data: events }] = await Promise.all([
-      sb.from('shipments').select('*').eq('tracking_id', trackingId).single(),
-      sb.from('tracking_events').select('*').eq('tracking_id', trackingId).order('timestamp', { ascending: false }).limit(5),
-    ]);
-    if (shipment) {
-      shipmentContext = `Shipment: ${shipment.tracking_id} | Status: ${shipment.status} | From: ${shipment.origin} | To: ${shipment.destination} | Est. Delivery: ${shipment.estimated_delivery || 'Pending'}\nEvents: ${events?.map(e => `${e.title}${e.location ? ' at ' + e.location : ''}`).join(', ') || 'None'}`;
+    const { message, shipmentId } = req.body;
+
+    if (!message || !shipmentId) {
+      return res.status(400).json({ error: 'message and shipmentId are required' });
     }
-  } catch (err) { console.error('[Chat] Context error:', err.message); }
 
-  const systemPrompt = `You are a professional customer support agent for ${process.env.BRAND_NAME || 'SwiftEx'} courier. Be warm, concise, 2-4 sentences max. ${shipmentContext}. If customer wants human agent, include exactly ESCALATE_TO_HUMAN in response. Never invent tracking data.`;
+    const trackingId = shipmentId.toUpperCase().trim();
 
-  const messages = [
-    { role: 'system', content: systemPrompt },
-    ...history.slice(-8).map(m => ({ role: m.role === 'assistant' ? 'assistant' : 'user', content: m.content })),
-    { role: 'user', content: message },
-  ];
+    // 1. Fetch shipment data
+    const { data: shipment, error: shipmentError } = await supabase
+      .from('shipments')
+      .select('*')
+      .eq('id', trackingId)
+      .single();
 
-  try {
-    const fireworksRes = await fetch('https://api.fireworks.ai/inference/v1/chat/completions', {
+    if (shipmentError || !shipment) {
+      await saveMessage(trackingId, 'user', message);
+      const reply = `I couldn't find a shipment with tracking ID "${trackingId}". Please double-check your tracking code or contact support.`;
+      await saveMessage(trackingId, 'bot', reply);
+      return res.status(200).json({ reply });
+    }
+
+    // 2. Load recent chat history (last 10 messages for context)
+    const { data: history } = await supabase
+      .from('chat_messages')
+      .select('role, message')
+      .eq('shipment_id', trackingId)
+      .order('created_at', { ascending: false })
+      .limit(10);
+
+    const recentHistory = (history || []).reverse();
+
+    // 3. Save the incoming user message
+    await saveMessage(trackingId, 'user', message);
+
+    // 4. Build system prompt with shipment context
+    const systemPrompt = `You are a helpful customer support agent for SwiftEx, a courier service.
+You are helping a customer about their specific shipment.
+
+SHIPMENT DETAILS:
+- Tracking ID: ${shipment.id}
+- Customer: ${shipment.customer_name}
+- Status: ${shipment.status}
+- Origin: ${shipment.origin}
+- Destination: ${shipment.destination}
+- Weight: ${shipment.weight ? shipment.weight + 'kg' : 'Not specified'}
+- Description: ${shipment.description || 'Not specified'}
+- Estimated Delivery: ${shipment.estimated_delivery || 'To be confirmed'}
+- Created: ${new Date(shipment.created_at).toLocaleDateString()}
+
+Be concise, helpful, and friendly. If asked something you don't know, say you will escalate to a human agent. Do not make up tracking information.`;
+
+    // 5. Call Fireworks AI (OpenAI-compatible endpoint)
+    const aiResponse = await fetch('https://api.fireworks.ai/inference/v1/chat/completions', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${process.env.FIREWORKS_API_KEY}` },
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${process.env.FIREWORKS_API_KEY}`
+      },
       body: JSON.stringify({
-        model: process.env.FIREWORKS_MODEL || 'accounts/fireworks/models/llama-v3p1-70b-instruct',
-        messages,
-        max_tokens: 400,
-        temperature: 0.7,
-        stream: false,
-      }),
+        model: 'accounts/fireworks/models/llama-v3p1-8b-instruct',
+        max_tokens: 512,
+        messages: [
+          { role: 'system', content: systemPrompt },
+          ...recentHistory.map(m => ({
+            role: m.role === 'user' ? 'user' : 'assistant',
+            content: m.message
+          })),
+          { role: 'user', content: message }
+        ]
+      })
     });
 
-    if (!fireworksRes.ok) {
-      console.error('[Chat] Fireworks error:', await fireworksRes.text());
-      return res.status(200).json({ reply: "I'm having trouble connecting. Please try again or request a human agent." });
-    }
+    const aiData = await aiResponse.json();
+    const reply = aiData?.choices?.[0]?.message?.content
+      || "I'm having trouble responding right now. Please try again in a moment.";
 
-    const data = await fireworksRes.json();
-    const reply = data.choices?.[0]?.message?.content || "Sorry, I couldn't generate a response.";
-
-    if (trackingId && sessionId) {
-      try {
-        const sb = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
-        await sb.from('chat_messages').insert([
-          { tracking_id: trackingId, session_id: sessionId, role: 'user', content: message, is_human_agent: false },
-          { tracking_id: trackingId, session_id: sessionId, role: 'assistant', content: reply, is_human_agent: false },
-        ]);
-      } catch (dbErr) { console.error('[Chat] DB error:', dbErr.message); }
-    }
+    // 6. Save bot reply
+    await saveMessage(trackingId, 'bot', reply);
 
     return res.status(200).json({ reply });
+
   } catch (err) {
-    console.error('[Chat] Error:', err.message);
-    return res.status(200).json({ reply: "I'm having trouble right now. Please try again shortly." });
+    console.error('Chat API error:', err);
+    return res.status(500).json({ error: 'Internal server error', reply: 'Something went wrong. Please try again.' });
   }
 };
+
+async function saveMessage(shipmentId, role, message) {
+  const { error } = await supabase
+    .from('chat_messages')
+    .insert({ shipment_id: shipmentId, role, message });
+  if (error) console.error('Failed to save message:', error);
+}
