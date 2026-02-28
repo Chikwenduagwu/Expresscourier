@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Standard Shipping — SwiftEx</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>/* shared-base — embedded in each page's <style> tag */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --purple: #4D148C;
+  --orange: #FF6200;
+  --navy: #1a2e6e;
+  --text: #1f2937;
+  --muted: #6b7280;
+  --border: #e5e7eb;
+  --bg: #f9fafb;
+  --bold-font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+body { font-family: 'DM Sans', sans-serif; color: var(--text); background: #fff; line-height: 1.65; }
+a { text-decoration: none; color: inherit; }
+
+/* NAVBAR */
+.navbar { background: var(--purple); position: sticky; top: 0; z-index: 200; box-shadow: 0 2px 24px rgba(77,20,140,0.35); }
+.navbar-inner { max-width: 1280px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; height: 68px; }
+.logo-text { font-family: 'Syne', sans-serif; font-size: 1.65rem; font-weight: 500; color: #fff; letter-spacing: -1px; }
+.logo-text span { color: var(--orange); }
+.navbar-links { display: flex; gap: 4px; }
+.nav-link { color: rgba(255,255,255,0.82); font-size: 0.875rem; font-weight: 500; padding: 8px 16px; border-radius: 6px; transition: all 0.18s; }
+.nav-link:hover { color: #fff; background: rgba(255,255,255,0.12); }
+.hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 6px; }
+.hamburger span { display: block; width: 24px; height: 2px; background: #fff; border-radius: 2px; }
+.mobile-menu { display: none; flex-direction: column; background: #3a0f6b; border-top: 1px solid rgba(255,255,255,0.1); }
+.mobile-menu.open { display: flex; }
+.mobile-link { color: rgba(255,255,255,0.85); padding: 14px 24px; font-size: 0.95rem; font-weight: 500; border-bottom: 1px solid rgba(255,255,255,0.07); }
+.mobile-link:hover { background: rgba(255,255,255,0.08); color: #fff; }
+@media (max-width: 900px) { .navbar-links { display: none; } .hamburger { display: flex; } }
+
+/* PAGE HERO */
+.page-hero { background: linear-gradient(135deg, var(--navy) 0%, var(--purple) 100%); padding: 72px 24px 64px; text-align: center; position: relative; overflow: hidden; }
+.page-hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 70% 50%, rgba(255,98,0,0.15), transparent 60%); }
+.page-hero h1 { font-family: var(--bold-font); font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; color: #fff; margin-bottom: 14px; position: relative; }
+.page-hero p { font-size: 1.05rem; color: rgba(255,255,255,0.75); max-width: 560px; margin: 0 auto; line-height: 1.65; position: relative; }
+.page-hero .breadcrumb { font-size: 0.8rem; color: rgba(255,255,255,0.5); margin-bottom: 16px; position: relative; }
+.page-hero .breadcrumb a { color: rgba(255,255,255,0.7); }
+.page-hero .breadcrumb a:hover { color: #fff; }
+
+/* CONTENT */
+.page-content { max-width: 820px; margin: 0 auto; padding: 64px 24px 100px; }
+.page-content h2 { font-family: var(--bold-font); font-size: clamp(1.35rem, 3vw, 1.75rem); font-weight: 800; color: var(--text); margin: 48px 0 16px; line-height: 1.25; }
+.page-content h2:first-child { margin-top: 0; }
+.page-content h3 { font-family: var(--bold-font); font-size: 1.1rem; font-weight: 700; color: var(--text); margin: 32px 0 12px; }
+.page-content p { font-size: 1rem; color: #374151; margin-bottom: 18px; line-height: 1.8; }
+.page-content ul, .page-content ol { padding-left: 24px; margin-bottom: 20px; }
+.page-content ul li, .page-content ol li { margin-bottom: 10px; font-size: 0.97rem; color: #374151; line-height: 1.7; }
+.page-content strong { font-family: var(--bold-font); font-weight: 700; color: var(--text); }
+.page-content a { color: var(--purple); font-weight: 500; }
+.page-content a:hover { text-decoration: underline; }
+.page-content hr { border: none; border-top: 1px solid var(--border); margin: 48px 0; }
+
+/* Info box */
+.info-box { background: #f0e8ff; border-left: 4px solid var(--purple); border-radius: 0 8px 8px 0; padding: 18px 20px; margin: 28px 0; }
+.info-box p { margin: 0; color: #3b0764; font-size: 0.92rem; }
+.info-box strong { font-family: var(--bold-font); }
+.warning-box { background: #fff7ed; border-left: 4px solid var(--orange); border-radius: 0 8px 8px 0; padding: 18px 20px; margin: 28px 0; }
+.warning-box p { margin: 0; color: #7c2d12; font-size: 0.92rem; }
+
+/* Section divider label */
+.section-label { font-family: var(--bold-font); font-size: 0.68rem; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: var(--orange); margin-bottom: 10px; }
+
+/* Table */
+.data-table { width: 100%; border-collapse: collapse; margin: 24px 0; font-size: 0.9rem; }
+.data-table th { font-family: var(--bold-font); font-weight: 700; text-align: left; padding: 12px 16px; background: var(--bg); border-bottom: 2px solid var(--border); color: var(--text); font-size: 0.82rem; }
+.data-table td { padding: 12px 16px; border-bottom: 1px solid var(--border); color: #374151; vertical-align: top; }
+.data-table tr:last-child td { border-bottom: none; }
+.data-table tr:hover td { background: #faf9ff; }
+
+/* Footer */
+.footer-simple { background: #f4f4f5; padding: 32px 24px; text-align: center; color: var(--muted); font-size: 0.82rem; border-top: 1px solid var(--border); }
+.footer-simple a { color: var(--purple); }
+</style>
+</head>
+<body>
+<nav class="navbar"><div class="navbar-inner"><a href="index.html" class="logo-text">EXPRESS<span>CO</span></a><div class="navbar-links"><a href="index.html#services" class="nav-link">Services</a><a href="index.html#track-section" class="nav-link">Track</a><a href="about.html" class="nav-link">About</a><a href="index.html#contact" class="nav-link">Contact</a></div><div style="display:flex;align-items:center;gap:12px"><button class="hamburger" id="hamburger"><span></span><span></span><span></span></button></div></div><div class="mobile-menu" id="mobileMenu"><a href="index.html#services" class="mobile-link">Services</a><a href="index.html#track-section" class="mobile-link">Track</a><a href="about.html" class="mobile-link">About</a><a href="index.html#contact" class="mobile-link">Contact</a></div></nav>
+<div class="page-hero">
+  <p class="breadcrumb"><a href="index.html">Home</a> › Services</p>
+  <h1>Standard Shipping</h1>
+  <p>Reliable, affordable delivery for parcels and letters — domestically and internationally.</p>
+</div>
+<div class="page-content">
+
+  <div class="section-label">Overview</div>
+  <h2>What is Standard Shipping?</h2>
+  <p>SwiftEx Standard Shipping is our core domestic and international delivery service, designed to provide dependable, cost-effective logistics for individuals and businesses. Whether you're sending a birthday gift across town or a product to a customer on the other side of the world, our Standard service handles it with the same care and professionalism you expect.</p>
+  <p>Standard Shipping is best suited for non-urgent deliveries where cost efficiency matters more than speed. It uses established road and air freight networks to keep prices competitive without compromising on reliability or tracking transparency.</p>
+
+  <div class="info-box"><p><strong>Tracking included on all shipments.</strong> Every Standard Shipping parcel comes with full end-to-end tracking and real-time status updates at no extra charge.</p></div>
+
+  <hr />
+
+  <div class="section-label">Delivery Timeframes</div>
+  <h2>How Long Does It Take?</h2>
+  <p>Delivery times for Standard Shipping depend on the origin, destination, and parcel type. Below are our current estimated transit times by region:</p>
+
+  <table class="data-table">
+    <thead><tr><th>Route</th><th>Estimated Transit</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Domestic (same country)</strong></td><td>2–4 business days</td><td>Major cities typically 2 days</td></tr>
+      <tr><td><strong>Europe to Europe</strong></td><td>3–5 business days</td><td>Cross-border customs may add 1 day</td></tr>
+      <tr><td><strong>Europe to Africa</strong></td><td>6–9 business days</td><td>Customs clearance included</td></tr>
+      <tr><td><strong>Europe to Americas</strong></td><td>7–12 business days</td><td>Air freight via partner hubs</td></tr>
+      <tr><td><strong>Europe to Asia Pacific</strong></td><td>8–14 business days</td><td>Varies by specific country</td></tr>
+      <tr><td><strong>Worldwide (rest of world)</strong></td><td>10–18 business days</td><td>Contact us for specific routes</td></tr>
+    </tbody>
+  </table>
+
+  <div class="warning-box"><p><strong>Please note:</strong> Transit times are estimates and begin from the day your parcel is collected or dropped off — not the day you create the shipment. Public holidays, adverse weather, and customs delays can affect these estimates.</p></div>
+
+  <hr />
+
+  <div class="section-label">Pricing</div>
+  <h2>How Much Does It Cost?</h2>
+  <p>Standard Shipping is priced based on three main factors: the destination zone, the weight of your parcel, and its dimensions. For large, light items, we apply volumetric weight (length × width × height ÷ 5000) — whichever is greater between actual and volumetric weight is what you're charged for.</p>
+  <p>Use our <a href="index.html">Rate Calculator</a> on the homepage for an instant, accurate quote for your specific shipment. Prices start from as little as £3.99 for domestic letters and scale transparently based on your parcel's characteristics.</p>
+
+  <h3>What's Included in the Price?</h3>
+  <ul>
+    <li>Full end-to-end parcel tracking</li>
+    <li>Up to £50 standard liability cover (upgradeable)</li>
+    <li>Delivery attempt notifications via email</li>
+    <li>Up to 3 delivery attempts</li>
+    <li>7-day parcel hold at service centre after failed delivery</li>
+    <li>Customer support access throughout transit</li>
+  </ul>
+
+  <h3>Optional Add-ons</h3>
+  <ul>
+    <li><strong>Enhanced Liability Cover</strong> — upgrade to £500, £1,000, or £2,500 protection</li>
+    <li><strong>Signature on Delivery</strong> — require recipient signature for confirmation</li>
+    <li><strong>Saturday Delivery</strong> — available on domestic routes for an additional fee</li>
+    <li><strong>Declared Value</strong> — declare the full item value for customs and insurance purposes</li>
+  </ul>
+
+  <hr />
+
+  <div class="section-label">Size &amp; Weight</div>
+  <h2>Parcel Size &amp; Weight Limits</h2>
+  <p>Standard Shipping accommodates most everyday parcel sizes. Oversized or heavy items may need to be shipped as freight — contact us for a freight quote.</p>
+
+  <table class="data-table">
+    <thead><tr><th>Parameter</th><th>Maximum</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Weight</strong></td><td>30 kg per parcel</td></tr>
+      <tr><td><strong>Length</strong></td><td>120 cm</td></tr>
+      <tr><td><strong>Width</strong></td><td>60 cm</td></tr>
+      <tr><td><strong>Height</strong></td><td>60 cm</td></tr>
+      <tr><td><strong>Girth</strong> (2× width + 2× height)</td><td>240 cm</td></tr>
+      <tr><td><strong>Minimum dimensions</strong></td><td>10 cm × 7 cm × 1 cm</td></tr>
+    </tbody>
+  </table>
+
+  <hr />
+
+  <div class="section-label">Packaging</div>
+  <h2>Packaging Requirements</h2>
+  <p>Proper packaging is essential for your parcel to arrive safely. SwiftEx is not responsible for damage caused by inadequate packaging. Follow these guidelines to protect your items:</p>
+
+  <h3>Choosing the Right Box</h3>
+  <p>Use a rigid, double-walled corrugated cardboard box whenever possible. The box should be slightly larger than your items to allow for cushioning material. Avoid reusing old boxes that may have weakened over time — compromised walls are a leading cause of damage in transit.</p>
+
+  <h3>Cushioning and Protection</h3>
+  <p>Wrap individual items in bubble wrap, foam, or packing paper. Place heavier items at the bottom of the box and lighter ones on top. Fill any empty space with loose fill, crumpled paper, or air pillows to prevent movement inside the box. The goal is for the contents to be completely immobile when the box is sealed and shaken gently.</p>
+
+  <h3>Sealing and Labelling</h3>
+  <p>Seal all openings and edges of the box with reinforced packing tape at least 48mm wide. Do not use standard sellotape, masking tape, or string — these are not adequate for transit. Apply your shipping label clearly on the largest flat surface, ensuring the barcode is not folded, covered, or obscured.</p>
+
+  <div class="info-box"><p><strong>Pro tip:</strong> Always include a secondary label inside the parcel with both sender and recipient address details. If the outer label is damaged or lost in transit, this inner label can help reunite your parcel.</p></div>
+
+  <hr />
+
+  <div class="section-label">Prohibited Items</div>
+  <h2>Items We Cannot Ship</h2>
+  <p>The following items are prohibited from Standard Shipping under all circumstances. Attempting to ship prohibited items may result in your parcel being seized, destroyed, or returned at your expense — and may also result in legal action.</p>
+
+  <h3>Absolutely Prohibited</h3>
+  <ul>
+    <li>Explosives, fireworks, and pyrotechnics</li>
+    <li>Flammable liquids and gases (including most aerosols)</li>
+    <li>Illegal drugs, narcotics, and controlled substances</li>
+    <li>Weapons, firearms, and ammunition</li>
+    <li>Counterfeit goods or intellectual property infringements</li>
+    <li>Human remains and body parts</li>
+    <li>Live animals (except via specialist services)</li>
+    <li>Cash, credit cards, and negotiable financial instruments</li>
+    <li>Radioactive materials</li>
+  </ul>
+
+  <h3>Restricted Items (require declaration)</h3>
+  <ul>
+    <li><strong>Lithium batteries</strong> — must be declared; restrictions on quantity per parcel</li>
+    <li><strong>Perfumes and aftershaves</strong> — alcohol-based; restricted on air routes</li>
+    <li><strong>Medications and pharmaceuticals</strong> — must comply with destination country regulations</li>
+    <li><strong>Artwork and antiques</strong> — require special declaration and valuation</li>
+    <li><strong>Food and perishables</strong> — must be securely packaged and comply with import regulations</li>
+  </ul>
+
+  <hr />
+
+  <div class="section-label">Tracking &amp; Notifications</div>
+  <h2>Tracking Your Standard Shipment</h2>
+  <p>Every Standard Shipping parcel is assigned a unique 12-character tracking ID at the point of booking. This ID gives you complete visibility of your shipment throughout its journey — from collection through sorting, transit, customs (where applicable), and final delivery.</p>
+  <p>You can track your parcel at any time on our <a href="index.html">homepage</a> by entering your tracking ID. Key milestones you'll see include:</p>
+  <ul>
+    <li>Parcel collected or dropped off at service point</li>
+    <li>Arrived at origin sorting facility</li>
+    <li>In transit (with location updates)</li>
+    <li>Customs cleared (international shipments)</li>
+    <li>Arrived at destination country facility</li>
+    <li>Out for delivery</li>
+    <li>Delivered (with timestamp and, if enabled, signature)</li>
+  </ul>
+
+  <h3>Email Notifications</h3>
+  <p>Subscribe to email notifications on your tracking page to receive automatic updates at each milestone. Notifications are free and can be unsubscribed at any time. We'll also notify you of any exceptions — such as a failed delivery attempt or customs hold — so you can act quickly.</p>
+
+  <hr />
+
+  <div class="section-label">Claims &amp; Liability</div>
+  <h2>Lost or Damaged Parcels</h2>
+  <p>Despite our best efforts, occasionally things go wrong. SwiftEx's Standard Shipping includes a <strong>standard liability of £50</strong> for domestic shipments and equivalent local currency for international routes. This covers loss or damage caused by SwiftEx — it does not cover damage caused by inadequate packaging or prohibited items.</p>
+
+  <h3>How to Make a Claim</h3>
+  <p>Claims must be submitted within <strong>28 days of the expected delivery date</strong> for lost parcels, and within <strong>7 days of actual delivery</strong> for damaged parcels. To submit a claim, you'll need your tracking ID, proof of the item's value (receipt or invoice), and photographs of the damage (for damaged parcel claims).</p>
+  <p>Claims can be submitted through our support chat or by contacting our customer service team. We aim to resolve all claims within 10–15 business days.</p>
+
+</div>
+<div class="footer-simple">© 2026 ExpressCO. All rights reserved. &nbsp;·&nbsp; <a href="privacy-policy.html">Privacy Policy</a> &nbsp;·&nbsp; <a href="faq.html">FAQs</a></div>
+<script>document.getElementById('hamburger').addEventListener('click',()=>{document.getElementById('mobileMenu').classList.toggle('open');});</script>
+</body>
+</html>
