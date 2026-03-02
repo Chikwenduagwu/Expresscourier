@@ -7,21 +7,30 @@
   <link rel="stylesheet" href="../assets/css/admin.css" />
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <style>
-    /* ── Layout ── */
+
+    /* ══════════════════════════════════════
+       CHAT LAYOUT — mobile-first two-panel
+    ══════════════════════════════════════ */
+
+    /* Full-height wrapper */
     .chat-layout {
-      display: grid;
-      grid-template-columns: 280px 1fr;
-      height: calc(100vh - 60px);
+      display: flex;
+      height: calc(100vh - 60px); /* 60px = topbar */
       overflow: hidden;
+      position: relative;
     }
 
-    /* ── Sessions sidebar ── */
+    /* ── LEFT PANEL: conversations list ── */
     .chat-sessions {
+      width: 300px;
+      min-width: 300px;
       border-right: 1px solid #e5e7eb;
       background: #fff;
       display: flex;
       flex-direction: column;
       overflow: hidden;
+      flex-shrink: 0;
+      transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
     }
     .chat-sessions-header {
       padding: 16px;
@@ -39,24 +48,33 @@
     .filter-tab {
       font-size: 0.75rem;
       font-weight: 600;
-      padding: 4px 12px;
+      padding: 5px 13px;
       border-radius: 6px;
       border: 1.5px solid #e5e7eb;
       color: #6b7280;
       background: #fff;
       cursor: pointer;
       transition: all 0.15s;
+      font-family: 'DM Sans', sans-serif;
     }
     .filter-tab.active { background: #4D148C; color: #fff; border-color: #4D148C; }
-    #sessionsList { flex: 1; overflow-y: auto; }
+
+    #sessionsList {
+      flex: 1;
+      overflow-y: auto;
+      min-height: 0;
+    }
+    #sessionsList::-webkit-scrollbar { width: 4px; }
+    #sessionsList::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 2px; }
+
     .session-placeholder {
-      padding: 24px;
+      padding: 32px 16px;
       text-align: center;
       color: #9ca3af;
       font-size: 0.85rem;
     }
 
-    /* Session item */
+    /* Session card */
     .session-item {
       display: flex;
       flex-direction: column;
@@ -69,59 +87,53 @@
     .session-item:hover { background: #faf9ff; }
     .session-item.active { background: #f3eeff; border-right: 3px solid #4D148C; }
     .session-item.escalated { border-left: 3px solid #FF6200; }
-    .session-header { display: flex; justify-content: space-between; align-items: flex-start; }
-    .session-id {
-      font-family: 'Syne', monospace;
-      font-size: 0.82rem;
-      font-weight: 700;
-      color: #4D148C;
-    }
-    .session-time { font-size: 0.7rem; color: #9ca3af; white-space: nowrap; margin-left: 8px; }
+    .session-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 6px; }
+    .session-id { font-family: 'Syne', sans-serif; font-size: 0.82rem; font-weight: 700; color: #4D148C; }
+    .session-time { font-size: 0.7rem; color: #9ca3af; white-space: nowrap; flex-shrink: 0; }
     .session-preview {
       font-size: 0.8rem;
       color: #6b7280;
-      margin-top: 3px;
+      margin-top: 4px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      max-width: 220px;
     }
-    .session-tags { display: flex; gap: 4px; margin-top: 5px; flex-wrap: wrap; }
-    .session-tag {
-      font-size: 0.65rem;
-      font-weight: 700;
-      padding: 2px 7px;
-      border-radius: 4px;
-    }
+    .session-tags { display: flex; gap: 4px; margin-top: 6px; flex-wrap: wrap; }
+    .session-tag { font-size: 0.65rem; font-weight: 700; padding: 2px 7px; border-radius: 4px; }
     .tag-escalated { background: #fff7ed; color: #c2410c; border: 1px solid #fed7aa; }
-    .tag-ai        { background: #f3eeff; color: #6b21a8; border: 1px solid #e9d5ff; }
-    .unread-dot {
-      width: 8px; height: 8px;
-      background: #FF6200;
-      border-radius: 50%;
-      position: absolute;
-      right: 16px; top: 16px;
-    }
+    .tag-ai { background: #f3eeff; color: #6b21a8; border: 1px solid #e9d5ff; }
+    .tag-count { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
 
-    /* ── Chat window ── */
+    /* ── RIGHT PANEL: chat window ── */
     .chat-window {
+      flex: 1;
       display: flex;
       flex-direction: column;
       background: #f9fafb;
       overflow: hidden;
-      height: 100%;
+      min-width: 0; /* prevents flex blowout */
     }
+
+    /* Empty state */
     .chat-empty {
       flex: 1;
       display: flex;
       align-items: center;
       justify-content: center;
     }
+
+    /* Active conversation */
     #chatActive {
       display: none;
       flex-direction: column;
+      flex: 1;
+      min-height: 0;
       height: 100%;
     }
+    #chatActive.visible {
+      display: flex;
+    }
+
     .chat-window-header {
       padding: 14px 20px;
       background: #fff;
@@ -140,10 +152,31 @@
       color: #1f2937;
       margin-bottom: 2px;
     }
+    .chat-header-left { display: flex; align-items: center; gap: 10px; }
+
+    /* Back button — mobile only */
+    .btn-back-mobile {
+      display: none;
+      background: none;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 7px;
+      padding: 6px 10px;
+      cursor: pointer;
+      color: #4b5563;
+      font-size: 0.8rem;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 600;
+      align-items: center;
+      gap: 5px;
+      white-space: nowrap;
+    }
+    .btn-back-mobile svg { width: 14px; height: 14px; }
+    .btn-back-mobile:hover { border-color: #4D148C; color: #4D148C; }
+
     .chat-tracking-link { font-size: 0.75rem; color: #9ca3af; }
     .chat-tracking-link a { color: #4D148C; text-decoration: none; font-weight: 600; }
 
-    /* Messages area */
+    /* Messages */
     .chat-window-messages {
       flex: 1;
       overflow-y: auto;
@@ -160,12 +193,11 @@
     .agent-message {
       display: flex;
       flex-direction: column;
-      max-width: 72%;
+      max-width: 75%;
     }
     .agent-message.agent-customer { align-self: flex-start; align-items: flex-start; }
     .agent-message.agent-ai       { align-self: flex-start; align-items: flex-start; }
     .agent-message.agent-me       { align-self: flex-end;   align-items: flex-end; }
-
     .agent-label {
       font-size: 0.68rem;
       font-weight: 600;
@@ -179,7 +211,7 @@
       font-size: 0.875rem;
       line-height: 1.55;
       word-break: break-word;
-      white-space: pre-wrap;       /* ← preserves line breaks */
+      white-space: pre-wrap;
     }
     .agent-message.agent-customer .agent-bubble {
       background: #fff;
@@ -199,18 +231,13 @@
       color: #fff;
       border-bottom-right-radius: 4px;
     }
-    .agent-time {
-      font-size: 0.65rem;
-      color: #9ca3af;
-      margin-top: 3px;
-      padding: 0 4px;
-    }
+    .agent-time { font-size: 0.65rem; color: #9ca3af; margin-top: 3px; padding: 0 4px; }
 
-    /* Input row */
+    /* Input area */
     .chat-window-input {
       display: flex;
       gap: 8px;
-      padding: 14px 16px;
+      padding: 12px 16px;
       background: #fff;
       border-top: 1px solid #e5e7eb;
       flex-shrink: 0;
@@ -225,6 +252,7 @@
       outline: none;
       color: #1f2937;
       transition: border-color 0.18s;
+      min-width: 0;
     }
     .chat-window-input input:focus { border-color: #4D148C; }
     .chat-send-btn {
@@ -239,17 +267,12 @@
       cursor: pointer;
       transition: background 0.18s;
       white-space: nowrap;
+      flex-shrink: 0;
     }
     .chat-send-btn:hover { background: #FF6200; }
 
     /* Status pills */
-    .status-pill {
-      font-size: 0.72rem;
-      font-weight: 700;
-      padding: 4px 10px;
-      border-radius: 100px;
-      letter-spacing: 0.03em;
-    }
+    .status-pill { font-size: 0.72rem; font-weight: 700; padding: 4px 10px; border-radius: 100px; }
     .status-pending          { background:#fef3c7; color:#d97706; }
     .status-picked_up        { background:#dbeafe; color:#1d4ed8; }
     .status-in_transit       { background:#dbeafe; color:#1d4ed8; }
@@ -258,47 +281,85 @@
     .status-exception        { background:#fee2e2; color:#dc2626; }
 
     /* Topbar extras */
-    .chat-live-badge {
-      font-size: 0.75rem;
-      font-weight: 700;
-      color: #16a34a;
-      background: #dcfce7;
-      padding: 3px 10px;
-      border-radius: 100px;
-      letter-spacing: 0.04em;
-    }
+    .chat-live-badge { font-size: 0.75rem; font-weight: 700; color: #16a34a; background: #dcfce7; padding: 3px 10px; border-radius: 100px; }
     .agent-status { font-size: 0.82rem; color: #6b7280; }
     .agent-status strong { color: #4D148C; }
     .btn-view-public {
-      font-size: 0.78rem;
-      padding: 6px 12px;
-      background: #fff;
-      border: 1.5px solid #e5e7eb;
-      border-radius: 6px;
-      cursor: pointer;
-      color: #4b5563;
-      font-family: 'DM Sans', sans-serif;
-      font-weight: 600;
-      transition: all 0.15s;
+      font-size: 0.78rem; padding: 6px 12px; background: #fff;
+      border: 1.5px solid #e5e7eb; border-radius: 6px; cursor: pointer;
+      color: #4b5563; font-family: 'DM Sans', sans-serif; font-weight: 600; transition: all 0.15s;
     }
     .btn-view-public:hover { border-color: #4D148C; color: #4D148C; }
 
-    /* Mobile */
+    /* Loading spinner */
+    .chat-spinner-wrap { display: flex; justify-content: center; padding: 32px; }
+    .chat-spinner {
+      width: 24px; height: 24px;
+      border: 2.5px solid #e5e7eb;
+      border-top-color: #4D148C;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ════════════════════════
+       MOBILE — single-panel nav
+    ════════════════════════ */
     @media (max-width: 768px) {
+
+      /* On mobile, both panels are full-width and we toggle which is visible */
       .chat-layout {
-        grid-template-columns: 1fr;
+        position: relative;
       }
+
       .chat-sessions {
-        display: none;
-      }
-      .chat-sessions.show {
-        display: flex;
-        position: fixed;
-        inset: 60px 0 0 0;
-        z-index: 100;
         width: 100%;
+        min-width: 0;
+        position: absolute;
+        inset: 0;
+        z-index: 10;
+        border-right: none;
+        transform: translateX(0);
+        transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+      }
+
+      /* When a chat is open, slide sessions panel out left */
+      .chat-sessions.hidden {
+        transform: translateX(-100%);
+        pointer-events: none;
+      }
+
+      .chat-window {
+        width: 100%;
+        position: absolute;
+        inset: 0;
+        z-index: 9;
+      }
+
+      #chatActive.visible {
+        z-index: 11; /* above sessions when open */
+      }
+
+      /* Show back button on mobile */
+      .btn-back-mobile {
+        display: flex;
+      }
+
+      /* Tighten header on mobile */
+      .chat-window-header {
+        padding: 10px 12px;
+      }
+
+      .agent-message {
+        max-width: 88%;
+      }
+
+      .chat-send-btn {
+        padding: 10px 14px;
+        font-size: 0.82rem;
       }
     }
+
   </style>
 </head>
 <body class="admin-body">
@@ -340,9 +401,9 @@
     </div>
   </header>
 
-  <div class="chat-layout">
+  <div class="chat-layout" id="chatLayout">
 
-    <!-- Sessions List (grouped by tracking_id) -->
+    <!-- LEFT: Conversations list -->
     <div class="chat-sessions" id="chatSessions">
       <div class="chat-sessions-header">
         <h3>Conversations</h3>
@@ -352,54 +413,67 @@
         </div>
       </div>
       <div id="sessionsList">
-        <div class="session-placeholder">Loading conversations…</div>
+        <div class="chat-spinner-wrap"><div class="chat-spinner"></div></div>
       </div>
     </div>
 
-    <!-- Chat Window -->
+    <!-- RIGHT: Chat window -->
     <div class="chat-window" id="chatWindow">
+
+      <!-- Empty state (no conversation selected) -->
       <div class="chat-empty" id="chatEmpty">
-        <div style="text-align:center">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#d1d5db" stroke-width="1" width="64" height="64" style="margin:0 auto 16px"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-          <p style="color:#9ca3af;font-size:0.9rem">Select a conversation to start chatting</p>
+        <div style="text-align:center;padding:20px">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#d1d5db" stroke-width="1" width="56" height="56" style="margin:0 auto 14px;display:block"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          <p style="color:#9ca3af;font-size:0.88rem;line-height:1.5">Select a conversation<br>from the left to start</p>
         </div>
       </div>
 
-      <div id="chatActive" style="display:none">
+      <!-- Active conversation -->
+      <div id="chatActive">
+
         <div class="chat-window-header">
-          <div>
-            <h3 id="activeChatTitle">—</h3>
-            <span class="chat-tracking-link" id="activeChatTrackingLink"></span>
+          <div class="chat-header-left">
+            <!-- Back button — mobile only -->
+            <button class="btn-back-mobile" onclick="closeChatMobile()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+              Back
+            </button>
+            <div>
+              <h3 id="activeChatTitle">—</h3>
+              <span class="chat-tracking-link" id="activeChatTrackingLink"></span>
+            </div>
           </div>
           <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-            <span class="status-pill" id="activeChatStatus">—</span>
-            <button class="btn-view-public" onclick="viewPublicTracking()">View Tracking Page</button>
+            <span class="status-pill" id="activeChatStatus" style="display:none">—</span>
+            <button class="btn-view-public" onclick="viewPublicTracking()">View Tracking</button>
           </div>
         </div>
 
         <div class="chat-window-messages" id="chatWindowMessages"></div>
 
         <div class="chat-window-input">
-          <input type="text" id="agentInput" placeholder="Type your reply as agent…" autocomplete="off" />
+          <input type="text" id="agentInput" placeholder="Reply as agent…" autocomplete="off" />
           <button class="chat-send-btn" onclick="sendAgentMessage()">Send</button>
         </div>
+
       </div>
     </div>
 
-  </div>
-</div>
+  </div><!-- end chat-layout -->
+</div><!-- end admin-main -->
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="../assets/js/config.js"></script>
 <script>
-let allSessions   = [];
-let activeTracking = null;   // tracking_id of open conversation
-let agentEmail    = '';
+
+let allSessions    = [];
+let activeTracking = null;
+let agentEmail     = '';
 let realtimeChannel  = null;
 let messagesChannel  = null;
-let currentFilter = 'all';
+let currentFilter  = 'all';
 
-// ── Auth guard + boot ──
+// ── Auth guard ──
 (async () => {
   const { data: { session } } = await supabaseClient.auth.getSession();
   if (!session) { window.location.href = 'index.html'; return; }
@@ -411,40 +485,33 @@ let currentFilter = 'all';
 
 // ── Load sessions grouped by tracking_id ──
 async function loadSessions() {
-  // Fetch all messages, ordered newest first
   const { data: msgs, error } = await supabaseClient
     .from('chat_messages')
     .select('tracking_id, role, content, is_human_agent, created_at')
     .order('created_at', { ascending: false });
 
-  if (error || !msgs) return;
+  if (error || !msgs) {
+    document.getElementById('sessionsList').innerHTML =
+      '<div class="session-placeholder">Failed to load conversations.</div>';
+    return;
+  }
 
-  // Group by tracking_id (one conversation per tracking code)
+  // Group by tracking_id
   const map = {};
   msgs.forEach(m => {
     const tid = m.tracking_id;
     if (!tid) return;
     if (!map[tid]) {
-      map[tid] = {
-        tracking_id:   tid,
-        last_message:  m.content,
-        last_time:     m.created_at,
-        escalated:     false,
-        message_count: 0,
-      };
+      map[tid] = { tracking_id: tid, last_message: m.content, last_time: m.created_at, escalated: false, message_count: 0 };
     }
     map[tid].message_count++;
-    // Mark escalated if any message was from human agent or had escalation content
-    if (m.is_human_agent || m.content === '[ESCALATED TO HUMAN]') {
-      map[tid].escalated = true;
-    }
-    // Use the most recent non-escalation message as preview
+    if (m.is_human_agent || m.content === '[ESCALATED TO HUMAN]') map[tid].escalated = true;
     if (m.content !== '[ESCALATED TO HUMAN]' && map[tid].last_message === '[ESCALATED TO HUMAN]') {
       map[tid].last_message = m.content;
     }
   });
 
-  allSessions = Object.values(map).sort((a, b) => new Date(b.last_time) - new Date(a.last_time));
+  allSessions = Object.values(map).sort((a,b) => new Date(b.last_time) - new Date(a.last_time));
   renderSessions(currentFilter === 'escalated' ? allSessions.filter(s => s.escalated) : allSessions);
 }
 
@@ -463,7 +530,7 @@ function renderSessions(sessions) {
   }
   list.innerHTML = sessions.map(s => `
     <div class="session-item ${s.escalated ? 'escalated' : ''} ${activeTracking === s.tracking_id ? 'active' : ''}"
-         onclick="openSession('${s.tracking_id}')">
+         onclick="openSession('${s.tracking_id}', this)">
       <div class="session-header">
         <span class="session-id">${s.tracking_id}</span>
         <span class="session-time">${timeAgo(s.last_time)}</span>
@@ -473,27 +540,31 @@ function renderSessions(sessions) {
         ${s.escalated
           ? '<span class="session-tag tag-escalated">🧑‍💼 Human needed</span>'
           : '<span class="session-tag tag-ai">🤖 AI chat</span>'}
-        <span class="session-tag tag-ai" style="background:#f0fdf4;color:#166534;border-color:#bbf7d0">${s.message_count} msgs</span>
+        <span class="session-tag tag-count">${s.message_count} msgs</span>
       </div>
     </div>
   `).join('');
 }
 
-// ── Open a conversation by tracking_id ──
-async function openSession(trackingId) {
+// ── Open conversation ──
+async function openSession(trackingId, clickedEl) {
   activeTracking = trackingId;
 
+  // Show chat panel, hide empty state
   document.getElementById('chatEmpty').style.display  = 'none';
-  document.getElementById('chatActive').style.display = 'flex';
-  document.getElementById('activeChatTitle').textContent = `Tracking: ${trackingId}`;
+  const chatActive = document.getElementById('chatActive');
+  chatActive.classList.add('visible');
+
+  // Update header
+  document.getElementById('activeChatTitle').textContent = trackingId;
   document.getElementById('activeChatTrackingLink').innerHTML =
-    `<a href="../track.html?id=${trackingId}" target="_blank">View public tracking page →</a>`;
+    `<a href="../track.html?id=${trackingId}" target="_blank">View tracking page →</a>`;
 
-  // Highlight active session in list
+  // Highlight active session
   document.querySelectorAll('.session-item').forEach(el => el.classList.remove('active'));
-  event?.currentTarget?.classList.add('active');
+  if (clickedEl) clickedEl.classList.add('active');
 
-  // Fetch shipment status
+  // Fetch shipment for status + name
   const { data: ship } = await supabaseClient
     .from('shipments')
     .select('status, recipient_name')
@@ -502,27 +573,46 @@ async function openSession(trackingId) {
 
   if (ship) {
     const pill = document.getElementById('activeChatStatus');
+    pill.style.display = '';
     pill.className = `status-pill status-${ship.status}`;
     pill.textContent = statusLabel(ship.status);
     if (ship.recipient_name) {
-      document.getElementById('activeChatTitle').textContent =
-        `${ship.recipient_name} — ${trackingId}`;
+      document.getElementById('activeChatTitle').textContent = `${ship.recipient_name} · ${trackingId}`;
     }
   }
 
+  // Load messages
   loadMessages(trackingId);
   subscribeMessages(trackingId);
+
+  // On mobile: hide sessions panel, show chat panel on top
+  if (window.innerWidth <= 768) {
+    document.getElementById('chatSessions').classList.add('hidden');
+    chatActive.style.zIndex = '11';
+    document.getElementById('agentInput').focus();
+  }
 }
 
-// ── Load all messages for a tracking_id ──
+// ── Back button (mobile) ──
+function closeChatMobile() {
+  document.getElementById('chatSessions').classList.remove('hidden');
+  document.getElementById('chatActive').classList.remove('visible');
+  document.getElementById('chatActive').style.zIndex = '';
+  document.getElementById('chatEmpty').style.display = 'flex';
+  activeTracking = null;
+}
+
+// ── Load messages ──
 async function loadMessages(trackingId) {
+  const container = document.getElementById('chatWindowMessages');
+  container.innerHTML = '<div class="chat-spinner-wrap"><div class="chat-spinner"></div></div>';
+
   const { data: msgs, error } = await supabaseClient
     .from('chat_messages')
     .select('*')
     .eq('tracking_id', trackingId)
     .order('created_at', { ascending: true });
 
-  const container = document.getElementById('chatWindowMessages');
   container.innerHTML = '';
 
   if (error || !msgs) {
@@ -530,8 +620,8 @@ async function loadMessages(trackingId) {
     return;
   }
 
-  if (msgs.length === 0) {
-    container.innerHTML = '<p style="color:#9ca3af;padding:20px;font-size:0.85rem;text-align:center">No messages yet for this tracking ID.</p>';
+  if (!msgs.length) {
+    container.innerHTML = '<p style="color:#9ca3af;padding:24px;font-size:0.85rem;text-align:center">No messages yet for this shipment.</p>';
     return;
   }
 
@@ -539,14 +629,12 @@ async function loadMessages(trackingId) {
   container.scrollTop = container.scrollHeight;
 }
 
-// ── Render a single message bubble ──
+// ── Render a message bubble ──
 function appendMessage(m) {
-  // Skip internal escalation marker
   if (m.content === '[ESCALATED TO HUMAN]') return;
 
   const container = document.getElementById('chatWindowMessages');
 
-  // Determine bubble style based on role
   let cls, label;
   if (m.is_human_agent || m.role === 'agent') {
     cls   = 'agent-me';
@@ -555,7 +643,6 @@ function appendMessage(m) {
     cls   = 'agent-ai';
     label = '🤖 AI Assistant';
   } else {
-    // role === 'user' — the customer
     cls   = 'agent-customer';
     label = '👤 Customer';
   }
@@ -577,10 +664,11 @@ async function sendAgentMessage() {
   const text  = input.value.trim();
   if (!text || !activeTracking) return;
   input.value = '';
+  input.focus();
 
   const { error } = await supabaseClient.from('chat_messages').insert({
     tracking_id:    activeTracking,
-    session_id:     null,            // no longer required
+    session_id:     null,
     role:           'agent',
     content:        text,
     is_human_agent: true,
@@ -588,34 +676,26 @@ async function sendAgentMessage() {
   });
 
   if (error) console.error('Send error:', error);
-  // Message will appear via realtime subscription
+  // Appears via realtime
 }
 
-// ── Realtime: new messages in active conversation ──
+// ── Realtime: messages in active conversation ──
 function subscribeMessages(trackingId) {
   if (messagesChannel) supabaseClient.removeChannel(messagesChannel);
   messagesChannel = supabaseClient
     .channel(`msgs-${trackingId}`)
     .on('postgres_changes', {
-      event: 'INSERT',
-      schema: 'public',
-      table: 'chat_messages',
+      event: 'INSERT', schema: 'public', table: 'chat_messages',
       filter: `tracking_id=eq.${trackingId}`
-    }, (payload) => {
-      appendMessage(payload.new);
-    })
+    }, payload => appendMessage(payload.new))
     .subscribe();
 }
 
-// ── Realtime: refresh sessions list when any new message arrives ──
+// ── Realtime: refresh session list on any new message ──
 function subscribeToNewMessages() {
   realtimeChannel = supabaseClient
-    .channel('all-chat-messages')
-    .on('postgres_changes', {
-      event: 'INSERT',
-      schema: 'public',
-      table: 'chat_messages',
-    }, () => loadSessions())
+    .channel('all-msgs')
+    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'chat_messages' }, () => loadSessions())
     .subscribe();
 }
 
@@ -624,28 +704,21 @@ function viewPublicTracking() {
   if (activeTracking) window.open(`../track.html?id=${activeTracking}`, '_blank');
 }
 function statusLabel(s) {
-  const m = {
-    pending:'Pending', picked_up:'Picked Up', in_transit:'In Transit',
-    out_for_delivery:'Out for Delivery', delivered:'Delivered', exception:'Exception'
-  };
-  return m[s] || s;
+  return { pending:'Pending', picked_up:'Picked Up', in_transit:'In Transit', out_for_delivery:'Out for Delivery', delivered:'Delivered', exception:'Exception' }[s] || s;
 }
 function timeAgo(ts) {
-  const diff = Date.now() - new Date(ts);
-  const mins = Math.floor(diff / 60000);
-  if (mins < 1)  return 'just now';
+  const diff = Date.now() - new Date(ts), mins = Math.floor(diff/60000);
+  if (mins < 1) return 'just now';
   if (mins < 60) return `${mins}m ago`;
-  const hrs = Math.floor(mins / 60);
-  if (hrs < 24)  return `${hrs}h ago`;
+  const hrs = Math.floor(mins/60);
+  if (hrs < 24) return `${hrs}h ago`;
   return `${Math.floor(hrs/24)}d ago`;
 }
 function formatTime(ts) {
-  return new Date(ts).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+  return new Date(ts).toLocaleTimeString('en-US', { hour:'numeric', minute:'2-digit', hour12:true });
 }
 function escapeHtml(str) {
-  return String(str)
-    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 function toggleSidebar() {
   document.getElementById('sidebar').classList.toggle('collapsed');
@@ -655,10 +728,18 @@ async function doLogout() {
   window.location.href = 'index.html';
 }
 
-// Enter to send
-document.getElementById('agentInput')?.addEventListener('keydown', e => {
+// Enter key to send
+document.getElementById('agentInput').addEventListener('keydown', e => {
   if (e.key === 'Enter') sendAgentMessage();
 });
+
+// Handle browser back/resize
+window.addEventListener('resize', () => {
+  if (window.innerWidth > 768) {
+    document.getElementById('chatSessions').classList.remove('hidden');
+  }
+});
+
 </script>
 </body>
 </html>
