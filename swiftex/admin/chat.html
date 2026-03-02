@@ -462,6 +462,148 @@
   </div><!-- end chat-layout -->
 </div><!-- end admin-main -->
 
+  <!-- ══════════════════════════════════════════
+     ADMIN BOTTOM NAV — paste before </body>
+     on dashboard.html, shipments.html,
+     shipment.html, chat.html
+════════════════════════════════════════════ -->
+
+<nav class="admin-bottom-nav" id="adminBottomNav">
+  <a href="dashboard.html" class="bottom-nav-item" data-page="dashboard">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+      <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+      <rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>
+    </svg>
+    <span>Dashboard</span>
+  </a>
+  <a href="shipments.html" class="bottom-nav-item" data-page="shipments">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+      <path d="M5 17H3a2 2 0 01-2-2V5a2 2 0 012-2h11a2 2 0 012 2v3m0 0h3l3 3v4a2 2 0 01-2 2h-1"/>
+      <circle cx="7" cy="20" r="2"/><circle cx="17" cy="20" r="2"/>
+    </svg>
+    <span>Shipments</span>
+  </a>
+  <a href="chat.html" class="bottom-nav-item" data-page="chat">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+      <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+    </svg>
+    <span>Chat</span>
+  </a>
+  <a href="index.html" class="bottom-nav-item" data-page="logout" onclick="handleLogout(event)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+      <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/>
+      <polyline points="16 17 21 12 16 7"/>
+      <line x1="21" y1="12" x2="9" y2="12"/>
+    </svg>
+    <span>Sign Out</span>
+  </a>
+</nav>
+
+<style>
+  /* Add bottom padding so content isn't hidden behind the nav */
+  .admin-main { padding-bottom: 72px; }
+
+  .admin-bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 64px;
+    background: #fff;
+    border-top: 1px solid #e5e7eb;
+    display: flex;
+    align-items: stretch;
+    z-index: 500;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.07);
+  }
+
+  .bottom-nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    text-decoration: none;
+    color: #9ca3af;
+    font-size: 0.68rem;
+    font-weight: 600;
+    font-family: 'DM Sans', sans-serif;
+    transition: color 0.18s, background 0.18s;
+    border-top: 2px solid transparent;
+    padding: 0 4px;
+    cursor: pointer;
+    background: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: none;
+  }
+
+  .bottom-nav-item svg {
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+    transition: stroke 0.18s;
+  }
+
+  .bottom-nav-item:hover {
+    color: #4D148C;
+    background: #faf6ff;
+  }
+
+  .bottom-nav-item.active {
+    color: #4D148C;
+    border-top-color: #4D148C;
+    background: #faf6ff;
+  }
+
+  .bottom-nav-item.active svg {
+    stroke: #4D148C;
+  }
+
+  /* Sign out gets orange on hover */
+  .bottom-nav-item[data-page="logout"]:hover {
+    color: #FF6200;
+    background: #fff7f0;
+  }
+  .bottom-nav-item[data-page="logout"]:hover svg {
+    stroke: #FF6200;
+  }
+
+  /* Only show on mobile/tablet — hide on large screens
+     where the sidebar already handles navigation */
+  @media (min-width: 901px) {
+    .admin-bottom-nav { display: none; }
+    .admin-main { padding-bottom: 0; }
+  }
+</style>
+
+<script>
+  /* Auto-highlight the active tab based on current page filename */
+  (function () {
+    const page = window.location.pathname.split('/').pop().replace('.html', '') || 'dashboard';
+    const items = document.querySelectorAll('.bottom-nav-item');
+    items.forEach(item => {
+      const itemPage = item.dataset.page;
+      if (
+        itemPage === page ||
+        (page === 'shipment' && itemPage === 'shipments') /* shipment detail → highlight Shipments */
+      ) {
+        item.classList.add('active');
+      }
+    });
+  })();
+
+  /* Sign out handler — uses supabaseClient if available */
+  async function handleLogout(e) {
+    e.preventDefault();
+    if (typeof supabaseClient !== 'undefined') {
+      await supabaseClient.auth.signOut();
+    }
+    window.location.href = 'index.html';
+  }
+</script>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="../assets/js/config.js"></script>
 <script>
