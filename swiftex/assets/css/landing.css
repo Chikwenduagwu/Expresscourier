@@ -1273,3 +1273,343 @@
   .ship-options { grid-template-columns: 1fr; }
   .footer-cols { grid-template-columns: 1fr 1fr; }
 }
+
+
+/* ══════════════════════════════════════════════
+   SCROLL & ENTRANCE ANIMATIONS
+   Pure CSS — no existing rules touched
+   Uses IntersectionObserver via a tiny
+   <script> block you paste before </body>
+══════════════════════════════════════════════ */
+
+/* ── 1. Keyframes ── */
+
+/* Fade up (general sections) */
+@keyframes swx-fadeUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Fade in (opacity only — images, cards) */
+@keyframes swx-fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* Slide in from left */
+@keyframes swx-slideLeft {
+  from { opacity: 0; transform: translateX(-48px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* Slide in from right */
+@keyframes swx-slideRight {
+  from { opacity: 0; transform: translateX(48px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* Scale up (cards, pills, stat items) */
+@keyframes swx-scaleUp {
+  from { opacity: 0; transform: scale(0.88); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* Stagger shimmer line (for section dividers / progress bars) */
+@keyframes swx-lineGrow {
+  from { transform: scaleX(0); transform-origin: left; }
+  to   { transform: scaleX(1); transform-origin: left; }
+}
+
+
+/* ── 2. Pre-animation hidden state ──
+   Applied by JS before element enters viewport.
+   Using a separate class so nothing breaks
+   if JS fails — elements stay visible. */
+
+.swx-hidden {
+  opacity: 0;
+  /* no transform here — each animation class sets it */
+  will-change: opacity, transform;
+}
+
+
+/* ── 3. Animation trigger classes ──
+   JS adds .swx-visible when element enters
+   viewport, which starts the animation. */
+
+.swx-anim-fadeUp.swx-visible {
+  animation: swx-fadeUp 0.65s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.swx-anim-fadeIn.swx-visible {
+  animation: swx-fadeIn 0.7s ease both;
+}
+
+.swx-anim-slideLeft.swx-visible {
+  animation: swx-slideLeft 0.65s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.swx-anim-slideRight.swx-visible {
+  animation: swx-slideRight 0.65s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.swx-anim-scaleUp.swx-visible {
+  animation: swx-scaleUp 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+/* Line grow — for carousel progress, dividers */
+.swx-anim-lineGrow.swx-visible {
+  animation: swx-lineGrow 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+
+/* ── 4. Stagger delays ──
+   Add these alongside an animation class
+   to stagger children. */
+
+.swx-d1  { animation-delay: 0.05s  !important; }
+.swx-d2  { animation-delay: 0.12s  !important; }
+.swx-d3  { animation-delay: 0.19s  !important; }
+.swx-d4  { animation-delay: 0.26s  !important; }
+.swx-d5  { animation-delay: 0.33s  !important; }
+.swx-d6  { animation-delay: 0.40s  !important; }
+.swx-d7  { animation-delay: 0.47s  !important; }
+.swx-d8  { animation-delay: 0.54s  !important; }
+
+
+/* ── 5. Section-level entrance targets ──
+   These selectors add swx-hidden + animation
+   class automatically via JS (see script below).
+   Listed here for documentation / override. */
+
+/*
+  Targeted automatically:
+  .section-title        → swx-fadeUp
+  .section-sub          → swx-fadeUp  swx-d2
+  .manage-card          → swx-scaleUp (staggered)
+  .biz-item             → swx-fadeUp
+  .biz-img-full         → swx-fadeIn
+  .biz-text             → swx-slideRight
+  .notice-card          → swx-slideLeft
+  .stat-pill            → swx-scaleUp (staggered)
+  .cta-inner            → swx-fadeUp
+  .cta-image-side       → swx-slideLeft
+  .cta-content-side     → swx-slideRight
+  .footer-brand         → swx-fadeUp
+  .footer-col           → swx-fadeUp (staggered)
+  .carousel-section     → swx-fadeIn
+*/
+
+
+/* ── 6. Continuous ambient animations ──
+   These run forever and don't need JS. */
+
+/* Gentle float for the hero ring */
+@keyframes swx-float {
+  0%, 100% { transform: rotate(0deg) translateY(0px); }
+  50%       { transform: rotate(2deg) translateY(-8px); }
+}
+.hero-ring {
+  /* appends to existing ringReveal animation */
+  animation: ringReveal 1s cubic-bezier(0.22, 1, 0.36, 1) 0.2s both,
+             swx-float 6s ease-in-out 1.2s infinite;
+}
+
+/* Subtle breathe on hero photo */
+@keyframes swx-breathe {
+  0%, 100% { transform: scale(1); }
+  50%       { transform: scale(1.012); }
+}
+.hero-photo-img {
+  animation: photoReveal 0.9s 0.4s ease both,
+             swx-breathe 8s ease-in-out 1.3s infinite;
+}
+
+/* Shimmer sweep across stat pills on hover */
+@keyframes swx-shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+.stat-pill:hover .stat-num {
+  background: linear-gradient(
+    90deg,
+    #4D148C 0%,
+    #FF6200 40%,
+    #4D148C 80%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: swx-shimmer 1.2s linear infinite;
+}
+
+/* Slide underline on footer links */
+.footer-col ul li a {
+  position: relative;
+}
+.footer-col ul li a::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  width: 0;
+  height: 1.5px;
+  background: #4D148C;
+  transition: width 0.25s ease;
+  border-radius: 1px;
+}
+.footer-col ul li a:hover::after { width: 100%; }
+
+/* Nav link indicator bar */
+.nav-link {
+  position: relative;
+}
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 4px;
+  left: 16px;
+  right: 16px;
+  height: 2px;
+  background: #FF6200;
+  transform: scaleX(0);
+  transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+  border-radius: 1px;
+}
+.nav-link:hover::after { transform: scaleX(1); }
+
+/* Manage card icon wiggle on hover */
+@keyframes swx-wiggle {
+  0%, 100% { transform: rotate(0deg); }
+  25%       { transform: rotate(-6deg); }
+  75%       { transform: rotate(6deg); }
+}
+.manage-card:hover .manage-illus svg {
+  animation: swx-wiggle 0.4s ease both;
+}
+
+/* CTA button ripple feel */
+@keyframes swx-ripple {
+  0%   { box-shadow: 0 0 0 0 rgba(10,31,143,0.3); }
+  100% { box-shadow: 0 0 0 16px rgba(10,31,143,0); }
+}
+.cta-btn:active {
+  animation: swx-ripple 0.5s ease both;
+}
+
+/* Track button pulse idle */
+@keyframes swx-pulse-btn {
+  0%, 100% { box-shadow: 0 4px 14px rgba(255,98,0,0.3); }
+  50%       { box-shadow: 0 4px 24px rgba(255,98,0,0.55); }
+}
+.hero-track-btn {
+  animation: swx-pulse-btn 2.5s ease-in-out infinite;
+}
+/* stop pulsing while user is interacting with the input */
+.hero-track-form:focus-within .hero-track-btn {
+  animation: none;
+}
+
+/* Orange dot on badge — already has pulse, leaving intact */
+
+
+/* ── 7. Reduced-motion safety ──
+   Honour prefers-reduced-motion system setting. */
+@media (prefers-reduced-motion: reduce) {
+  .hero-ring,
+  .hero-photo-img,
+  .hero-track-btn,
+  .manage-card:hover .manage-illus svg {
+    animation: none !important;
+  }
+  .swx-hidden {
+    opacity: 1 !important;
+  }
+  .swx-anim-fadeUp.swx-visible,
+  .swx-anim-fadeIn.swx-visible,
+  .swx-anim-slideLeft.swx-visible,
+  .swx-anim-slideRight.swx-visible,
+  .swx-anim-scaleUp.swx-visible {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+
+/* ══════════════════════════════════════════════
+   SCROLL ANIMATION SCRIPT
+   Paste the block below just before </body>
+   on your index.html — it auto-wires everything.
+   -----------------------------------------------
+   <script>
+   (function () {
+     'use strict';
+
+     // Map: CSS selector → animation class(es) to add
+     const targets = [
+       // Sections headings
+       { sel: '.section-title',       anim: 'swx-anim-fadeUp' },
+       { sel: '.section-sub',         anim: 'swx-anim-fadeUp swx-d2' },
+
+       // Notice / info cards
+       { sel: '.notice-card',         anim: 'swx-anim-slideLeft' },
+
+       // Manage cards — staggered
+       { sel: '.manage-card',         anim: 'swx-anim-scaleUp', stagger: true },
+
+       // Business items
+       { sel: '.biz-img-full',        anim: 'swx-anim-fadeIn' },
+       { sel: '.biz-text',            anim: 'swx-anim-slideRight swx-d2' },
+
+       // Stats
+       { sel: '.stat-pill',           anim: 'swx-anim-scaleUp', stagger: true },
+
+       // CTA
+       { sel: '.cta-image-side',      anim: 'swx-anim-slideLeft' },
+       { sel: '.cta-content-side',    anim: 'swx-anim-slideRight swx-d2' },
+
+       // Carousel section title
+       { sel: '.carousel-section .section-title', anim: 'swx-anim-fadeUp' },
+
+       // Footer columns
+       { sel: '.footer-brand',        anim: 'swx-anim-fadeUp' },
+       { sel: '.footer-col',          anim: 'swx-anim-fadeUp', stagger: true },
+     ];
+
+     const STAGGER_CLASSES = ['swx-d1','swx-d2','swx-d3','swx-d4','swx-d5','swx-d6','swx-d7','swx-d8'];
+
+     // Skip for users who prefer reduced motion
+     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+     // Add hidden state + animation class to each target
+     targets.forEach(({ sel, anim, stagger }) => {
+       const els = document.querySelectorAll(sel);
+       els.forEach((el, i) => {
+         el.classList.add('swx-hidden');
+         anim.split(' ').forEach(cls => el.classList.add(cls));
+         if (stagger) {
+           const delay = STAGGER_CLASSES[Math.min(i, STAGGER_CLASSES.length - 1)];
+           el.classList.add(delay);
+         }
+       });
+     });
+
+     // IntersectionObserver — trigger when 15% of element is visible
+     const observer = new IntersectionObserver((entries) => {
+       entries.forEach(entry => {
+         if (entry.isIntersecting) {
+           entry.target.classList.remove('swx-hidden');
+           entry.target.classList.add('swx-visible');
+           observer.unobserve(entry.target); // animate once
+         }
+       });
+     }, { threshold: 0.15 });
+
+     // Observe all tagged elements
+     document.querySelectorAll('.swx-hidden').forEach(el => observer.observe(el));
+   })();
+   </script>
+   -----------------------------------------------
+══════════════════════════════════════════════ */
