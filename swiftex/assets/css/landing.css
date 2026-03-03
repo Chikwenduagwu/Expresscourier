@@ -150,7 +150,7 @@
 
 /* Title */
 .hero-title {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont,
              'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   font-size: clamp(1.9rem, 7vw, 2.8rem);
   font-weight: 800;
@@ -262,7 +262,7 @@
 
 /* Track label */
 .hero-track-label {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont,
              'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   font-size: 0.72rem;
   font-weight: 700;
@@ -365,7 +365,7 @@
   background: #f3eeff;
 }
 .stat-num {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont,
              'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   font-size: 1.4rem;
   font-weight: 800;
@@ -1274,342 +1274,323 @@
   .footer-cols { grid-template-columns: 1fr 1fr; }
 }
 
+/* ══════════════════════════════════════════════════════════════
+   SCROLL ANIMATIONS — JS-FREE PRIMARY, JS ENHANCEMENT FALLBACK
+   ─────────────────────────────────────────────────────────────
+
+   PRIMARY ENGINE: CSS animation-timeline: view()
+   Works natively in Chrome 115+, Edge 115+, Samsung Internet 23+
+   (covers ~75% of mobile browsers worldwide, especially Android)
+
+   FALLBACK: tiny <script> for Safari / Firefox
+   Only needed if you want those browsers animated too.
+   Safari 18+ added partial support; full support coming.
+
+   HOW TO USE — add one class to any HTML element:
+   ─────────────────────────────────────────────────
+     reveal            fades + rises when scrolled into view
+     reveal-left       slides in from left
+     reveal-right      slides in from right
+     reveal-scale      scales up from 94%
+     reveal-fade       opacity only, no movement
+     stagger-children  parent: children cascade in 100ms apart
+     section-fade      full section fades in/out as you scroll
+
+   Optional speed modifiers (stack with any reveal class):
+     delay-1  → 100ms   delay-2 → 200ms   delay-3 → 300ms
+     delay-4  → 400ms   delay-5 → 500ms
+
+   OPTIONAL FALLBACK SCRIPT (for Safari/Firefox)
+   Paste once before </body> — safe to omit, gracefully degrades:
+
+   <script src="scroll-animate.js"></script>
+
+   OR inline:
+   <script>
+   !function(){var s='.reveal,.reveal-left,.reveal-right,.reveal-scale,.reveal-fade,.stagger-children,.section-fade';if('CSS' in window&&CSS.supports('animation-timeline','scroll()')){return;}var o=new IntersectionObserver(function(e){e.forEach(function(x){x.isIntersecting?x.target.classList.add('in-view'):x.target.classList.contains('in-view')&&(x.target.classList.add('out-view'),x.target.classList.remove('in-view'));});},{threshold:0.1,rootMargin:'0px 0px -44px 0px'});document.querySelectorAll(s).forEach(function(el){o.observe(el);});window.addEventListener('scroll',function(){var nb=document.querySelector('.navbar');if(nb)nb.classList.toggle('scrolled',window.scrollY>40);},{passive:true});}();
+   </script>
+
+══════════════════════════════════════════════════════════════ */
+
 
 /* ══════════════════════════════════════════════
-   SCROLL & ENTRANCE ANIMATIONS
-   Pure CSS — no existing rules touched
-   Uses IntersectionObserver via a tiny
-   <script> block you paste before </body>
+   @keyframes definitions (used by both engines)
 ══════════════════════════════════════════════ */
 
-/* ── 1. Keyframes ── */
-
-/* Fade up (general sections) */
-@keyframes swx-fadeUp {
-  from { opacity: 0; transform: translateY(40px); }
+@keyframes revealUp {
+  from { opacity: 0; transform: translateY(36px); }
   to   { opacity: 1; transform: translateY(0); }
 }
-
-/* Fade in (opacity only — images, cards) */
-@keyframes swx-fadeIn {
+@keyframes revealLeft {
+  from { opacity: 0; transform: translateX(-44px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes revealRight {
+  from { opacity: 0; transform: translateX(44px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes revealScale {
+  from { opacity: 0; transform: scale(0.93); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes revealFade {
   from { opacity: 0; }
   to   { opacity: 1; }
 }
-
-/* Slide in from left */
-@keyframes swx-slideLeft {
-  from { opacity: 0; transform: translateX(-48px); }
-  to   { opacity: 1; transform: translateX(0); }
+@keyframes statShimmer {
+  0%   { opacity: 0; transform: translateY(12px) scale(0.88); filter: blur(4px); }
+  60%  { filter: blur(0); }
+  100% { opacity: 1; transform: none; filter: blur(0); }
 }
-
-/* Slide in from right */
-@keyframes swx-slideRight {
-  from { opacity: 0; transform: translateX(48px); }
-  to   { opacity: 1; transform: translateX(0); }
-}
-
-/* Scale up (cards, pills, stat items) */
-@keyframes swx-scaleUp {
-  from { opacity: 0; transform: scale(0.88); }
+@keyframes dotPop {
+  from { opacity: 0; transform: scale(0); }
   to   { opacity: 1; transform: scale(1); }
-}
-
-/* Stagger shimmer line (for section dividers / progress bars) */
-@keyframes swx-lineGrow {
-  from { transform: scaleX(0); transform-origin: left; }
-  to   { transform: scaleX(1); transform-origin: left; }
-}
-
-
-/* ── 2. Pre-animation hidden state ──
-   Applied by JS before element enters viewport.
-   Using a separate class so nothing breaks
-   if JS fails — elements stay visible. */
-
-.swx-hidden {
-  opacity: 0;
-  /* no transform here — each animation class sets it */
-  will-change: opacity, transform;
-}
-
-
-/* ── 3. Animation trigger classes ──
-   JS adds .swx-visible when element enters
-   viewport, which starts the animation. */
-
-.swx-anim-fadeUp.swx-visible {
-  animation: swx-fadeUp 0.65s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-.swx-anim-fadeIn.swx-visible {
-  animation: swx-fadeIn 0.7s ease both;
-}
-
-.swx-anim-slideLeft.swx-visible {
-  animation: swx-slideLeft 0.65s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-.swx-anim-slideRight.swx-visible {
-  animation: swx-slideRight 0.65s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-.swx-anim-scaleUp.swx-visible {
-  animation: swx-scaleUp 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) both;
-}
-
-/* Line grow — for carousel progress, dividers */
-.swx-anim-lineGrow.swx-visible {
-  animation: swx-lineGrow 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-
-/* ── 4. Stagger delays ──
-   Add these alongside an animation class
-   to stagger children. */
-
-.swx-d1  { animation-delay: 0.05s  !important; }
-.swx-d2  { animation-delay: 0.12s  !important; }
-.swx-d3  { animation-delay: 0.19s  !important; }
-.swx-d4  { animation-delay: 0.26s  !important; }
-.swx-d5  { animation-delay: 0.33s  !important; }
-.swx-d6  { animation-delay: 0.40s  !important; }
-.swx-d7  { animation-delay: 0.47s  !important; }
-.swx-d8  { animation-delay: 0.54s  !important; }
-
-
-/* ── 5. Section-level entrance targets ──
-   These selectors add swx-hidden + animation
-   class automatically via JS (see script below).
-   Listed here for documentation / override. */
-
-/*
-  Targeted automatically:
-  .section-title        → swx-fadeUp
-  .section-sub          → swx-fadeUp  swx-d2
-  .manage-card          → swx-scaleUp (staggered)
-  .biz-item             → swx-fadeUp
-  .biz-img-full         → swx-fadeIn
-  .biz-text             → swx-slideRight
-  .notice-card          → swx-slideLeft
-  .stat-pill            → swx-scaleUp (staggered)
-  .cta-inner            → swx-fadeUp
-  .cta-image-side       → swx-slideLeft
-  .cta-content-side     → swx-slideRight
-  .footer-brand         → swx-fadeUp
-  .footer-col           → swx-fadeUp (staggered)
-  .carousel-section     → swx-fadeIn
-*/
-
-
-/* ── 6. Continuous ambient animations ──
-   These run forever and don't need JS. */
-
-/* Gentle float for the hero ring */
-@keyframes swx-float {
-  0%, 100% { transform: rotate(0deg) translateY(0px); }
-  50%       { transform: rotate(2deg) translateY(-8px); }
-}
-.hero-ring {
-  /* appends to existing ringReveal animation */
-  animation: ringReveal 1s cubic-bezier(0.22, 1, 0.36, 1) 0.2s both,
-             swx-float 6s ease-in-out 1.2s infinite;
-}
-
-/* Subtle breathe on hero photo */
-@keyframes swx-breathe {
-  0%, 100% { transform: scale(1); }
-  50%       { transform: scale(1.012); }
-}
-.hero-photo-img {
-  animation: photoReveal 0.9s 0.4s ease both,
-             swx-breathe 8s ease-in-out 1.3s infinite;
-}
-
-/* Shimmer sweep across stat pills on hover */
-@keyframes swx-shimmer {
-  0%   { background-position: -200% center; }
-  100% { background-position: 200% center; }
-}
-.stat-pill:hover .stat-num {
-  background: linear-gradient(
-    90deg,
-    #4D148C 0%,
-    #FF6200 40%,
-    #4D148C 80%
-  );
-  background-size: 200% auto;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  animation: swx-shimmer 1.2s linear infinite;
-}
-
-/* Slide underline on footer links */
-.footer-col ul li a {
-  position: relative;
-}
-.footer-col ul li a::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  bottom: -1px;
-  width: 0;
-  height: 1.5px;
-  background: #4D148C;
-  transition: width 0.25s ease;
-  border-radius: 1px;
-}
-.footer-col ul li a:hover::after { width: 100%; }
-
-/* Nav link indicator bar */
-.nav-link {
-  position: relative;
-}
-.nav-link::after {
-  content: '';
-  position: absolute;
-  bottom: 4px;
-  left: 16px;
-  right: 16px;
-  height: 2px;
-  background: #FF6200;
-  transform: scaleX(0);
-  transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1);
-  border-radius: 1px;
-}
-.nav-link:hover::after { transform: scaleX(1); }
-
-/* Manage card icon wiggle on hover */
-@keyframes swx-wiggle {
-  0%, 100% { transform: rotate(0deg); }
-  25%       { transform: rotate(-6deg); }
-  75%       { transform: rotate(6deg); }
-}
-.manage-card:hover .manage-illus svg {
-  animation: swx-wiggle 0.4s ease both;
-}
-
-/* CTA button ripple feel */
-@keyframes swx-ripple {
-  0%   { box-shadow: 0 0 0 0 rgba(10,31,143,0.3); }
-  100% { box-shadow: 0 0 0 16px rgba(10,31,143,0); }
-}
-.cta-btn:active {
-  animation: swx-ripple 0.5s ease both;
-}
-
-/* Track button pulse idle */
-@keyframes swx-pulse-btn {
-  0%, 100% { box-shadow: 0 4px 14px rgba(255,98,0,0.3); }
-  50%       { box-shadow: 0 4px 24px rgba(255,98,0,0.55); }
-}
-.hero-track-btn {
-  animation: swx-pulse-btn 2.5s ease-in-out infinite;
-}
-/* stop pulsing while user is interacting with the input */
-.hero-track-form:focus-within .hero-track-btn {
-  animation: none;
-}
-
-/* Orange dot on badge — already has pulse, leaving intact */
-
-
-/* ── 7. Reduced-motion safety ──
-   Honour prefers-reduced-motion system setting. */
-@media (prefers-reduced-motion: reduce) {
-  .hero-ring,
-  .hero-photo-img,
-  .hero-track-btn,
-  .manage-card:hover .manage-illus svg {
-    animation: none !important;
-  }
-  .swx-hidden {
-    opacity: 1 !important;
-  }
-  .swx-anim-fadeUp.swx-visible,
-  .swx-anim-fadeIn.swx-visible,
-  .swx-anim-slideLeft.swx-visible,
-  .swx-anim-slideRight.swx-visible,
-  .swx-anim-scaleUp.swx-visible {
-    animation: none !important;
-    opacity: 1 !important;
-    transform: none !important;
-  }
 }
 
 
 /* ══════════════════════════════════════════════
-   SCROLL ANIMATION SCRIPT
-   Paste the block below just before </body>
-   on your index.html — it auto-wires everything.
-   -----------------------------------------------
-   <script>
-   (function () {
-     'use strict';
-
-     // Map: CSS selector → animation class(es) to add
-     const targets = [
-       // Sections headings
-       { sel: '.section-title',       anim: 'swx-anim-fadeUp' },
-       { sel: '.section-sub',         anim: 'swx-anim-fadeUp swx-d2' },
-
-       // Notice / info cards
-       { sel: '.notice-card',         anim: 'swx-anim-slideLeft' },
-
-       // Manage cards — staggered
-       { sel: '.manage-card',         anim: 'swx-anim-scaleUp', stagger: true },
-
-       // Business items
-       { sel: '.biz-img-full',        anim: 'swx-anim-fadeIn' },
-       { sel: '.biz-text',            anim: 'swx-anim-slideRight swx-d2' },
-
-       // Stats
-       { sel: '.stat-pill',           anim: 'swx-anim-scaleUp', stagger: true },
-
-       // CTA
-       { sel: '.cta-image-side',      anim: 'swx-anim-slideLeft' },
-       { sel: '.cta-content-side',    anim: 'swx-anim-slideRight swx-d2' },
-
-       // Carousel section title
-       { sel: '.carousel-section .section-title', anim: 'swx-anim-fadeUp' },
-
-       // Footer columns
-       { sel: '.footer-brand',        anim: 'swx-anim-fadeUp' },
-       { sel: '.footer-col',          anim: 'swx-anim-fadeUp', stagger: true },
-     ];
-
-     const STAGGER_CLASSES = ['swx-d1','swx-d2','swx-d3','swx-d4','swx-d5','swx-d6','swx-d7','swx-d8'];
-
-     // Skip for users who prefer reduced motion
-     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-     // Add hidden state + animation class to each target
-     targets.forEach(({ sel, anim, stagger }) => {
-       const els = document.querySelectorAll(sel);
-       els.forEach((el, i) => {
-         el.classList.add('swx-hidden');
-         anim.split(' ').forEach(cls => el.classList.add(cls));
-         if (stagger) {
-           const delay = STAGGER_CLASSES[Math.min(i, STAGGER_CLASSES.length - 1)];
-           el.classList.add(delay);
-         }
-       });
-     });
-
-     // IntersectionObserver — trigger when 15% of element is visible
-     const observer = new IntersectionObserver((entries) => {
-       entries.forEach(entry => {
-         if (entry.isIntersecting) {
-           entry.target.classList.remove('swx-hidden');
-           entry.target.classList.add('swx-visible');
-           observer.unobserve(entry.target); // animate once
-         }
-       });
-     }, { threshold: 0.15 });
-
-     // Observe all tagged elements
-     document.querySelectorAll('.swx-hidden').forEach(el => observer.observe(el));
-   })();
-   </script>
-   -----------------------------------------------
+   PRIMARY ENGINE — animation-timeline: view()
+   No JS required. Chrome/Edge/Samsung Internet.
 ══════════════════════════════════════════════ */
+
+@supports (animation-timeline: view()) {
+
+  /* Base: all reveal elements use view-driven animation */
+  .reveal,
+  .reveal-left,
+  .reveal-right,
+  .reveal-scale,
+  .reveal-fade {
+    animation-fill-mode: both;
+    animation-duration: 0.001ms; /* overridden per class below */
+    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+    animation-timeline: view();
+    animation-range: entry 0% entry 35%;
+  }
+
+  .reveal       { animation-name: revealUp;    animation-duration: 700ms; }
+  .reveal-left  { animation-name: revealLeft;  animation-duration: 700ms; }
+  .reveal-right { animation-name: revealRight; animation-duration: 700ms; }
+  .reveal-scale { animation-name: revealScale; animation-duration: 650ms; }
+  .reveal-fade  { animation-name: revealFade;  animation-duration: 750ms; }
+
+  /* Delay modifiers */
+  .delay-1 { animation-delay: calc(-1 * 0.10s) !important; }
+  .delay-2 { animation-delay: calc(-1 * 0.20s) !important; }
+  .delay-3 { animation-delay: calc(-1 * 0.30s) !important; }
+  .delay-4 { animation-delay: calc(-1 * 0.40s) !important; }
+  .delay-5 { animation-delay: calc(-1 * 0.50s) !important; }
+
+  /* Stagger children using animation-timeline */
+  .stagger-children > * {
+    animation-name: revealUp;
+    animation-duration: 600ms;
+    animation-fill-mode: both;
+    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+    animation-timeline: view();
+    animation-range: entry 0% entry 40%;
+  }
+  .stagger-children > *:nth-child(1) { animation-duration: 600ms; animation-delay: 0s; }
+  .stagger-children > *:nth-child(2) { animation-duration: 600ms; animation-delay: 0.1s; }
+  .stagger-children > *:nth-child(3) { animation-duration: 600ms; animation-delay: 0.2s; }
+  .stagger-children > *:nth-child(4) { animation-duration: 600ms; animation-delay: 0.3s; }
+  .stagger-children > *:nth-child(5) { animation-duration: 600ms; animation-delay: 0.4s; }
+  .stagger-children > *:nth-child(6) { animation-duration: 600ms; animation-delay: 0.5s; }
+  .stagger-children > *:nth-child(n+7) { animation-duration: 600ms; animation-delay: 0.6s; }
+
+  /* Section fade — plays on both entry and exit */
+  .section-fade {
+    animation-name: revealFade;
+    animation-duration: 800ms;
+    animation-fill-mode: both;
+    animation-timing-function: ease;
+    animation-timeline: view();
+    animation-range: entry 0% entry 30%, exit 70% exit 100%;
+  }
+
+  /* Stat shimmer */
+  .stagger-children .stat-num {
+    animation-name: statShimmer;
+    animation-duration: 800ms;
+    animation-fill-mode: both;
+    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+    animation-timeline: view();
+    animation-range: entry 5% entry 45%;
+  }
+
+  /* Carousel dots */
+  .carousel-dots .dot {
+    animation-name: dotPop;
+    animation-duration: 450ms;
+    animation-fill-mode: both;
+    animation-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
+    animation-timeline: view();
+    animation-range: entry 10% entry 50%;
+  }
+  .carousel-dots .dot:nth-child(2) { animation-delay: 0.07s; }
+  .carousel-dots .dot:nth-child(3) { animation-delay: 0.14s; }
+  .carousel-dots .dot:nth-child(4) { animation-delay: 0.21s; }
+  .carousel-dots .dot:nth-child(5) { animation-delay: 0.28s; }
+
+  /* Footer cols */
+  .footer-cols-animate .footer-col {
+    animation-name: revealUp;
+    animation-duration: 550ms;
+    animation-fill-mode: both;
+    animation-timing-function: ease;
+    animation-timeline: view();
+    animation-range: entry 0% entry 40%;
+  }
+  .footer-cols-animate .footer-col:nth-child(2) { animation-delay: 0.1s; }
+  .footer-cols-animate .footer-col:nth-child(3) { animation-delay: 0.2s; }
+  .footer-cols-animate .footer-col:nth-child(4) { animation-delay: 0.3s; }
+
+  /* Speed modifiers */
+  .parallax-slow { animation-duration: 1000ms !important; }
+  .parallax-fast { animation-duration:  450ms !important; }
+
+  /* Navbar shrink (not scroll-driven animation, but transitions) */
+  .navbar { transition: box-shadow 0.3s ease, background 0.3s ease; }
+  .navbar-inner { transition: height 0.3s ease; }
+  .navbar.scrolled { background: #3d1070; box-shadow: 0 4px 32px rgba(77,20,140,0.52); }
+  .navbar.scrolled .navbar-inner { height: 56px; }
+
+}
+
+
+/* ══════════════════════════════════════════════
+   FALLBACK ENGINE — class-based (JS adds .in-view)
+   Kicks in on browsers that don't support
+   animation-timeline (Safari, Firefox, older Chrome).
+   If no JS is loaded either, elements stay visible
+   — they just don't animate. No broken layouts.
+══════════════════════════════════════════════ */
+
+@supports not (animation-timeline: view()) {
+
+  @media (prefers-reduced-motion: no-preference) {
+
+    .reveal {
+      opacity: 0; transform: translateY(36px);
+      transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+                  transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+      will-change: opacity, transform;
+    }
+    .reveal-left {
+      opacity: 0; transform: translateX(-44px);
+      transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+                  transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+      will-change: opacity, transform;
+    }
+    .reveal-right {
+      opacity: 0; transform: translateX(44px);
+      transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+                  transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+      will-change: opacity, transform;
+    }
+    .reveal-scale {
+      opacity: 0; transform: scale(0.93);
+      transition: opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+                  transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+      will-change: opacity, transform;
+    }
+    .reveal-fade {
+      opacity: 0;
+      transition: opacity 0.75s ease;
+      will-change: opacity;
+    }
+
+    .reveal.in-view,
+    .reveal-left.in-view,
+    .reveal-right.in-view,
+    .reveal-scale.in-view,
+    .reveal-fade.in-view   { opacity: 1; transform: none; }
+
+    /* Stagger */
+    .stagger-children > * {
+      opacity: 0; transform: translateY(28px);
+      transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+                  transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+      will-change: opacity, transform;
+    }
+    .stagger-children.in-view > *:nth-child(1)   { opacity:1; transform:none; transition-delay:0s; }
+    .stagger-children.in-view > *:nth-child(2)   { opacity:1; transform:none; transition-delay:0.1s; }
+    .stagger-children.in-view > *:nth-child(3)   { opacity:1; transform:none; transition-delay:0.2s; }
+    .stagger-children.in-view > *:nth-child(4)   { opacity:1; transform:none; transition-delay:0.3s; }
+    .stagger-children.in-view > *:nth-child(5)   { opacity:1; transform:none; transition-delay:0.4s; }
+    .stagger-children.in-view > *:nth-child(6)   { opacity:1; transform:none; transition-delay:0.5s; }
+    .stagger-children.in-view > *:nth-child(n+7) { opacity:1; transform:none; transition-delay:0.6s; }
+
+    /* Section fade in/out */
+    .section-fade {
+      opacity: 0; transform: translateY(24px);
+      transition: opacity 0.75s cubic-bezier(0.22, 1, 0.36, 1),
+                  transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
+      will-change: opacity, transform;
+    }
+    .section-fade.in-view  { opacity: 1; transform: none; }
+    .section-fade.out-view { opacity: 0; transform: translateY(-20px);
+                             transition: opacity 0.5s ease, transform 0.5s ease; }
+
+    /* Delays */
+    .delay-1 { transition-delay: 0.10s !important; }
+    .delay-2 { transition-delay: 0.20s !important; }
+    .delay-3 { transition-delay: 0.30s !important; }
+    .delay-4 { transition-delay: 0.40s !important; }
+    .delay-5 { transition-delay: 0.50s !important; }
+
+    /* Stat shimmer */
+    .stagger-children.in-view .stat-num { animation: statShimmer 0.8s cubic-bezier(0.22,1,0.36,1) both; }
+
+    /* Dots */
+    .carousel-dots.in-view .dot { animation: dotPop 0.45s cubic-bezier(0.34,1.56,0.64,1) both; }
+    .carousel-dots.in-view .dot:nth-child(2) { animation-delay:0.07s; }
+    .carousel-dots.in-view .dot:nth-child(3) { animation-delay:0.14s; }
+    .carousel-dots.in-view .dot:nth-child(4) { animation-delay:0.21s; }
+    .carousel-dots.in-view .dot:nth-child(5) { animation-delay:0.28s; }
+
+    /* Footer cols */
+    .footer-cols-animate .footer-col { opacity:0; transform:translateY(20px); transition:opacity 0.55s ease,transform 0.55s ease; }
+    .footer-cols-animate.in-view .footer-col:nth-child(1) { opacity:1; transform:none; transition-delay:0s; }
+    .footer-cols-animate.in-view .footer-col:nth-child(2) { opacity:1; transform:none; transition-delay:0.1s; }
+    .footer-cols-animate.in-view .footer-col:nth-child(3) { opacity:1; transform:none; transition-delay:0.2s; }
+    .footer-cols-animate.in-view .footer-col:nth-child(4) { opacity:1; transform:none; transition-delay:0.3s; }
+
+    /* Navbar */
+    .navbar { transition: box-shadow 0.3s ease, background 0.3s ease; }
+    .navbar-inner { transition: height 0.3s ease; }
+    .navbar.scrolled { background: #3d1070; box-shadow: 0 4px 32px rgba(77,20,140,0.52); }
+    .navbar.scrolled .navbar-inner { height: 56px; }
+
+  }
+
+  /* Reduced-motion fallback */
+  @media (prefers-reduced-motion: reduce) {
+    .reveal,.reveal-left,.reveal-right,.reveal-scale,.reveal-fade { opacity:0; transform:none !important; transition:opacity 0.4s ease; }
+    .reveal.in-view,.reveal-left.in-view,.reveal-right.in-view,.reveal-scale.in-view,.reveal-fade.in-view { opacity:1; }
+    .stagger-children > * { opacity:0; transform:none !important; transition:opacity 0.35s ease; }
+    .stagger-children.in-view > * { opacity:1; }
+    .section-fade { opacity:0; transition:opacity 0.35s ease; }
+    .section-fade.in-view { opacity:1; }
+    .section-fade.out-view { opacity:0; }
+    .footer-cols-animate .footer-col { opacity:0; transition:opacity 0.3s ease; }
+    .footer-cols-animate.in-view .footer-col { opacity:1; }
+  }
+
+  /* SAFETY NET: if NO JS and browser doesn't support animation-timeline,
+     show all content normally so nothing is hidden */
+  .no-js .reveal,
+  .no-js .reveal-left,
+  .no-js .reveal-right,
+  .no-js .reveal-scale,
+  .no-js .reveal-fade,
+  .no-js .stagger-children > *,
+  .no-js .section-fade,
+  .no-js .footer-cols-animate .footer-col {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+    animation: none !important;
+  }
+
+}
