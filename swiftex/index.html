@@ -10,52 +10,50 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
 
-<script src="https://cdn.tailwindcss.com"></script>
-<script>
-  tailwind.config = {
-    theme: {
-      extend: {
-        keyframes: {
-          'fade-up':    { '0%': { opacity:'0', transform:'translateY(32px)' },  '100%': { opacity:'1', transform:'translateY(0)' } },
-          'fade-left':  { '0%': { opacity:'0', transform:'translateX(-40px)' }, '100%': { opacity:'1', transform:'translateX(0)' } },
-          'fade-right': { '0%': { opacity:'0', transform:'translateX(40px)' },  '100%': { opacity:'1', transform:'translateX(0)' } },
-          'fade-scale': { '0%': { opacity:'0', transform:'scale(0.93)' },        '100%': { opacity:'1', transform:'scale(1)' } },
-          'fade-in':    { '0%': { opacity:'0' },                                  '100%': { opacity:'1' } },
-          'stat-pop':   { '0%': { opacity:'0', transform:'translateY(14px) scale(0.85)', filter:'blur(5px)' }, '60%': { filter:'blur(0)' }, '100%': { opacity:'1', transform:'none', filter:'blur(0)' } },
-          'dot-pop':    { '0%': { opacity:'0', transform:'scale(0)' },            '100%': { opacity:'1', transform:'scale(1)' } },
-        },
-        animation: {
-          'fade-up':    'fade-up    0.7s cubic-bezier(0.22,1,0.36,1) both',
-          'fade-left':  'fade-left  0.7s cubic-bezier(0.22,1,0.36,1) both',
-          'fade-right': 'fade-right 0.7s cubic-bezier(0.22,1,0.36,1) both',
-          'fade-scale': 'fade-scale 0.65s cubic-bezier(0.22,1,0.36,1) both',
-          'fade-in':    'fade-in    0.7s ease both',
-          'stat-pop':   'stat-pop   0.9s cubic-bezier(0.22,1,0.36,1) both',
-          'dot-pop':    'dot-pop    0.45s cubic-bezier(0.34,1.56,0.64,1) both',
-        },
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          keyframes: {
+            'fade-up':    { '0%': { opacity:'0', transform:'translateY(32px)' },  '100%': { opacity:'1', transform:'translateY(0)' } },
+            'fade-left':  { '0%': { opacity:'0', transform:'translateX(-40px)' }, '100%': { opacity:'1', transform:'translateX(0)' } },
+            'fade-right': { '0%': { opacity:'0', transform:'translateX(40px)' },  '100%': { opacity:'1', transform:'translateX(0)' } },
+            'fade-scale': { '0%': { opacity:'0', transform:'scale(0.93)' },        '100%': { opacity:'1', transform:'scale(1)' } },
+            'fade-in':    { '0%': { opacity:'0' },                                  '100%': { opacity:'1' } },
+            'stat-pop':   { '0%': { opacity:'0', transform:'translateY(14px) scale(0.85)', filter:'blur(5px)' }, '60%': { filter:'blur(0)' }, '100%': { opacity:'1', transform:'none', filter:'blur(0)' } },
+            'dot-pop':    { '0%': { opacity:'0', transform:'scale(0)' },            '100%': { opacity:'1', transform:'scale(1)' } },
+          },
+          animation: {
+            'fade-up':    'fade-up    0.7s cubic-bezier(0.22,1,0.36,1) both',
+            'fade-left':  'fade-left  0.7s cubic-bezier(0.22,1,0.36,1) both',
+            'fade-right': 'fade-right 0.7s cubic-bezier(0.22,1,0.36,1) both',
+            'fade-scale': 'fade-scale 0.65s cubic-bezier(0.22,1,0.36,1) both',
+            'fade-in':    'fade-in    0.7s ease both',
+            'stat-pop':   'stat-pop   0.9s cubic-bezier(0.22,1,0.36,1) both',
+            'dot-pop':    'dot-pop    0.45s cubic-bezier(0.34,1.56,0.64,1) both',
+          },
+        }
       }
     }
-  }
-</script>
+  </script>
 </head>
 <body>
 
 <!-- ══════════════════════════════════════════════
      NAVBAR
 ══════════════════════════════════════════════ -->
-<nav class="navbar" id="navbar">
+<nav class="navbar animate-fade-in" id="navbar">
   <div class="navbar-inner">
-    <a href="index.html" class="navbar-logo">
+    <a href="index.html" class="navbar-logo animate-fade-in [animation-delay:50ms]">
       <span class="logo-text">EXPRESS<span>CO</span></span>
     </a>
-    <div class="navbar-links desktop-only">
+    <div class="navbar-links desktop-only animate-fade-in [animation-delay:100ms]">
       <a href="faq.html" class="nav-link">FAQ</a>
       <a href="#track-section" class="nav-link">Track</a>
       <a href="about.html" class="nav-link">About</a>
-      
     </div>
-    <div class="navbar-actions">
-      
+    <div class="navbar-actions animate-fade-in [animation-delay:150ms]">
       <button class="hamburger" id="hamburger" aria-label="Menu">
         <span></span><span></span><span></span>
       </button>
@@ -66,8 +64,6 @@
     <a href="faq.html" class="mobile-link">FAQ</a>
     <a href="#track-section" class="mobile-link">Track</a>
     <a href="about.html" class="mobile-link">About</a>
-    
-    
   </div>
 </nav>
 
@@ -76,18 +72,18 @@
 ══════════════════════════════════════════════ -->
 <section class="hero">
 
-  <!-- ── TOP: New design (white bg, text + ring + photo) ── -->
+  <!-- ── TOP: text + ring ── -->
   <div class="hero-top">
     <div class="hero-text-col">
-      <div class="hero-badge">
+      <div class="hero-badge animate-fade-in [animation-delay:100ms]">
         <span class="badge-dot"></span>
         Welcome
       </div>
-      <h1 class="hero-title">Fast and reliable<br>delivery</h1>
-      <p class="hero-subtitle">To any destination worldwide</p>
-      <a href="#track-section" class="hero-send-btn">Track now <span>›</span></a>
+      <h1 class="hero-title animate-fade-up [animation-delay:200ms]">Fast and reliable<br>delivery</h1>
+      <p class="hero-subtitle animate-fade-up [animation-delay:300ms]">To any destination worldwide</p>
+      <a href="#track-section" class="hero-send-btn animate-fade-up [animation-delay:400ms]">Track now <span>›</span></a>
     </div>
-    <div class="hero-graphic-col">
+    <div class="hero-graphic-col animate-fade-scale [animation-delay:250ms]">
       <svg class="hero-ring" viewBox="0 0 260 260" fill="none" xmlns="http://www.w3.org/2000/svg">
         <circle cx="200" cy="60" r="140" fill="none" stroke="#FF6200" stroke-width="22" stroke-dasharray="290 180" stroke-dashoffset="0" stroke-linecap="round"/>
         <circle cx="200" cy="60" r="140" fill="none" stroke="#4D148C" stroke-width="22" stroke-dasharray="130 340" stroke-dashoffset="-290" stroke-linecap="round"/>
@@ -98,15 +94,15 @@
   </div>
 
   <!-- ── PHOTO ── -->
-  <div class="hero-photo">
+  <div class="hero-photo animate-fade-scale [animation-delay:300ms]">
     <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=1200&q=80" alt="Woman receiving parcel" class="hero-photo-img" />
   </div>
 
-  <!-- ── BOTTOM: Track form + stats (purple bg) ── -->
+  <!-- ── BOTTOM: Track form + stats ── -->
   <div class="hero-bottom" id="track-section">
     <div class="hero-bottom-inner">
 
-      <div class="hero-track-wrap">
+      <div class="hero-track-wrap animate-fade-up [animation-delay:200ms]">
         <p class="hero-track-label">Track your shipment</p>
         <div class="hero-track-form">
           <div class="track-input-wrap">
@@ -128,16 +124,16 @@
 
       <!-- Stats -->
       <div class="hero-stats">
-        <div class="stat-pill">
-          <span class="stat-num">2M+</span>
+        <div class="stat-pill animate-fade-scale [animation-delay:300ms]">
+          <span class="stat-num animate-stat-pop [animation-delay:350ms]">2M+</span>
           <span class="stat-label">Packages Delivered</span>
         </div>
-        <div class="stat-pill">
-          <span class="stat-num">99.8%</span>
+        <div class="stat-pill animate-fade-scale [animation-delay:420ms]">
+          <span class="stat-num animate-stat-pop [animation-delay:470ms]">99.8%</span>
           <span class="stat-label">On-Time Rate</span>
         </div>
-        <div class="stat-pill">
-          <span class="stat-num">180+</span>
+        <div class="stat-pill animate-fade-scale [animation-delay:540ms]">
+          <span class="stat-num animate-stat-pop [animation-delay:590ms]">180+</span>
           <span class="stat-label">Countries Served</span>
         </div>
       </div>
@@ -148,23 +144,23 @@
 </section>
 
 <!-- ══════════════════════════════════════════════
-     SERVICE TABS (FedEx-style 3-column)
+     SERVICE TABS
 ══════════════════════════════════════════════ -->
 <section class="service-tabs" id="services">
   <div class="tab-bar">
-    <div class="tab-item" onclick="setTab(this,'rate')">
+    <div class="tab-item animate-fade-up [animation-delay:100ms]" onclick="setTab(this,'rate')">
       <div class="tab-icon">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><path d="M7 8h2m0 0v4m0-4h2m2 0h2"/></svg>
       </div>
       <span>RATE & TRANSIT TIMES</span>
     </div>
-    <div class="tab-item active" onclick="setTab(this,'track')">
+    <div class="tab-item active animate-fade-up [animation-delay:200ms]" onclick="setTab(this,'track')">
       <div class="tab-icon">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><circle cx="11" cy="11" r="3"/></svg>
       </div>
       <span>TRACK</span>
     </div>
-    <div class="tab-item" onclick="setTab(this,'ship')">
+    <div class="tab-item animate-fade-up [animation-delay:300ms]" onclick="setTab(this,'ship')">
       <div class="tab-icon">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 17H3a2 2 0 01-2-2V5a2 2 0 012-2h11a2 2 0 012 2v3"/><rect x="9" y="11" width="14" height="10" rx="1"/><circle cx="12" cy="21" r="1"/><circle cx="20" cy="21" r="1"/></svg>
       </div>
@@ -172,10 +168,9 @@
     </div>
   </div>
 
-  <!-- Tab panels -->
   <div class="tab-panels">
     <div class="tab-panel" id="tab-rate">
-      <div class="panel-content">
+      <div class="panel-content animate-fade-up [animation-delay:100ms]">
         <h3>Calculate Shipping Rates</h3>
         <p>Get instant quotes for domestic and international shipments.</p>
         <div class="rate-form">
@@ -196,7 +191,7 @@
       </div>
     </div>
     <div class="tab-panel active" id="tab-track">
-      <div class="panel-content" id="track-section">
+      <div class="panel-content animate-fade-up [animation-delay:100ms]" id="track-section">
         <h3>Track Your Shipment</h3>
         <p>Enter your tracking ID to get real-time status updates.</p>
         <div class="track-form-panel">
@@ -207,43 +202,44 @@
       </div>
     </div>
     <div class="tab-panel" id="tab-ship">
-      <div class="panel-content">
-        
+      <div class="panel-content animate-fade-up [animation-delay:100ms]">
+      </div>
     </div>
   </div>
 </section>
 
+<!-- ══════════════════════════════════════════════
+     NOTICE
+══════════════════════════════════════════════ -->
 <section class="notice-section">
-  <div class="notice-card">
+  <div class="notice-card animate-fade-up [animation-delay:150ms]">
     <div class="notice-stripe"></div>
-    <div class="notice-postmark">
+    <div class="notice-postmark animate-fade-left [animation-delay:250ms]">
       <img src="assets/img/postmark-home.png" alt="Postmark" class="postmark-img" />
     </div>
-    <div class="notice-body">
+    <div class="notice-body animate-fade-right [animation-delay:300ms]">
       <p><strong>Postmarks:</strong> If you want to ensure that your shipments receive a postmark on the day you send it, submit your international packages early to ensure on-time delivery. Express options available for urgent packages. <a href="#" class="link-blue">Learn more</a></p>
     </div>
   </div>
 </section>
+
 <!-- ══════════════════════════════════════════════
      MANAGE SHIPMENTS
 ══════════════════════════════════════════════ -->
 <section class="manage-section" id="about">
   <div class="container">
-    <h2 class="section-title">Manage Your Shipments</h2>
-    <p class="section-sub">Everything you need to send, track, and receive packages in one place.</p>
+    <h2 class="section-title animate-fade-up [animation-delay:100ms]">Manage Your Shipments</h2>
+    <p class="section-sub animate-fade-up [animation-delay:200ms]">Everything you need to send, track, and receive packages in one place.</p>
     <div class="manage-grid">
 
       <!-- Card 1 -->
-      <div class="manage-card" style="--card-bg: #cc3300; --card-footer: #b02b00;">
+      <div class="manage-card animate-fade-up [animation-delay:100ms]" style="--card-bg: #cc3300; --card-footer: #b02b00;">
         <div class="manage-card-top">
           <div class="manage-illus">
             <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <!-- Envelope -->
               <rect x="8" y="22" width="50" height="36" rx="4" fill="#f5e6c8" stroke="#e8d5a3" stroke-width="1.5"/>
               <path d="M8 26l25 18L58 26" stroke="#e8d5a3" stroke-width="2" stroke-linecap="round"/>
-              <!-- Card sticking out -->
               <rect x="28" y="12" width="38" height="30" rx="3" fill="#fff" stroke="#ddd" stroke-width="1.5" transform="rotate(8 28 12)"/>
-              <!-- Flowers -->
               <circle cx="42" cy="18" r="4" fill="#e74c3c"/>
               <circle cx="52" cy="15" r="3.5" fill="#9b59b6"/>
               <circle cx="48" cy="26" r="3" fill="#2ecc71"/>
@@ -261,16 +257,13 @@
       </div>
 
       <!-- Card 2 -->
-      <div class="manage-card" style="--card-bg: #4D148C; --card-footer: #3d1070;">
+      <div class="manage-card animate-fade-up [animation-delay:200ms]" style="--card-bg: #4D148C; --card-footer: #3d1070;">
         <div class="manage-card-top">
           <div class="manage-illus">
             <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <!-- Box -->
               <rect x="14" y="28" width="44" height="38" rx="3" fill="#c8a165"/>
               <rect x="14" y="28" width="44" height="12" rx="3" fill="#b8904f"/>
-              <!-- Tape strip -->
               <rect x="30" y="22" width="12" height="20" rx="2" fill="#e8c87a"/>
-              <!-- Barcode lines -->
               <rect x="22" y="50" width="2" height="10" fill="#7a5c2e"/>
               <rect x="26" y="50" width="1" height="10" fill="#7a5c2e"/>
               <rect x="29" y="50" width="3" height="10" fill="#7a5c2e"/>
@@ -278,7 +271,6 @@
               <rect x="37" y="50" width="2" height="10" fill="#7a5c2e"/>
               <rect x="41" y="50" width="3" height="10" fill="#7a5c2e"/>
               <rect x="46" y="50" width="1" height="10" fill="#7a5c2e"/>
-              <!-- Up arrow symbol -->
               <path d="M36 34l4-4 4 4M40 30v8" stroke="#7a5c2e" stroke-width="1.5" stroke-linecap="round"/>
             </svg>
           </div>
@@ -291,21 +283,17 @@
       </div>
 
       <!-- Card 3 -->
-      <div class="manage-card" style="--card-bg: #1a3a8c; --card-footer: #122d70;">
+      <div class="manage-card animate-fade-up [animation-delay:300ms]" style="--card-bg: #1a3a8c; --card-footer: #122d70;">
         <div class="manage-card-top">
           <div class="manage-illus">
             <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <!-- Hand -->
               <path d="M28 62c0 0 -4-2-4-8V42l4-2v12" fill="#c8956c"/>
               <rect x="24" y="54" width="32" height="8" rx="4" fill="#c8956c"/>
-              <!-- Phone body -->
               <rect x="28" y="16" width="26" height="44" rx="4" fill="#1a1a2e"/>
               <rect x="30" y="20" width="22" height="34" rx="2" fill="#fff"/>
-              <!-- Screen content - tracking dots -->
               <circle cx="36" cy="34" r="3" fill="#FF6200"/>
               <line x1="39" y1="34" x2="52" y2="34" stroke="#e0e0e0" stroke-width="2" stroke-dasharray="3 2"/>
               <circle cx="52" cy="34" r="2" fill="#e0e0e0"/>
-              <!-- Orange bar at top of screen -->
               <rect x="30" y="20" width="22" height="7" rx="2" fill="#FF6200"/>
             </svg>
           </div>
@@ -318,19 +306,15 @@
       </div>
 
       <!-- Card 4 -->
-      <div class="manage-card" style="--card-bg: #FF6200; --card-footer: #e05500;">
+      <div class="manage-card animate-fade-up [animation-delay:400ms]" style="--card-bg: #FF6200; --card-footer: #e05500;">
         <div class="manage-card-top">
           <div class="manage-illus">
             <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <!-- Mailbox slot / letterbox -->
               <rect x="10" y="28" width="52" height="36" rx="6" fill="#cc4400"/>
               <rect x="10" y="28" width="52" height="36" rx="6" stroke="#ff8c42" stroke-width="1.5"/>
-              <!-- Slot opening -->
               <rect x="20" y="44" width="32" height="6" rx="3" fill="#ff8c42"/>
-              <!-- Letter going in -->
               <rect x="24" y="36" width="24" height="16" rx="2" fill="#fff" opacity="0.9"/>
               <path d="M24 40l12 7 12-7" stroke="#e0e0e0" stroke-width="1.2"/>
-              <!-- Brand text on box -->
               <rect x="14" y="56" width="14" height="4" rx="1" fill="#ff8c42" opacity="0.5"/>
             </svg>
           </div>
@@ -351,35 +335,34 @@
 ══════════════════════════════════════════════ -->
 <section class="business-section">
   <div class="container">
-    <h2 class="section-title">Your Business Resource</h2>
+    <h2 class="section-title animate-fade-up [animation-delay:100ms]">Your Business Resource</h2>
   </div>
 
   <div class="biz-item">
-    <div class="biz-img-full">
+    <div class="biz-img-full animate-fade-scale [animation-delay:100ms]">
       <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=1200&q=80" alt="Customs" />
     </div>
-    <div class="biz-text">
+    <div class="biz-text animate-fade-up [animation-delay:250ms]">
       <h3>Customs Made Easier</h3>
       <p>Access all the tools you need for shipping across borders. Prepare international documents, estimate duties and taxes, search country profiles, and much more.</p>
     </div>
   </div>
 
   <div class="biz-item">
-    <div class="biz-img-full">
+    <div class="biz-img-full animate-fade-scale [animation-delay:150ms]">
       <img src="assets/img/inter.jpg" alt="International Priority Express" />
     </div>
-    <div class="biz-text">
+    <div class="biz-text animate-fade-up [animation-delay:300ms]">
       <h3>International Priority Express<sup>®</sup></h3>
       <p>More delivery time options are available for your international shipments.</p>
-      
     </div>
   </div>
 
   <div class="biz-item">
-    <div class="biz-img-full">
+    <div class="biz-img-full animate-fade-scale [animation-delay:200ms]">
       <img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1200&q=80" alt="Sustainable Shipping" />
     </div>
-    <div class="biz-text">
+    <div class="biz-text animate-fade-up [animation-delay:350ms]">
       <h3>Sustainable Shipping</h3>
       <p>View your carbon emissions to help you manage your carbon footprint. Understand your shipping patterns and environmental impact.</p>
     </div>
@@ -387,21 +370,18 @@
 
 </section>
 
-  
-
-  
 <!-- ══════════════════════════════════════════════
      CTA BANNER
 ══════════════════════════════════════════════ -->
 <section class="cta-banner">
   <div class="cta-inner">
-    <div class="cta-image-side">
+    <div class="cta-image-side animate-fade-left [animation-delay:100ms]">
       <img src="assets/img/beforefooter.jpg" alt="Happy customer with packages" class="cta-photo" />
     </div>
-    <div class="cta-content-side">
+    <div class="cta-content-side animate-fade-right [animation-delay:250ms]">
       <h2>A parcel from abroad</h2>
       <p>Are you expecting a parcel from outside the European Union? We can help you with the customs declaration. Sometimes we will need some more data from you or there may be additional costs.</p>
-      <a href="#" class="cta-btn">START TRACKING WITH US </a>
+      <a href="#" class="cta-btn">START TRACKING WITH US</a>
     </div>
   </div>
 </section>
@@ -411,7 +391,7 @@
 ══════════════════════════════════════════════ -->
 <footer class="footer" id="contact">
   <div class="footer-inner">
-    <div class="footer-brand">
+    <div class="footer-brand animate-fade-up [animation-delay:100ms]">
       <div class="footer-logo">EXPRESS<span>COURIER</span></div>
       <p>Fast, reliable, and fully tracked courier services for individuals and businesses worldwide.</p>
       <div class="footer-social">
@@ -431,18 +411,16 @@
     </div>
 
     <div class="footer-cols">
-      <div class="footer-col">
+      <div class="footer-col animate-fade-up [animation-delay:200ms]">
         <h5>HELPFUL LINKS</h5>
         <ul>
-          
           <li><a href="faq.html">FAQs</a></li>
           <li><a href="about.html">About</a></li>
           <li><a href="#">Track</a></li>
           <li><a href="#">Homepage</a></li>
         </ul>
       </div>
-      
-      <div class="footer-col">
+      <div class="footer-col animate-fade-up [animation-delay:320ms]">
         <h5>COMPANY</h5>
         <ul>
           <li><a href="about.html">About Express CO</a></li>
@@ -451,10 +429,9 @@
           <li><a href="sending-parcels.html">Sending parcels</a></li>
         </ul>
       </div>
-      
     </div>
   </div>
-  <div class="footer-bottom">
+  <div class="footer-bottom animate-fade-in [animation-delay:400ms]">
     <p>Copyright &copy; <span id="year"></span> Express courier. All Rights Reserved.</p>
   </div>
 </footer>
