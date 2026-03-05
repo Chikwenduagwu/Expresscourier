@@ -1,0 +1,182 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body {
+  --time: .4s;
+  background-color: #eee;
+}
+
+svg {
+  max-width: 1000px;
+  margin: auto;
+}
+
+.animation {
+  -webkit-animation: load calc(var(--time) * 2) forwards var(--time);
+          animation: load calc(var(--time) * 2) forwards var(--time);
+  -webkit-animation-timing-function: cubic-bezier(0.09, 0.72, 0.6, 1.12);
+          animation-timing-function: cubic-bezier(0.09, 0.72, 0.6, 1.12);
+}
+
+.animation-alpha {
+  opacity: 0;
+}
+
+.animation-beta {
+  opacity: 0;
+  transform: translateY(3%);
+  -webkit-animation-delay: calc(var(--time) * 2);
+          animation-delay: calc(var(--time) * 2);
+}
+
+.animation-beta:nth-child(2) {
+  -webkit-animation-delay: calc(var(--time) * (2 + .1));
+          animation-delay: calc(var(--time) * (2 + .1));
+}
+
+.animation-beta:nth-child(3) {
+  -webkit-animation-delay: calc(var(--time) * (2 + .2));
+          animation-delay: calc(var(--time) * (2 + .2));
+}
+
+.animation-beta:nth-child(4) {
+  -webkit-animation-delay: calc(var(--time) * (2 + .3));
+          animation-delay: calc(var(--time) * (2 + .3));
+}
+
+.animation-beta:nth-child(5) {
+  -webkit-animation-delay: calc(var(--time) * (2 + .4));
+          animation-delay: calc(var(--time) * (2 + .4));
+}
+
+.animation-beta:nth-child(6) {
+  -webkit-animation-delay: calc(var(--time) * (2 + .5));
+          animation-delay: calc(var(--time) * (2 + .5));
+}
+
+.animation-beta:nth-child(7) {
+  -webkit-animation-delay: calc(var(--time) * (2 + .6));
+          animation-delay: calc(var(--time) * (2 + .6));
+}
+
+.animation-beta:nth-child(8) {
+  -webkit-animation-delay: calc(var(--time) * (2 + .7));
+          animation-delay: calc(var(--time) * (2 + .7));
+}
+
+.animation-beta:nth-child(9) {
+  -webkit-animation-delay: calc(var(--time) * (2 + .8));
+          animation-delay: calc(var(--time) * (2 + .8));
+}
+
+.animation-gamma {
+  opacity: 0;
+  transform: translateX(-5%);
+  -webkit-animation-delay: calc(var(--time) * 3.5);
+          animation-delay: calc(var(--time) * 3.5);
+}
+
+.animation-delta {
+  opacity: 0;
+  transform: translateY(5%);
+  -webkit-animation-delay: calc(var(--time) * 4);
+          animation-delay: calc(var(--time) * 4);
+}
+
+.animation-epsilon {
+  opacity: 0;
+  transform: translateY(2%);
+  -webkit-animation-delay: calc(var(--time) * 4.5);
+          animation-delay: calc(var(--time) * 4.5);
+}
+
+.animation-zeta {
+  opacity: 0;
+  transform: translateY(5%);
+  -webkit-animation-delay: calc(var(--time) * 4.75);
+          animation-delay: calc(var(--time) * 4.75);
+}
+
+.animation-eta {
+  opacity: 0;
+  transform: translateY(5%);
+  -webkit-animation-delay: calc(var(--time) * 5);
+          animation-delay: calc(var(--time) * 5);
+}
+
+.animation-theta {
+  opacity: 0;
+  transform: translateY(-10%);
+  -webkit-animation-delay: calc(var(--time) * 7);
+          animation-delay: calc(var(--time) * 7);
+}
+
+.animation-theta:nth-child(1) {
+  -webkit-animation-delay: calc(var(--time) * (7 + .3));
+          animation-delay: calc(var(--time) * (7 + .3));
+}
+
+.animation-theta:nth-child(2) {
+  -webkit-animation-delay: calc(var(--time) * (7 + .6));
+          animation-delay: calc(var(--time) * (7 + .6));
+}
+
+.animation-theta:nth-child(3) {
+  -webkit-animation-delay: calc(var(--time) * (7 + .9));
+          animation-delay: calc(var(--time) * (7 + .9));
+}
+
+.animation-theta:nth-child(4) {
+  -webkit-animation-delay: calc(var(--time) * (7 + 1.2));
+          animation-delay: calc(var(--time) * (7 + 1.2));
+}
+
+.animation-iota {
+  opacity: 0;
+  transform: translateY(-10%);
+  -webkit-animation-delay: calc(var(--time) * 6);
+          animation-delay: calc(var(--time) * 6);
+}
+
+.animation-iota:nth-child(1) {
+  -webkit-animation-delay: calc(var(--time) * (6 + .3));
+          animation-delay: calc(var(--time) * (6 + .3));
+}
+
+.animation-iota:nth-child(2) {
+  -webkit-animation-delay: calc(var(--time) * (6 + .6));
+          animation-delay: calc(var(--time) * (6 + .6));
+}
+
+.animation-iota:nth-child(3) {
+  -webkit-animation-delay: calc(var(--time) * (6 + .9));
+          animation-delay: calc(var(--time) * (6 + .9));
+}
+
+.animation-iota:nth-child(4) {
+  -webkit-animation-delay: calc(var(--time) * (6 + 1.2));
+          animation-delay: calc(var(--time) * (6 + 1.2));
+}
+
+.animation-kappa {
+  transform: translateX(-47%);
+  -webkit-animation-delay: calc(var(--time) * 5);
+          animation-delay: calc(var(--time) * 5);
+}
+
+@-webkit-keyframes load {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes load {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
