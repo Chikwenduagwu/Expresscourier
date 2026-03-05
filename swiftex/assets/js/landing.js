@@ -138,4 +138,54 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 
+/* Intersection Observer — trigger .reveal on scroll */
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1 });
 
+    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+/* ══ COUNT-UP ══════════════════════════════════════
+   Counts from 0 → target with easeOutQuart curve.
+   Triggers when .stats-section enters the viewport.
+══════════════════════════════════════════════════ */
+(function () {
+  var nums    = document.querySelectorAll('.s-num');
+  var section = document.querySelector('.stats-section');
+  var fired   = false;
+
+  function easeOut(t) { return 1 - Math.pow(1 - t, 4); }
+
+  function runCounters() {
+    if (fired) return;
+    fired = true;
+    nums.forEach(function (el) {
+      var target  = +el.dataset.target;
+      var suffix  = el.dataset.suffix || '';
+      var dur     = 2400;
+      var t0      = performance.now();
+      (function tick(now) {
+        var p = Math.min((now - t0) / dur, 1);
+        var v = target * easeOut(p);
+        /* Format: always show integer unless < 10 */
+        el.textContent = (target < 10 ? Math.round(v * 10) / 10 : Math.round(v)) + suffix;
+        if (p < 1) requestAnimationFrame(tick);
+        else el.textContent = target + suffix;
+      })(t0);
+    });
+  }
+
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      if (entries[0].isIntersecting) { runCounters(); io.disconnect(); }
+    }, { threshold: 0.3 });
+    io.observe(section);
+  } else {
+    runCounters();
+  }
+})();
