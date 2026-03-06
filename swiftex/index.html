@@ -2467,7 +2467,7 @@
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
       <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
     </svg>
-    ASK EXPRESS
+    HEY!👋
   </button>
 
   <!-- Chat panel -->
@@ -2504,7 +2504,7 @@
 
     <!-- Human agent mode bar -->
     <div class="chat-mode-bar" id="landingChatModeBar" style="display:none">
-      🧑‍💼 A human agent has joined this conversation
+       A human agent has joined this conversation
     </div>
 
     <!-- Messages -->
@@ -2638,12 +2638,17 @@
   })();
 
 /* ══ LANDING CHAT WIDGET ══ */
-const SUPABASE_URL = window.SUPABASE_URL || '';
-const SUPABASE_ANON_KEY = window.SUPABASE_ANON_KEY || '';
-const supabaseClient = (typeof supabase !== 'undefined' && SUPABASE_URL)
-  ? supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+/* ══ LANDING CHAT WIDGET ══ */
+var SUPABASE_URL = (typeof window.SUPABASE_URL !== 'undefined') ? window.SUPABASE_URL : '';
+var SUPABASE_ANON_KEY = (typeof window.SUPABASE_ANON_KEY !== 'undefined') ? window.SUPABASE_ANON_KEY : '';
+var supabaseClient = null;
+try {
+  if (typeof supabase !== 'undefined' && SUPABASE_URL) {
+    supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  }
+} catch(e) { console.warn('Supabase init failed:', e); }
 
-function getSessionId() {
+ function getSessionId() {
   try {
     var stored = JSON.parse(localStorage.getItem('swiftex_session') || '{}');
     var thirtyDays = 30 * 24 * 60 * 60 * 1000;
