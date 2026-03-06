@@ -103,9 +103,16 @@ const reply = aiData?.choices?.[0]?.message?.content
     return res.status(200).json({ reply });
 
   } catch (err) {
-  console.error('Chat API error:', err.message, err.stack);
-  return res.status(500).json({ error: err.message, reply: 'Something went wrong. Please try again.' });
-}
+    console.error('SWIFTEX_ERROR', JSON.stringify({
+      message: err.message,
+      stack: err.stack,
+      name: err.name
+    }));
+    return res.status(500).json({ 
+      error: err.message, 
+      reply: err.message 
+    });
+  }
 };
 
 async function saveMessage(shipmentId, role, message) {
