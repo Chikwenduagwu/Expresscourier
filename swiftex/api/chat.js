@@ -31,7 +31,7 @@ if (!message) {
     const { data: shipment, error: shipmentError } = await supabase
   .from('shipments')
   .select('*')
-  .eq('id', trackingId)
+  .eq('tracking_id', trackingId)
   .single();
 
 // ADD THIS LINE RIGHT HERE
