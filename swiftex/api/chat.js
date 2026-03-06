@@ -92,7 +92,8 @@ Be concise, helpful, and friendly. If asked something you don't know, say you wi
     });
 
     const aiData = await aiResponse.json();
-    const reply = aiData?.choices?.[0]?.message?.content
+console.log('Fireworks response:', JSON.stringify(aiData));
+const reply = aiData?.choices?.[0]?.message?.content
       || "I'm having trouble responding right now. Please try again in a moment.";
 
     // 6. Save bot reply
