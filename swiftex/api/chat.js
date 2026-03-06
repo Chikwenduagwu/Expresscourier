@@ -7,7 +7,7 @@ module.exports = async (req, res) => {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   try {
-    const { message } = req.body;
+    const { message, history } = req.body;
 
     if (!message) return res.status(400).json({ error: 'message is required' });
 
@@ -22,7 +22,7 @@ ABOUT SWIFTEX:
 - For urgent issues, customers can request to speak with a human agent
 - Support is available 24/7
 
-Only answer questions related to SwiftEx and courier/delivery topics. If asked something unrelated, politely redirect the conversation back to how you can help with deliveries and shipments. Keep responses short, friendly, and helpful.`;
+Only answer questions related to SwiftEx and courier/delivery topics. If asked something unrelated, politely redirect the conversation back to how you can help with deliveries and shipments. Keep responses short, friendly, and helpful. Format your responses clearly — use line breaks between points, and keep replies concise.`;
 
     const aiResponse = await fetch('https://api.fireworks.ai/inference/v1/chat/completions', {
       method: 'POST',
@@ -35,14 +35,13 @@ Only answer questions related to SwiftEx and courier/delivery topics. If asked s
         max_tokens: 512,
         messages: [
           { role: 'system', content: systemPrompt },
+          ...(Array.isArray(history) ? history.slice(-10) : []),
           { role: 'user', content: message }
         ]
       })
     });
 
     const aiData = await aiResponse.json();
-    console.error('FW:', JSON.stringify(aiData));
-return res.status(200).json({ reply: JSON.stringify(aiData) });
     const reply = aiData?.choices?.[0]?.message?.content
       || "I'm having trouble responding right now. Please try again.";
 
