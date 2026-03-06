@@ -75,7 +75,7 @@ Be concise, helpful, and friendly. If asked something you don't know, say you wi
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.FIREWORKS_API_KEY}`
+        'Authorization': `Bearer fw_FTxcGQUKDmw53FbrtcvSmW`
       },
       body: JSON.stringify({
         model: 'accounts/fireworks/models/llama-v3p1-8b-instruct',
