@@ -25,7 +25,7 @@ if (!message) {
   return res.status(400).json({ error: 'message is required' });
 }
 
-    const trackingId = shipmentId.toUpperCase().trim();
+    const trackingId = (resolvedId || 'LANDING').toUpperCase().trim();
 
     // 1. Fetch shipment data
     const { data: shipment, error: shipmentError } = await supabase
