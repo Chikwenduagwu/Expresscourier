@@ -16,3 +16,12 @@ const APP_CONFIG = {
   apiBase: '/api',        // Vercel serverless functions
   trackingIdLength: 12,
 };
+
+// ══════════════════════════════════════════════
+// WINDOW ALIASES — for cross-script access
+// (used by landing page chat widget and others)
+// ══════════════════════════════════════════════
+window.SUPABASE_URL      = SUPABASE_URL;
+window.SUPABASE_ANON_KEY = SUPABASE_ANON_KEY;
+window.supabaseClient    = supabaseClient;
+window.APP_CONFIG        = APP_CONFIG;
