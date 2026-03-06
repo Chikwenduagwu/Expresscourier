@@ -103,9 +103,9 @@ const reply = aiData?.choices?.[0]?.message?.content
     return res.status(200).json({ reply });
 
   } catch (err) {
-    console.error('Chat API error:', err);
-    return res.status(500).json({ error: 'Internal server error', reply: 'Something went wrong. Please try again.' });
-  }
+  console.error('Chat API error:', err.message, err.stack);
+  return res.status(500).json({ error: err.message, reply: 'Something went wrong. Please try again.' });
+}
 };
 
 async function saveMessage(shipmentId, role, message) {
