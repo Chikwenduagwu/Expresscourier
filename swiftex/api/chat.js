@@ -29,12 +29,15 @@ if (!message) {
 
     // 1. Fetch shipment data
     const { data: shipment, error: shipmentError } = await supabase
-      .from('shipments')
-      .select('*')
-      .eq('id', trackingId)
-      .single();
+  .from('shipments')
+  .select('*')
+  .eq('id', trackingId)
+  .single();
 
-    if (shipmentError || !shipment) {
+// ADD THIS LINE RIGHT HERE
+console.error('LOOKUP', JSON.stringify({ trackingId, shipment, shipmentError }));
+
+if (shipmentError || !shipment) {
       await saveMessage(trackingId, 'user', message);
       const reply = `I couldn't find a shipment with tracking ID "${trackingId}". Please double-check your tracking code or contact support.`;
       await saveMessage(trackingId, 'bot', reply);
