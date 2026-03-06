@@ -31,7 +31,7 @@ Only answer questions related to SwiftEx and courier/delivery topics. If asked s
         'Authorization': `Bearer fw_FTxcGQUKDmw53FbrtcvSmW`
       },
       body: JSON.stringify({
-        model: 'accounts/fireworks/models/llama-v3p1-70b-instruct',
+        model: 'accounts/fireworks/models/llama-v3p3-70b-instruct',
         max_tokens: 512,
         messages: [
           { role: 'system', content: systemPrompt },
