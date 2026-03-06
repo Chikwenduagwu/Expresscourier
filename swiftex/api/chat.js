@@ -41,6 +41,8 @@ Only answer questions related to SwiftEx and courier/delivery topics. If asked s
     });
 
     const aiData = await aiResponse.json();
+    console.error('FW:', JSON.stringify(aiData));
+return res.status(200).json({ reply: JSON.stringify(aiData) });
     const reply = aiData?.choices?.[0]?.message?.content
       || "I'm having trouble responding right now. Please try again.";
 
