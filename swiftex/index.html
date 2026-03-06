@@ -2638,182 +2638,210 @@
   })();
 
 /* ══ LANDING CHAT WIDGET ══ */
-/* ══ LANDING CHAT WIDGET ══ */
-var SUPABASE_URL = (typeof window.SUPABASE_URL !== 'undefined') ? window.SUPABASE_URL : '';
-var SUPABASE_ANON_KEY = (typeof window.SUPABASE_ANON_KEY !== 'undefined') ? window.SUPABASE_ANON_KEY : '';
-var supabaseClient = null;
-try {
-  if (typeof supabase !== 'undefined' && SUPABASE_URL) {
-    supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-  }
-} catch(e) { console.warn('Supabase init failed:', e); }
+(function() {
+  'use strict';
 
- function getSessionId() {
-  try {
-    var stored = JSON.parse(localStorage.getItem('swiftex_session') || '{}');
-    var thirtyDays = 30 * 24 * 60 * 60 * 1000;
-    if (!stored.id || (Date.now() - (stored.created || 0)) > thirtyDays) {
-      var fresh = { id: crypto.randomUUID(), created: Date.now() };
-      localStorage.setItem('swiftex_session', JSON.stringify(fresh));
-      return fresh.id;
-    }
-    return stored.id;
-  } catch(e) { return crypto.randomUUID(); }
-}
+  var _supabaseClient = null;
+  var _sessionId = null;
+  var _chatOpen = false;
+  var _historyLoaded = false;
+  var _channel = null;
+  var _isHumanAgent = false;
 
-var SESSION_ID = getSessionId();
-var landingChatOpen = false;
-var landingHistoryLoaded = false;
-var landingChannel = null;
-var isHumanAgent = false;
-
-function landingToggleChat() {
-  var panel = document.getElementById('landingChatPanel');
-  landingChatOpen = !landingChatOpen;
-  if (landingChatOpen) {
-    panel.classList.add('open');
-    if (!landingHistoryLoaded) { loadHistory(); landingHistoryLoaded = true; }
-    if (!landingChannel) subscribeRealtime();
-    setTimeout(function(){ document.getElementById('landingChatInput').focus(); }, 300);
-  } else {
-    panel.classList.remove('open');
-  }
-}
-
-function loadHistory() {
-  if (!supabaseClient) {
-    appendMsg('assistant', 'Hello! How can I help you today?');
-    return;
-  }
-  supabaseClient
-    .from('chat_messages')
-    .select('*')
-    .eq('session_id', SESSION_ID)
-    .order('created_at', { ascending: true })
-    .then(function(result) {
-      var data = result.data; var error = result.error;
-      if (error || !data || data.length === 0) {
-        appendMsg('assistant', 'Hello! How can I help you today?');
-        return;
+  function _initSupabase() {
+    try {
+      var url = window.SUPABASE_URL || '';
+      var key = window.SUPABASE_ANON_KEY || '';
+      if (url && key && typeof supabase !== 'undefined') {
+        _supabaseClient = supabase.createClient(url, key);
       }
-      data.forEach(function(msg) {
-        if (msg.is_human_agent) { isHumanAgent = true; }
-        appendMsgSilent(msg.role, msg.content, msg.is_human_agent);
+    } catch(e) {}
+  }
+
+  function _getSessionId() {
+    try {
+      var stored = JSON.parse(localStorage.getItem('swiftex_session') || '{}');
+      var thirtyDays = 30 * 24 * 60 * 60 * 1000;
+      if (!stored.id || (Date.now() - (stored.created || 0)) > thirtyDays) {
+        var fresh = { id: crypto.randomUUID(), created: Date.now() };
+        localStorage.setItem('swiftex_session', JSON.stringify(fresh));
+        return fresh.id;
+      }
+      return stored.id;
+    } catch(e) { return 'session_' + Date.now(); }
+  }
+
+  function _escHtml(str) {
+    return String(str)
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function _showTyping(show) {
+    var el = document.getElementById('landingChatTyping');
+    if (el) el.style.display = show ? 'flex' : 'none';
+  }
+
+  function _appendMsg(role, content, isAgent) {
+    var msgs = document.getElementById('landingChatMessages');
+    if (!msgs) return;
+    var div = document.createElement('div');
+    div.className = 'chat-message ' + (isAgent ? 'agent' : role);
+    var now = new Date();
+    var time = now.getHours() + ':' + String(now.getMinutes()).padStart(2,'0');
+    div.innerHTML =
+      (isAgent ? '<div class="msg-agent-label">Agent</div>' : '') +
+      '<div class="msg-bubble">' + _escHtml(content) + '</div>' +
+      '<span class="msg-time">' + time + '</span>';
+    msgs.appendChild(div);
+    msgs.scrollTop = msgs.scrollHeight;
+  }
+
+  function _saveMsg(role, content, isAgent) {
+    if (!_supabaseClient) return;
+    try {
+      _supabaseClient.from('chat_messages').insert({
+        session_id: _sessionId,
+        role: role,
+        content: content,
+        is_human_agent: isAgent || false,
+        page: 'landing'
       });
-      if (isHumanAgent) {
-        document.getElementById('landingChatModeBar').style.display = 'block';
-      }
-      var msgs = document.getElementById('landingChatMessages');
-      msgs.scrollTop = msgs.scrollHeight;
-    });
-}
-
-function landingSendMessage() {
-  var input = document.getElementById('landingChatInput');
-  var text = input.value.trim();
-  if (!text) return;
-  input.value = '';
-  appendMsg('user', text);
-  saveMsg('user', text, false);
-
-  if (isHumanAgent) return;
-
-  showTyping(true);
-  fetch('/api/chat', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ message: text, session_id: SESSION_ID, page: 'landing' })
-  })
-  .then(function(r){ return r.json(); })
-  .then(function(data) {
-    showTyping(false);
-    var reply = data.reply || data.message || 'Sorry, I could not process that.';
-    if (reply.includes('ESCALATE_TO_HUMAN')) {
-      landingRequestAgent();
-    } else {
-      appendMsg('assistant', reply);
-    }
-  })
-  .catch(function() {
-    showTyping(false);
-    appendMsg('assistant', 'Something went wrong. Please try again.');
-  });
-}
-
-function landingRequestAgent() {
-  isHumanAgent = true;
-  document.getElementById('landingChatModeBar').style.display = 'block';
-  var msg = 'You have been connected to a human agent. Please wait for a response.';
-  appendMsg('agent', msg);
-  saveMsg('agent', msg, true);
-}
-
-function saveMsg(role, content, isAgent) {
-  if (!supabaseClient) return;
-  supabaseClient.from('chat_messages').insert({
-    session_id: SESSION_ID,
-    role: role,
-    content: content,
-    is_human_agent: isAgent || false,
-    page: 'landing'
-  });
-}
-
-function subscribeRealtime() {
-  if (!supabaseClient) return;
-  landingChannel = supabaseClient
-    .channel('landing_chat:' + SESSION_ID)
-    .on('postgres_changes', {
-      event: 'INSERT',
-      schema: 'public',
-      table: 'chat_messages',
-      filter: 'session_id=eq.' + SESSION_ID
-    }, function(payload) {
-      var msg = payload.new;
-      if (msg.role === 'agent') { appendMsg('agent', msg.content); }
-    })
-    .subscribe();
-}
-
-function appendMsg(role, content, isAgent) {
-  var msgs = document.getElementById('landingChatMessages');
-  var div = document.createElement('div');
-  div.className = 'chat-message ' + (isAgent ? 'agent' : role);
-  var now = new Date();
-  var time = now.getHours() + ':' + String(now.getMinutes()).padStart(2,'0');
-  div.innerHTML = (isAgent ? '<div class="msg-agent-label">Agent</div>' : '') +
-    '<div class="msg-bubble">' + escHtml(content) + '</div>' +
-    '<span class="msg-time">' + time + '</span>';
-  msgs.appendChild(div);
-  msgs.scrollTop = msgs.scrollHeight;
-}
-
-function appendMsgSilent(role, content, isAgent) {
-  var msgs = document.getElementById('landingChatMessages');
-  var div = document.createElement('div');
-  div.className = 'chat-message ' + (isAgent ? 'agent' : role);
-  div.innerHTML = (isAgent ? '<div class="msg-agent-label">Agent</div>' : '') +
-    '<div class="msg-bubble">' + escHtml(content) + '</div>';
-  msgs.appendChild(div);
-}
-
-function showTyping(show) {
-  document.getElementById('landingChatTyping').style.display = show ? 'flex' : 'none';
-}
-
-function escHtml(str) {
-  return String(str)
-    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
-document.addEventListener('keydown', function(e) {
-  if (e.key === 'Enter' && document.activeElement &&
-      document.activeElement.id === 'landingChatInput') {
-    landingSendMessage();
+    } catch(e) {}
   }
-});
 
+  function _subscribeRealtime() {
+    if (!_supabaseClient) return;
+    try {
+      _channel = _supabaseClient
+        .channel('landing_chat:' + _sessionId)
+        .on('postgres_changes', {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'chat_messages',
+          filter: 'session_id=eq.' + _sessionId
+        }, function(payload) {
+          var msg = payload.new;
+          if (msg.role === 'agent') { _appendMsg('agent', msg.content, true); }
+        })
+        .subscribe();
+    } catch(e) {}
+  }
+
+  function _loadHistory() {
+    if (!_supabaseClient) {
+      _appendMsg('assistant', 'Hello! How can I help you today?');
+      return;
+    }
+    try {
+      _supabaseClient
+        .from('chat_messages')
+        .select('*')
+        .eq('session_id', _sessionId)
+        .order('created_at', { ascending: true })
+        .then(function(result) {
+          var data = result.data;
+          if (!data || data.length === 0) {
+            _appendMsg('assistant', 'Hello! How can I help you today?');
+            return;
+          }
+          data.forEach(function(msg) {
+            if (msg.is_human_agent) { _isHumanAgent = true; }
+            var div = document.createElement('div');
+            div.className = 'chat-message ' + (msg.is_human_agent ? 'agent' : msg.role);
+            div.innerHTML =
+              (msg.is_human_agent ? '<div class="msg-agent-label">Agent</div>' : '') +
+              '<div class="msg-bubble">' + _escHtml(msg.content) + '</div>';
+            var msgs = document.getElementById('landingChatMessages');
+            if (msgs) {
+              msgs.appendChild(div);
+              msgs.scrollTop = msgs.scrollHeight;
+            }
+          });
+          if (_isHumanAgent) {
+            var bar = document.getElementById('landingChatModeBar');
+            if (bar) bar.style.display = 'block';
+          }
+        });
+    } catch(e) {
+      _appendMsg('assistant', 'Hello! How can I help you today?');
+    }
+  }
+
+  /* ── Public functions attached to window ── */
+  window.landingToggleChat = function() {
+    var panel = document.getElementById('landingChatPanel');
+    if (!panel) return;
+    _chatOpen = !_chatOpen;
+    if (_chatOpen) {
+      panel.classList.add('open');
+      if (!_historyLoaded) { _loadHistory(); _historyLoaded = true; }
+      if (!_channel) { _subscribeRealtime(); }
+      setTimeout(function() {
+        var inp = document.getElementById('landingChatInput');
+        if (inp) inp.focus();
+      }, 300);
+    } else {
+      panel.classList.remove('open');
+    }
+  };
+
+  window.landingSendMessage = function() {
+    var input = document.getElementById('landingChatInput');
+    if (!input) return;
+    var text = input.value.trim();
+    if (!text) return;
+    input.value = '';
+    _appendMsg('user', text);
+    _saveMsg('user', text, false);
+    if (_isHumanAgent) return;
+    _showTyping(true);
+    fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: text, session_id: _sessionId, page: 'landing' })
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      _showTyping(false);
+      var reply = data.reply || data.message || 'Sorry, I could not process that.';
+      if (reply.includes('ESCALATE_TO_HUMAN')) {
+        window.landingRequestAgent();
+      } else {
+        _appendMsg('assistant', reply);
+        _saveMsg('assistant', reply, false);
+      }
+    })
+    .catch(function() {
+      _showTyping(false);
+      _appendMsg('assistant', 'Something went wrong. Please try again.');
+    });
+  };
+
+  window.landingRequestAgent = function() {
+    _isHumanAgent = true;
+    var bar = document.getElementById('landingChatModeBar');
+    if (bar) bar.style.display = 'block';
+    var msg = 'You have been connected to a human agent. Please wait for a response.';
+    _appendMsg('agent', msg, true);
+    _saveMsg('agent', msg, true);
+  };
+
+  /* ── Enter key ── */
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+      var active = document.activeElement;
+      if (active && active.id === 'landingChatInput') {
+        window.landingSendMessage();
+      }
+    }
+  });
+
+  /* ── Init ── */
+  _initSupabase();
+  _sessionId = _getSessionId();
+
+})();
     
 
 
