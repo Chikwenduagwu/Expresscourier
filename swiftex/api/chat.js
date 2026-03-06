@@ -18,11 +18,12 @@ module.exports = async (req, res) => {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   try {
-    const { message, shipmentId } = req.body;
+    const { message, shipmentId, session_id } = req.body;
+const resolvedId = shipmentId || session_id || 'LANDING';
 
-    if (!message || !shipmentId) {
-      return res.status(400).json({ error: 'message and shipmentId are required' });
-    }
+if (!message) {
+  return res.status(400).json({ error: 'message is required' });
+}
 
     const trackingId = shipmentId.toUpperCase().trim();
 
