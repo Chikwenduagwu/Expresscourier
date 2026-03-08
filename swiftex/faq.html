@@ -3,222 +3,154 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FAQs — SwiftEx</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <title>FAQs . Express Courier</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --purple: #4D148C;
-      --orange: #FF6200;
-      --navy: #1a2e6e;
-      --text: #1f2937;
-      --muted: #6b7280;
-      --border: #e5e7eb;
-      --bg: #f9fafb;
+      --black: #111111;
+      --yellow: #F5C400;
+      --white: #ffffff;
+      --off-white: #f7f7f5;
+      --grey: #888888;
+      --border: #e8e8e4;
+      --text: #1a1a1a;
+      --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     }
-    body { font-family: 'DM Sans', sans-serif; color: var(--text); background: #fff; }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font); color: var(--text); background: var(--white); overflow-x: hidden; }
     a { text-decoration: none; color: inherit; }
 
-    /* ── NAVBAR ── */
-    .navbar { background: var(--purple); position: sticky; top: 0; z-index: 200; box-shadow: 0 2px 24px rgba(77,20,140,0.35); }
-    .navbar-inner { max-width: 1280px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; height: 68px; }
-    .logo-text { font-family: 'Syne', sans-serif; font-size: 1.65rem; font-weight: 500; color: #fff; letter-spacing: -1px; }
-    .logo-text span { color: var(--orange); }
-    .navbar-links { display: flex; gap: 4px; }
-    .nav-link { color: rgba(255,255,255,0.82); font-size: 0.875rem; font-weight: 500; padding: 8px 16px; border-radius: 6px; transition: all 0.18s; }
-    .nav-link:hover { color: #fff; background: rgba(255,255,255,0.12); }
-    .nav-btn { background: var(--orange); color: #fff; font-size: 0.85rem; font-weight: 700; padding: 9px 22px; border-radius: 6px; letter-spacing: 0.03em; transition: all 0.18s; box-shadow: 0 4px 16px rgba(255,98,0,0.35); }
-    .nav-btn:hover { background: #e85800; transform: translateY(-1px); }
-    .hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 6px; }
-    .hamburger span { display: block; width: 24px; height: 2px; background: #fff; border-radius: 2px; transition: all 0.25s; }
-    .mobile-menu { display: none; flex-direction: column; background: #3a0f6b; border-top: 1px solid rgba(255,255,255,0.1); }
-    .mobile-menu.open { display: flex; }
-    .mobile-link { color: rgba(255,255,255,0.85); padding: 14px 24px; font-size: 0.95rem; font-weight: 500; border-bottom: 1px solid rgba(255,255,255,0.07); }
-    .mobile-link:hover { background: rgba(255,255,255,0.08); color: #fff; }
-    @media (max-width: 900px) { .navbar-links, .nav-btn { display: none; } .hamburger { display: flex; } }
+    /* ── SCROLL ANIMATIONS ── */
+    .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.65s cubic-bezier(.22,1,.36,1), transform 0.65s cubic-bezier(.22,1,.36,1); }
+    .reveal.visible { opacity: 1; transform: none; }
+    .reveal-delay-1 { transition-delay: 0.08s; }
+    .reveal-delay-2 { transition-delay: 0.16s; }
+    .reveal-delay-3 { transition-delay: 0.24s; }
 
-    /* ── PAGE HERO ── */
-    .page-hero {
-      background: linear-gradient(135deg, var(--navy) 0%, var(--purple) 100%);
-      padding: 72px 24px 64px;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
+    /* ── NAVBAR ── */
+    .navbar { background: var(--black); position: sticky; top: 0; z-index: 200; border-bottom: 2px solid var(--yellow); }
+    .navbar-inner { max-width: 1280px; margin: 0 auto; padding: 0 32px; display: flex; align-items: center; justify-content: space-between; height: 68px; }
+    .logo-text { font-size: 1.4rem; font-weight: 800; color: var(--white); letter-spacing: -0.5px; }
+    .logo-text span { color: var(--yellow); }
+    .navbar-links { display: flex; gap: 4px; }
+    .nav-link { color: rgba(255,255,255,0.72); font-size: 0.875rem; font-weight: 500; padding: 8px 16px; border-radius: 6px; transition: all 0.18s; }
+    .nav-link:hover { color: var(--yellow); background: rgba(245,196,0,0.08); }
+    .hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 6px; }
+    .hamburger span { display: block; width: 24px; height: 2px; background: #fff; border-radius: 2px; }
+    .mobile-menu { display: none; flex-direction: column; background: #0a0a0a; border-top: 1px solid rgba(245,196,0,0.15); }
+    .mobile-menu.open { display: flex; }
+    .mobile-link { color: rgba(255,255,255,0.82); padding: 14px 24px; font-size: 0.95rem; font-weight: 500; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .mobile-link:hover { background: rgba(245,196,0,0.07); color: var(--yellow); }
+    @media (max-width: 900px) { .navbar-links { display: none; } .hamburger { display: flex; } }
+
+    /* ── HERO ── */
+    .page-hero { background: var(--black); padding: 100px 24px 90px; text-align: center; position: relative; overflow: hidden; }
+    .page-hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 65% 0%, rgba(245,196,0,0.1), transparent 60%); }
+    .page-hero::after {
+      content: ''; position: absolute; inset: 0;
+      background-image: linear-gradient(rgba(245,196,0,0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(245,196,0,0.035) 1px, transparent 1px);
+      background-size: 56px 56px;
+      animation: gridMove 24s linear infinite;
     }
-    .page-hero::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(circle at 70% 50%, rgba(255,98,0,0.15), transparent 60%);
+    @keyframes gridMove { 0% { background-position: 0 0; } 100% { background-position: 56px 56px; } }
+    .page-hero-inner { position: relative; z-index: 2; }
+    .breadcrumb { font-size: 0.78rem; color: rgba(255,255,255,0.38); margin-bottom: 22px; }
+    .breadcrumb a { color: rgba(255,255,255,0.52); transition: color 0.18s; }
+    .breadcrumb a:hover { color: var(--yellow); }
+    .hero-eyebrow {
+      display: inline-block; font-size: 0.68rem; font-weight: 700;
+      letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--yellow); background: rgba(245,196,0,0.1);
+      border: 1px solid rgba(245,196,0,0.22); padding: 5px 14px;
+      border-radius: 100px; margin-bottom: 24px;
     }
-    .page-hero h1 {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-      font-size: clamp(2rem, 5vw, 3rem);
-      font-weight: 800;
-      color: #fff;
-      margin-bottom: 14px;
-      position: relative;
-    }
-    .page-hero p {
-      font-size: 1.05rem;
-      color: rgba(255,255,255,0.75);
-      max-width: 520px;
-      margin: 0 auto;
-      line-height: 1.65;
-      position: relative;
-    }
+    .page-hero h1 { font-size: clamp(2.4rem, 6vw, 3.8rem); font-weight: 800; color: var(--white); line-height: 1.1; margin-bottom: 20px; letter-spacing: -1.5px; }
+    .page-hero h1 em { color: var(--yellow); font-style: normal; }
+    .page-hero p { font-size: 1.05rem; color: rgba(255,255,255,0.55); max-width: 500px; margin: 0 auto; line-height: 1.75; }
 
     /* ── CONTENT ── */
-    .page-content { max-width: 800px; margin: 0 auto; padding: 60px 24px 100px; }
+    .page-content { max-width: 800px; margin: 0 auto; padding: 72px 24px 100px; }
 
-    /* Search bar */
+    /* Search */
     .faq-search {
-      display: flex;
-      align-items: center;
-      background: #fff;
-      border: 2px solid var(--border);
-      border-radius: 10px;
-      padding: 0 16px;
-      margin-bottom: 48px;
+      display: flex; align-items: center;
+      background: var(--white); border: 2px solid var(--border);
+      border-radius: 10px; padding: 0 16px; margin-bottom: 40px;
       transition: border-color 0.18s;
     }
-    .faq-search:focus-within { border-color: var(--purple); }
-    .faq-search svg { width: 18px; height: 18px; color: var(--muted); flex-shrink: 0; }
+    .faq-search:focus-within { border-color: var(--yellow); }
+    .faq-search svg { width: 18px; height: 18px; color: var(--grey); flex-shrink: 0; }
     .faq-search input {
-      flex: 1;
-      border: none;
-      outline: none;
-      padding: 14px 12px;
-      font-size: 0.95rem;
-      font-family: 'DM Sans', sans-serif;
-      color: var(--text);
-      background: transparent;
+      flex: 1; border: none; outline: none; padding: 14px 12px;
+      font-size: 0.95rem; font-family: var(--font); color: var(--text); background: transparent;
     }
-    .faq-search input::placeholder { color: var(--muted); }
+    .faq-search input::placeholder { color: var(--grey); }
 
     /* Category tabs */
-    .faq-categories {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-bottom: 40px;
-    }
+    .faq-categories { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 48px; }
     .faq-cat-btn {
-      padding: 8px 18px;
-      border-radius: 100px;
-      border: 1.5px solid var(--border);
-      background: #fff;
-      font-size: 0.82rem;
-      font-weight: 600;
-      color: var(--muted);
-      cursor: pointer;
-      transition: all 0.18s;
-      font-family: 'DM Sans', sans-serif;
+      padding: 8px 18px; border-radius: 100px;
+      border: 1.5px solid var(--border); background: var(--white);
+      font-size: 0.82rem; font-weight: 600; color: var(--grey);
+      cursor: pointer; transition: all 0.18s; font-family: var(--font);
     }
-    .faq-cat-btn:hover, .faq-cat-btn.active { background: var(--purple); color: #fff; border-color: var(--purple); }
+    .faq-cat-btn:hover { border-color: var(--yellow); color: var(--black); }
+    .faq-cat-btn.active { background: var(--black); color: var(--yellow); border-color: var(--black); }
 
     /* FAQ group */
-    .faq-group { margin-bottom: 48px; }
+    .faq-group { margin-bottom: 52px; }
     .faq-group-title {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-      font-size: 0.7rem;
-      font-weight: 800;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--orange);
-      margin-bottom: 16px;
+      font-size: 0.65rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--yellow); background: var(--black);
+      padding: 5px 12px; border-radius: 4px; display: inline-block; margin-bottom: 20px;
     }
 
-    /* Accordion item */
+    /* Accordion */
     .faq-item { border-bottom: 1px solid var(--border); }
     .faq-question {
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 20px 0;
-      background: none;
-      border: none;
-      cursor: pointer;
-      text-align: left;
-      gap: 16px;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-      font-size: 1rem;
-      font-weight: 600;
-      color: var(--text);
-      transition: color 0.18s;
+      width: 100%; display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 0; background: none; border: none; cursor: pointer;
+      text-align: left; gap: 16px; font-family: var(--font);
+      font-size: 0.97rem; font-weight: 600; color: var(--text); transition: color 0.18s;
     }
-    .faq-question:hover { color: var(--purple); }
-    .faq-question.open { color: var(--purple); }
+    .faq-question:hover { color: var(--black); }
+    .faq-question.open { color: var(--black); }
     .faq-icon {
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      background: var(--bg);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      transition: background 0.18s, transform 0.3s;
+      width: 26px; height: 26px; border-radius: 50%;
+      background: var(--off-white); border: 1.5px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; transition: background 0.2s, border-color 0.2s, transform 0.3s;
     }
-    .faq-question.open .faq-icon { background: var(--purple); transform: rotate(45deg); }
-    .faq-icon svg { width: 14px; height: 14px; color: var(--muted); transition: color 0.18s; }
-    .faq-question.open .faq-icon svg { color: #fff; }
-    .faq-answer {
-      overflow: hidden;
-      max-height: 0;
-      transition: max-height 0.35s ease, padding 0.25s ease;
-    }
+    .faq-question.open .faq-icon { background: var(--yellow); border-color: var(--yellow); transform: rotate(45deg); }
+    .faq-icon svg { width: 13px; height: 13px; stroke: var(--grey); transition: stroke 0.18s; }
+    .faq-question.open .faq-icon svg { stroke: var(--black); }
+    .faq-answer { overflow: hidden; max-height: 0; transition: max-height 0.38s ease, padding 0.25s ease; }
     .faq-answer.open { max-height: 600px; }
-    .faq-answer-inner {
-      padding: 0 0 20px;
-      font-size: 0.95rem;
-      color: var(--muted);
-      line-height: 1.75;
-    }
-    .faq-answer-inner strong {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-      font-weight: 700;
-      color: var(--text);
-    }
+    .faq-answer-inner { padding: 0 0 22px; font-size: 0.93rem; color: #555; line-height: 1.8; }
+    .faq-answer-inner strong { font-weight: 700; color: var(--text); }
+    .faq-answer-inner a { color: var(--black); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
     .faq-answer-inner ul { padding-left: 20px; margin-top: 10px; }
-    .faq-answer-inner ul li { margin-bottom: 6px; }
+    .faq-answer-inner ul li { margin-bottom: 7px; }
 
-    /* Still have questions */
+    /* CTA */
     .faq-cta {
-      margin-top: 64px;
-      background: linear-gradient(135deg, var(--purple), #6b2db5);
-      border-radius: 16px;
-      padding: 48px 40px;
-      text-align: center;
-      color: #fff;
+      margin-top: 64px; background: var(--black);
+      border-radius: 16px; padding: 48px 40px; text-align: center;
+      position: relative; overflow: hidden;
     }
-    .faq-cta h3 {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-      font-size: 1.5rem;
-      font-weight: 800;
-      margin-bottom: 10px;
-    }
-    .faq-cta p { color: rgba(255,255,255,0.8); margin-bottom: 24px; font-size: 0.95rem; }
+    .faq-cta::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--yellow); }
+    .faq-cta h3 { font-size: 1.6rem; font-weight: 800; color: var(--white); margin-bottom: 10px; letter-spacing: -0.5px; }
+    .faq-cta p { color: rgba(255,255,255,0.55); margin-bottom: 28px; font-size: 0.95rem; }
     .faq-cta a {
-      display: inline-block;
-      background: var(--orange);
-      color: #fff;
-      padding: 13px 32px;
-      border-radius: 8px;
-      font-weight: 700;
-      font-size: 0.9rem;
-      font-family: 'Syne', sans-serif;
-      letter-spacing: 0.04em;
-      transition: background 0.18s;
+      display: inline-block; background: var(--yellow); color: var(--black);
+      padding: 13px 32px; border-radius: 8px; font-weight: 700;
+      font-size: 0.9rem; transition: opacity 0.18s;
     }
-    .faq-cta a:hover { background: #e85800; }
+    .faq-cta a:hover { opacity: 0.88; }
 
     /* Footer */
-    .footer-simple { background: #f4f4f5; padding: 32px 24px; text-align: center; color: var(--muted); font-size: 0.82rem; border-top: 1px solid var(--border); }
-    .footer-simple a { color: var(--purple); }
+    .footer-simple { background: var(--black); padding: 36px 24px; text-align: center; color: rgba(255,255,255,0.38); font-size: 0.82rem; border-top: 2px solid var(--yellow); }
+    .footer-simple a { color: var(--yellow); }
   </style>
 </head>
 <body>
@@ -228,39 +160,42 @@
   <div class="navbar-inner">
     <a href="index.html" class="logo-text">EXPRESS<span>CO</span></a>
     <div class="navbar-links">
-      <a href="index.html#services" class="nav-link">Services</a>
-      <a href="index.html#track-section" class="nav-link">Track</a>
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="track.html" class="nav-link">Track</a>
       <a href="about.html" class="nav-link">About</a>
-      <a href="index.html#contact" class="nav-link">Contact</a>
+      <a href="contact.html" class="nav-link">Contact</a>
     </div>
-    <div style="display:flex;align-items:center;gap:12px">
-      <a href="index.html#track-section" class="nav-btn desktop-only" style="display:none">Send Now</a>
-      <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
-    </div>
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
   </div>
   <div class="mobile-menu" id="mobileMenu">
-    <a href="index.html#services" class="mobile-link">Services</a>
-    <a href="index.html#track-section" class="mobile-link">Track</a>
+    <a href="index.html" class="mobile-link">Home</a>
+    <a href="track.html" class="mobile-link">Track</a>
     <a href="about.html" class="mobile-link">About</a>
-    <a href="index.html#contact" class="mobile-link">Contact</a>
+    <a href="contact.html" class="mobile-link">Contact</a>
   </div>
 </nav>
 
 <!-- HERO -->
 <div class="page-hero">
-  <h1>Frequently Asked Questions</h1>
-  <p>Everything you need to know about sending, tracking and receiving with SwiftEx.</p>
+  <div class="page-hero-inner">
+    <p class="breadcrumb"><a href="index.html">Home</a> › Support</p>
+    <div class="hero-eyebrow">Help Center</div>
+    <h1>Frequently Asked<br><em>Questions</em></h1>
+    <p>Everything you need to know about sending, tracking, and receiving with Express Courier.</p>
+  </div>
 </div>
 
 <!-- CONTENT -->
 <div class="page-content">
 
-  <div class="faq-search">
+  <div class="faq-search reveal">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
     <input type="text" id="faqSearch" placeholder="Search questions…" oninput="searchFAQs()" />
   </div>
 
-  <div class="faq-categories">
+  <div class="faq-categories reveal reveal-delay-1">
     <button class="faq-cat-btn active" onclick="filterCat('all', this)">All</button>
     <button class="faq-cat-btn" onclick="filterCat('tracking', this)">Tracking</button>
     <button class="faq-cat-btn" onclick="filterCat('shipping', this)">Shipping</button>
@@ -271,290 +206,230 @@
 
   <div id="faqContent">
 
-    <div class="faq-group" data-cat="tracking">
+    <div class="faq-group reveal" data-cat="tracking">
       <div class="faq-group-title">Tracking</div>
-
       <div class="faq-item">
         <button class="faq-question" onclick="toggleFAQ(this)">
           How do I track my shipment?
-          <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+          <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
         </button>
-        <div class="faq-answer">
-          <div class="faq-answer-inner">
-            Enter your 12-character tracking ID on our <a href="index.html" style="color:var(--purple);font-weight:600">homepage</a> or tracking page. You'll get real-time updates including current location, estimated delivery time, and any status changes. You can also subscribe to email notifications to be alerted of every update automatically.
-          </div>
-        </div>
+        <div class="faq-answer"><div class="faq-answer-inner">
+          Enter your 12-character tracking ID on our <a href="index.html">homepage</a> or tracking page. You'll get real-time updates including current location, estimated delivery time, and any status changes. You can also subscribe to email notifications to be alerted of every update automatically.
+        </div></div>
       </div>
-
       <div class="faq-item">
         <button class="faq-question" onclick="toggleFAQ(this)">
           Where do I find my tracking number?
-          <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+          <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
         </button>
-        <div class="faq-answer">
-          <div class="faq-answer-inner">
-            Your tracking number is provided by the sender when they create your shipment. It's a 12-character alphanumeric code (e.g. <strong>ABC123XYZ789</strong>). Check your email confirmation, the shipping receipt, or ask the sender directly.
-          </div>
-        </div>
+        <div class="faq-answer"><div class="faq-answer-inner">
+          Your tracking number is provided by the sender when they create your shipment. It's a 12-character alphanumeric code (e.g. <strong>ABC123XYZ789</strong>). Check your email confirmation, the shipping receipt, or ask the sender directly.
+        </div></div>
       </div>
-
       <div class="faq-item">
         <button class="faq-question" onclick="toggleFAQ(this)">
           My tracking hasn't updated in 24 hours. What should I do?
-          <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+          <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
         </button>
-        <div class="faq-answer">
-          <div class="faq-answer-inner">
-            Tracking gaps can happen when a parcel is in transit between facilities or during customs processing. If there has been no update for more than <strong>48 hours</strong>, please contact our support team with your tracking ID and we'll investigate immediately.
-          </div>
-        </div>
+        <div class="faq-answer"><div class="faq-answer-inner">
+          Tracking gaps can happen when a parcel is in transit between facilities or during customs processing. If there has been no update for more than <strong>48 hours</strong>, please contact our support team with your tracking ID and we'll investigate immediately.
+        </div></div>
       </div>
-
       <div class="faq-item">
         <button class="faq-question" onclick="toggleFAQ(this)">
           Can I track multiple shipments at once?
-          <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+          <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
         </button>
-        <div class="faq-answer">
-          <div class="faq-answer-inner">
-            Currently each tracking ID must be entered individually. Business accounts can access a bulk tracking dashboard — contact us to set up a business account for multi-shipment tracking.
-          </div>
-        </div>
+        <div class="faq-answer"><div class="faq-answer-inner">
+          Currently each tracking ID must be entered individually. Business accounts can access a bulk tracking dashboard . contact us to set up a business account for multi-shipment tracking.
+        </div></div>
       </div>
     </div>
 
-    <div class="faq-group" data-cat="shipping">
+    <div class="faq-group reveal" data-cat="shipping">
       <div class="faq-group-title">Shipping</div>
-
       <div class="faq-item">
         <button class="faq-question" onclick="toggleFAQ(this)">
           What are the size and weight limits for parcels?
-          <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+          <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
         </button>
-        <div class="faq-answer">
-          <div class="faq-answer-inner">
-            <strong>Standard service:</strong> up to 30kg, max dimensions 120cm × 60cm × 60cm.<br><br>
-            <strong>Express service:</strong> up to 70kg, max dimensions 150cm × 80cm × 80cm.<br><br>
-            Items exceeding these limits are classified as freight and must be booked separately. Contact us for a freight quote.
-          </div>
-        </div>
+        <div class="faq-answer"><div class="faq-answer-inner">
+          <strong>Standard service:</strong> up to 30kg, max dimensions 120cm × 60cm × 60cm.<br><br>
+          <strong>Express service:</strong> up to 70kg, max dimensions 150cm × 80cm × 80cm.<br><br>
+          Items exceeding these limits are classified as freight and must be booked separately. Contact us for a freight quote.
+        </div></div>
       </div>
-
       <div class="faq-item">
         <button class="faq-question" onclick="toggleFAQ(this)">
           What items are prohibited from shipping?
-          <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+          <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
         </button>
-        <div class="faq-answer">
-          <div class="faq-answer-inner">
-            The following items cannot be shipped under any circumstances:
-            <ul>
-              <li>Dangerous goods, flammable liquids, explosives</li>
-              <li>Illegal substances or counterfeit goods</li>
-              <li>Live animals (except via specialist pet courier services)</li>
-              <li>Human remains or body parts</li>
-              <li>Cash, currencies, or negotiable instruments</li>
-              <li>Perishable food without proper insulated packaging</li>
-            </ul>
-            Some restricted items (lithium batteries, aerosols) require special declarations. Contact us before shipping.
-          </div>
-        </div>
+        <div class="faq-answer"><div class="faq-answer-inner">
+          The following items cannot be shipped under any circumstances:
+          <ul>
+            <li>Dangerous goods, flammable liquids, explosives</li>
+            <li>Illegal substances or counterfeit goods</li>
+            <li>Live animals (except via specialist pet courier services)</li>
+            <li>Human remains or body parts</li>
+            <li>Cash, currencies, or negotiable instruments</li>
+            <li>Perishable food without proper insulated packaging</li>
+          </ul>
+          Some restricted items (lithium batteries, aerosols) require special declarations. Contact us before shipping.
+        </div></div>
       </div>
-
       <div class="faq-item">
         <button class="faq-question" onclick="toggleFAQ(this)">
           How do I package my items correctly?
-          <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+          <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
         </button>
-        <div class="faq-answer">
-          <div class="faq-answer-inner">
-            Use a sturdy corrugated box that's slightly larger than the contents. Wrap fragile items individually in bubble wrap and fill empty space with packing material. <strong>Do not reuse old boxes</strong> that may have weakened walls. Seal all seams with strong packing tape and attach your label clearly on the largest flat surface.
-          </div>
-        </div>
+        <div class="faq-answer"><div class="faq-answer-inner">
+          Use a sturdy corrugated box that's slightly larger than the contents. Wrap fragile items individually in bubble wrap and fill empty space with packing material. <strong>Do not reuse old boxes</strong> that may have weakened walls. Seal all seams with strong packing tape and attach your label clearly on the largest flat surface.
+        </div></div>
       </div>
-
       <div class="faq-item">
         <button class="faq-question" onclick="toggleFAQ(this)">
           Can I change the delivery address after shipping?
-          <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+          <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
         </button>
-        <div class="faq-answer">
-          <div class="faq-answer-inner">
-            Address changes are possible <strong>before the parcel reaches the destination country</strong>. Once it enters the delivery facility, changes cannot be made. Contact our support team as early as possible with your tracking ID and the new address. Additional charges may apply.
-          </div>
-        </div>
+        <div class="faq-answer"><div class="faq-answer-inner">
+          Address changes are possible <strong>before the parcel reaches the destination country</strong>. Once it enters the delivery facility, changes cannot be made. Contact our support team as early as possible with your tracking ID and the new address. Additional charges may apply.
+        </div></div>
       </div>
     </div>
 
-    <div class="faq-group" data-cat="receiving">
+    <div class="faq-group reveal" data-cat="receiving">
       <div class="faq-group-title">Receiving</div>
-
       <div class="faq-item">
         <button class="faq-question" onclick="toggleFAQ(this)">
           What happens if I'm not home for delivery?
-          <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+          <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
         </button>
-        <div class="faq-answer">
-          <div class="faq-answer-inner">
-            Our driver will attempt delivery up to <strong>3 times</strong>. After each failed attempt, a card is left with instructions. You can also redirect your parcel to a nearby drop-off point or neighbour through our tracking page. After 3 failed attempts, the parcel is held at the nearest service centre for 7 days before being returned to sender.
-          </div>
-        </div>
+        <div class="faq-answer"><div class="faq-answer-inner">
+          Our driver will attempt delivery up to <strong>3 times</strong>. After each failed attempt, a card is left with instructions. You can also redirect your parcel to a nearby drop-off point or neighbour through our tracking page. After 3 failed attempts, the parcel is held at the nearest service centre for 7 days before being returned to sender.
+        </div></div>
       </div>
-
       <div class="faq-item">
         <button class="faq-question" onclick="toggleFAQ(this)">
           My parcel says delivered but I haven't received it. What do I do?
-          <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+          <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
         </button>
-        <div class="faq-answer">
-          <div class="faq-answer-inner">
-            First check with neighbours and building reception, as drivers sometimes leave parcels with a neighbour. Check around your property including side doors, sheds, and bins. If still missing after checking, contact us within <strong>24 hours</strong> of the marked delivery time with your tracking ID — we'll launch an immediate investigation.
-          </div>
-        </div>
+        <div class="faq-answer"><div class="faq-answer-inner">
+          First check with neighbours and building reception, as drivers sometimes leave parcels with a neighbour. Check around your property including side doors, sheds, and bins. If still missing after checking, contact us within <strong>24 hours</strong> of the marked delivery time with your tracking ID . we'll launch an immediate investigation.
+        </div></div>
       </div>
-
       <div class="faq-item">
         <button class="faq-question" onclick="toggleFAQ(this)">
           My parcel arrived damaged. What are my options?
-          <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+          <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
         </button>
-        <div class="faq-answer">
-          <div class="faq-answer-inner">
-            <strong>Do not discard the packaging</strong> — we'll need photos of both the damaged item and packaging for your claim. Report damage within 7 days of delivery via our support chat or email. Claims are processed within 5–10 business days. Compensation is subject to declared value and shipping insurance level.
-          </div>
-        </div>
+        <div class="faq-answer"><div class="faq-answer-inner">
+          <strong>Do not discard the packaging</strong> . we'll need photos of both the damaged item and packaging for your claim. Report damage within 7 days of delivery via our support chat or email. Claims are processed within 5–10 business days. Compensation is subject to declared value and shipping insurance level.
+        </div></div>
       </div>
     </div>
 
-    <div class="faq-group" data-cat="pricing">
+    <div class="faq-group reveal" data-cat="pricing">
       <div class="faq-group-title">Pricing &amp; Payment</div>
-
       <div class="faq-item">
         <button class="faq-question" onclick="toggleFAQ(this)">
           How is shipping cost calculated?
-          <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+          <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
         </button>
-        <div class="faq-answer">
-          <div class="faq-answer-inner">
-            Shipping cost is calculated based on <strong>distance, weight, dimensions, and service type</strong>. We use volumetric weight for large, light packages (length × width × height ÷ 5000). The higher of actual weight and volumetric weight is charged. Use our rate calculator on the homepage for an instant quote.
-          </div>
-        </div>
+        <div class="faq-answer"><div class="faq-answer-inner">
+          Shipping cost is calculated based on <strong>distance, weight, dimensions, and service type</strong>. We use volumetric weight for large, light packages (length × width × height ÷ 5000). The higher of actual weight and volumetric weight is charged. Use our rate calculator on the homepage for an instant quote.
+        </div></div>
       </div>
-
       <div class="faq-item">
         <button class="faq-question" onclick="toggleFAQ(this)">
           Are there any hidden fees?
-          <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+          <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
         </button>
-        <div class="faq-answer">
-          <div class="faq-answer-inner">
-            Our pricing is transparent. The price you see in the rate calculator is what you pay. The only additional charges that may apply are customs duties and taxes on international shipments — these are set by the destination country's government and are outside our control. We always inform you of estimated duties before you confirm.
-          </div>
-        </div>
+        <div class="faq-answer"><div class="faq-answer-inner">
+          Our pricing is transparent. The price you see in the rate calculator is what you pay. The only additional charges that may apply are customs duties and taxes on international shipments . these are set by the destination country's government and are outside our control. We always inform you of estimated duties before you confirm.
+        </div></div>
       </div>
-
       <div class="faq-item">
         <button class="faq-question" onclick="toggleFAQ(this)">
           Do you offer discounts for bulk shipping?
-          <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+          <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
         </button>
-        <div class="faq-answer">
-          <div class="faq-answer-inner">
-            Yes. Business and volume accounts receive tiered discounts starting from <strong>10 shipments per month</strong>. Discounts range from 8% to 25% depending on volume. Contact our business team for a tailored quote and to set up a monthly invoicing account.
-          </div>
-        </div>
+        <div class="faq-answer"><div class="faq-answer-inner">
+          Yes. Business and volume accounts receive tiered discounts starting from <strong>10 shipments per month</strong>. Discounts range from 8% to 25% depending on volume. Contact our business team for a tailored quote and to set up a monthly invoicing account.
+        </div></div>
       </div>
     </div>
 
-    <div class="faq-group" data-cat="international">
+    <div class="faq-group reveal" data-cat="international">
       <div class="faq-group-title">International Shipping</div>
-
       <div class="faq-item">
         <button class="faq-question" onclick="toggleFAQ(this)">
           Which countries do you ship to?
-          <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+          <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
         </button>
-        <div class="faq-answer">
-          <div class="faq-answer-inner">
-            SwiftEx ships to <strong>180+ countries worldwide</strong>. Some high-risk or sanctioned regions may be excluded. Enter your destination in the rate calculator to confirm availability and get current transit times for your specific route.
-          </div>
-        </div>
+        <div class="faq-answer"><div class="faq-answer-inner">
+          Express Courier ships to <strong>180+ countries worldwide</strong>. Some high-risk or sanctioned regions may be excluded. Enter your destination in the rate calculator to confirm availability and get current transit times for your specific route.
+        </div></div>
       </div>
-
       <div class="faq-item">
         <button class="faq-question" onclick="toggleFAQ(this)">
           What customs documents do I need?
-          <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+          <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
         </button>
-        <div class="faq-answer">
-          <div class="faq-answer-inner">
-            For international shipments you'll typically need:
-            <ul>
-              <li><strong>Commercial invoice</strong> — describes contents, quantity, and declared value</li>
-              <li><strong>Packing list</strong> — itemised breakdown of the parcel contents</li>
-              <li><strong>HS codes</strong> — tariff classification codes for each item</li>
-            </ul>
-            Our platform generates these documents automatically when you create a shipment. For specific country requirements, check our Customs Guide or contact support.
-          </div>
-        </div>
+        <div class="faq-answer"><div class="faq-answer-inner">
+          For international shipments you'll typically need:
+          <ul>
+            <li><strong>Commercial invoice</strong> . describes contents, quantity, and declared value</li>
+            <li><strong>Packing list</strong> . itemised breakdown of the parcel contents</li>
+            <li><strong>HS codes</strong> . tariff classification codes for each item</li>
+          </ul>
+          Our platform generates these documents automatically when you create a shipment. For specific country requirements, check our Customs Guide or contact support.
+        </div></div>
       </div>
-
       <div class="faq-item">
         <button class="faq-question" onclick="toggleFAQ(this)">
           How long does international shipping take?
-          <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+          <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
         </button>
-        <div class="faq-answer">
-          <div class="faq-answer-inner">
-            Transit times vary by destination and service:
-            <ul>
-              <li><strong>International Priority Express:</strong> 1–3 business days</li>
-              <li><strong>International Express:</strong> 3–5 business days</li>
-              <li><strong>International Standard:</strong> 6–12 business days</li>
-            </ul>
-            Customs clearance can add 1–5 days depending on destination. These are estimates and not guaranteed.
-          </div>
-        </div>
+        <div class="faq-answer"><div class="faq-answer-inner">
+          Transit times vary by destination and service:
+          <ul>
+            <li><strong>International Priority Express:</strong> 1–3 business days</li>
+            <li><strong>International Express:</strong> 3–5 business days</li>
+            <li><strong>International Standard:</strong> 6–12 business days</li>
+          </ul>
+          Customs clearance can add 1–5 days depending on destination. These are estimates and not guaranteed.
+        </div></div>
       </div>
     </div>
 
-  </div><!-- end faqContent -->
-
-  <div class="faq-cta">
-    <h3>Still have questions?</h3>
-    <p>Our support team is available 7 days a week to help you.</p>
-    <a href="index.html#contact">Chat with Support →</a>
   </div>
+
+  
 
 </div>
 
 <!-- FOOTER -->
 <div class="footer-simple">
-  © 2026 ExpressCO. All rights reserved. &nbsp;·&nbsp; <a href="privacy-policy.html">Privacy Policy</a> &nbsp;·&nbsp; <a href="faq.html">FAQs</a>
+  © 2026 Express Courier. All rights reserved. &nbsp;·&nbsp;
+  <a href="privacy-policy.html">Privacy Policy</a> &nbsp;·&nbsp;
+  <a href="faq.html">FAQs</a>
 </div>
 
 <script>
-  // Hamburger
   document.getElementById('hamburger').addEventListener('click', () => {
     document.getElementById('mobileMenu').classList.toggle('open');
   });
 
-  // Toggle FAQ
   function toggleFAQ(btn) {
     const answer = btn.nextElementSibling;
     const isOpen = btn.classList.contains('open');
-    // Close all
     document.querySelectorAll('.faq-question.open').forEach(q => {
       q.classList.remove('open');
       q.nextElementSibling.classList.remove('open');
     });
-    if (!isOpen) {
-      btn.classList.add('open');
-      answer.classList.add('open');
-    }
+    if (!isOpen) { btn.classList.add('open'); answer.classList.add('open'); }
   }
 
-  // Filter by category
   function filterCat(cat, btn) {
     document.querySelectorAll('.faq-cat-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
@@ -563,14 +438,18 @@
     });
   }
 
-  // Search
   function searchFAQs() {
     const q = document.getElementById('faqSearch').value.toLowerCase();
     document.querySelectorAll('.faq-item').forEach(item => {
-      const text = item.textContent.toLowerCase();
-      item.style.display = text.includes(q) ? 'block' : 'none';
+      item.style.display = item.textContent.toLowerCase().includes(q) ? 'block' : 'none';
     });
   }
+
+  const revealEls = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+  }, { threshold: 0.08 });
+  revealEls.forEach(el => observer.observe(el));
 </script>
 </body>
 </html>
