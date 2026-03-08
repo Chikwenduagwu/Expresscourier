@@ -2,102 +2,165 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Privacy Policy  Express CO</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
-  <style>/* shared-base  embedded in each page's <style> tag */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-:root {
-  --purple: #4D148C;
-  --orange: #FF6200;
-  --navy: #1a2e6e;
-  --text: #1f2937;
-  --muted: #6b7280;
-  --border: #e5e7eb;
-  --bg: #f9fafb;
-  --bold-font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-}
-body { font-family: 'DM Sans', sans-serif; color: var(--text); background: #fff; line-height: 1.65; }
-a { text-decoration: none; color: inherit; }
+  <title>Privacy Policy . Express Courier</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --black: #111111;
+      --yellow: #F5C400;
+      --white: #ffffff;
+      --off-white: #f7f7f5;
+      --grey: #888888;
+      --border: #e8e8e4;
+      --text: #1a1a1a;
+      --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font); color: var(--text); background: var(--white); line-height: 1.65; overflow-x: hidden; }
+    a { text-decoration: none; color: inherit; }
 
-/* NAVBAR */
-.navbar { background: var(--purple); position: sticky; top: 0; z-index: 200; box-shadow: 0 2px 24px rgba(77,20,140,0.35); }
-.navbar-inner { max-width: 1280px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; height: 68px; }
-.logo-text { font-family: 'Syne', sans-serif; font-size: 1.65rem; font-weight: 500; color: #fff; letter-spacing: -1px; }
-.logo-text span { color: var(--orange); }
-.navbar-links { display: flex; gap: 4px; }
-.nav-link { color: rgba(255,255,255,0.82); font-size: 0.875rem; font-weight: 500; padding: 8px 16px; border-radius: 6px; transition: all 0.18s; }
-.nav-link:hover { color: #fff; background: rgba(255,255,255,0.12); }
-.hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 6px; }
-.hamburger span { display: block; width: 24px; height: 2px; background: #fff; border-radius: 2px; }
-.mobile-menu { display: none; flex-direction: column; background: #3a0f6b; border-top: 1px solid rgba(255,255,255,0.1); }
-.mobile-menu.open { display: flex; }
-.mobile-link { color: rgba(255,255,255,0.85); padding: 14px 24px; font-size: 0.95rem; font-weight: 500; border-bottom: 1px solid rgba(255,255,255,0.07); }
-.mobile-link:hover { background: rgba(255,255,255,0.08); color: #fff; }
-@media (max-width: 900px) { .navbar-links { display: none; } .hamburger { display: flex; } }
+    /* ── SCROLL ANIMATIONS ── */
+    .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.65s cubic-bezier(.22,1,.36,1), transform 0.65s cubic-bezier(.22,1,.36,1); }
+    .reveal.visible { opacity: 1; transform: none; }
+    .reveal-delay-1 { transition-delay: 0.08s; }
+    .reveal-delay-2 { transition-delay: 0.16s; }
 
-/* PAGE HERO */
-.page-hero { background: linear-gradient(135deg, var(--navy) 0%, var(--purple) 100%); padding: 72px 24px 64px; text-align: center; position: relative; overflow: hidden; }
-.page-hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 70% 50%, rgba(255,98,0,0.15), transparent 60%); }
-.page-hero h1 { font-family: var(--bold-font); font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; color: #fff; margin-bottom: 14px; position: relative; }
-.page-hero p { font-size: 1.05rem; color: rgba(255,255,255,0.75); max-width: 560px; margin: 0 auto; line-height: 1.65; position: relative; }
-.page-hero .breadcrumb { font-size: 0.8rem; color: rgba(255,255,255,0.5); margin-bottom: 16px; position: relative; }
-.page-hero .breadcrumb a { color: rgba(255,255,255,0.7); }
-.page-hero .breadcrumb a:hover { color: #fff; }
+    /* ── NAVBAR ── */
+    .navbar { background: var(--black); position: sticky; top: 0; z-index: 200; border-bottom: 2px solid var(--yellow); }
+    .navbar-inner { max-width: 1280px; margin: 0 auto; padding: 0 32px; display: flex; align-items: center; justify-content: space-between; height: 68px; }
+    .logo-text { font-size: 1.4rem; font-weight: 800; color: var(--white); letter-spacing: -0.5px; }
+    .logo-text span { color: var(--yellow); }
+    .navbar-links { display: flex; gap: 4px; }
+    .nav-link { color: rgba(255,255,255,0.72); font-size: 0.875rem; font-weight: 500; padding: 8px 16px; border-radius: 6px; transition: all 0.18s; }
+    .nav-link:hover { color: var(--yellow); background: rgba(245,196,0,0.08); }
+    .hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 6px; }
+    .hamburger span { display: block; width: 24px; height: 2px; background: #fff; border-radius: 2px; }
+    .mobile-menu { display: none; flex-direction: column; background: #0a0a0a; border-top: 1px solid rgba(245,196,0,0.15); }
+    .mobile-menu.open { display: flex; }
+    .mobile-link { color: rgba(255,255,255,0.82); padding: 14px 24px; font-size: 0.95rem; font-weight: 500; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .mobile-link:hover { background: rgba(245,196,0,0.07); color: var(--yellow); }
+    @media (max-width: 900px) { .navbar-links { display: none; } .hamburger { display: flex; } }
 
-/* CONTENT */
-.page-content { max-width: 820px; margin: 0 auto; padding: 64px 24px 100px; }
-.page-content h2 { font-family: var(--bold-font); font-size: clamp(1.35rem, 3vw, 1.75rem); font-weight: 800; color: var(--text); margin: 48px 0 16px; line-height: 1.25; }
-.page-content h2:first-child { margin-top: 0; }
-.page-content h3 { font-family: var(--bold-font); font-size: 1.1rem; font-weight: 700; color: var(--text); margin: 32px 0 12px; }
-.page-content p { font-size: 1rem; color: #374151; margin-bottom: 18px; line-height: 1.8; }
-.page-content ul, .page-content ol { padding-left: 24px; margin-bottom: 20px; }
-.page-content ul li, .page-content ol li { margin-bottom: 10px; font-size: 0.97rem; color: #374151; line-height: 1.7; }
-.page-content strong { font-family: var(--bold-font); font-weight: 700; color: var(--text); }
-.page-content a { color: var(--purple); font-weight: 500; }
-.page-content a:hover { text-decoration: underline; }
-.page-content hr { border: none; border-top: 1px solid var(--border); margin: 48px 0; }
+    /* ── HERO ── */
+    .page-hero { background: var(--black); padding: 100px 24px 90px; text-align: center; position: relative; overflow: hidden; }
+    .page-hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 65% 0%, rgba(245,196,0,0.1), transparent 60%); }
+    .page-hero::after {
+      content: ''; position: absolute; inset: 0;
+      background-image: linear-gradient(rgba(245,196,0,0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(245,196,0,0.035) 1px, transparent 1px);
+      background-size: 56px 56px;
+      animation: gridMove 24s linear infinite;
+    }
+    @keyframes gridMove { 0% { background-position: 0 0; } 100% { background-position: 56px 56px; } }
+    .page-hero-inner { position: relative; z-index: 2; }
+    .breadcrumb { font-size: 0.78rem; color: rgba(255,255,255,0.38); margin-bottom: 22px; }
+    .breadcrumb a { color: rgba(255,255,255,0.52); transition: color 0.18s; }
+    .breadcrumb a:hover { color: var(--yellow); }
+    .hero-eyebrow {
+      display: inline-block; font-size: 0.68rem; font-weight: 700;
+      letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--yellow); background: rgba(245,196,0,0.1);
+      border: 1px solid rgba(245,196,0,0.22); padding: 5px 14px;
+      border-radius: 100px; margin-bottom: 24px;
+    }
+    .page-hero h1 { font-size: clamp(2.4rem, 6vw, 3.8rem); font-weight: 800; color: var(--white); line-height: 1.1; margin-bottom: 20px; letter-spacing: -1.5px; }
+    .page-hero h1 em { color: var(--yellow); font-style: normal; }
+    .page-hero p { font-size: 1.05rem; color: rgba(255,255,255,0.55); max-width: 500px; margin: 0 auto; line-height: 1.75; }
 
-/* Info box */
-.info-box { background: #f0e8ff; border-left: 4px solid var(--purple); border-radius: 0 8px 8px 0; padding: 18px 20px; margin: 28px 0; }
-.info-box p { margin: 0; color: #3b0764; font-size: 0.92rem; }
-.info-box strong { font-family: var(--bold-font); }
-.warning-box { background: #fff7ed; border-left: 4px solid var(--orange); border-radius: 0 8px 8px 0; padding: 18px 20px; margin: 28px 0; }
-.warning-box p { margin: 0; color: #7c2d12; font-size: 0.92rem; }
+    /* ── CONTENT ── */
+    .page-content { max-width: 820px; margin: 0 auto; padding: 72px 24px 100px; }
 
-/* Section divider label */
-.section-label { font-family: var(--bold-font); font-size: 0.68rem; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: var(--orange); margin-bottom: 10px; }
+    .last-updated {
+      font-size: 0.8rem; color: var(--grey);
+      background: var(--off-white); border: 1.5px solid var(--border);
+      padding: 9px 16px; border-radius: 6px;
+      display: inline-block; margin-bottom: 40px;
+    }
 
-/* Table */
-.data-table { width: 100%; border-collapse: collapse; margin: 24px 0; font-size: 0.9rem; }
-.data-table th { font-family: var(--bold-font); font-weight: 700; text-align: left; padding: 12px 16px; background: var(--bg); border-bottom: 2px solid var(--border); color: var(--text); font-size: 0.82rem; }
-.data-table td { padding: 12px 16px; border-bottom: 1px solid var(--border); color: #374151; vertical-align: top; }
-.data-table tr:last-child td { border-bottom: none; }
-.data-table tr:hover td { background: #faf9ff; }
+    /* TOC */
+    .toc {
+      background: var(--off-white); border: 1.5px solid var(--border);
+      border-left: 4px solid var(--yellow);
+      border-radius: 0 10px 10px 0; padding: 24px 28px; margin-bottom: 52px;
+    }
+    .toc h4 {
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.16em;
+      text-transform: uppercase; color: var(--yellow);
+      background: var(--black); padding: 4px 10px; border-radius: 4px;
+      display: inline-block; margin-bottom: 16px;
+    }
+    .toc ol { padding-left: 20px; }
+    .toc ol li { margin-bottom: 8px; font-size: 0.9rem; color: #555; }
+    .toc ol li a { color: var(--black); font-weight: 600; text-underline-offset: 3px; }
+    .toc ol li a:hover { color: var(--yellow); text-decoration: none; }
 
-/* Footer */
-.footer-simple { background: #f4f4f5; padding: 32px 24px; text-align: center; color: var(--muted); font-size: 0.82rem; border-top: 1px solid var(--border); }
-.footer-simple a { color: var(--purple); }
+    /* Typography */
+    .page-content h2 {
+      font-size: clamp(1.25rem, 3vw, 1.65rem); font-weight: 800;
+      color: var(--black); margin: 52px 0 16px; line-height: 1.2;
+      letter-spacing: -0.4px; padding-top: 8px;
+      border-top: 1px solid var(--border);
+    }
+    .page-content h2:first-of-type { border-top: none; margin-top: 0; }
+    .page-content h3 { font-size: 1rem; font-weight: 700; color: var(--black); margin: 28px 0 10px; }
+    .page-content p { font-size: 0.97rem; color: #444; margin-bottom: 18px; line-height: 1.85; }
+    .page-content ul, .page-content ol { padding-left: 22px; margin-bottom: 20px; }
+    .page-content ul li, .page-content ol li { margin-bottom: 10px; font-size: 0.93rem; color: #444; line-height: 1.75; }
+    .page-content strong { font-weight: 700; color: var(--black); }
+    .page-content a { color: var(--black); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+    .page-content a:hover { color: var(--yellow); }
 
-  .toc { background: var(--bg); border: 1.5px solid var(--border); border-radius: 10px; padding: 24px 28px; margin-bottom: 48px; }
-  .toc h4 { font-family: var(--bold-font); font-size: 0.82rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 14px; }
-  .toc ol { padding-left: 20px; }
-  .toc ol li { margin-bottom: 7px; font-size: 0.9rem; }
-  .toc ol li a { color: var(--purple); font-weight: 500; }
-  .last-updated { font-size: 0.82rem; color: var(--muted); margin-bottom: 40px; background: var(--bg); padding: 10px 16px; border-radius: 6px; display: inline-block; }
+    /* Info box */
+    .info-box {
+      background: var(--off-white); border-left: 4px solid var(--yellow);
+      border-radius: 0 8px 8px 0; padding: 18px 20px; margin: 28px 0;
+    }
+    .info-box p { margin: 0; color: #333; font-size: 0.92rem; }
+
+    /* Footer */
+    .footer-simple { background: var(--black); padding: 36px 24px; text-align: center; color: rgba(255,255,255,0.38); font-size: 0.82rem; border-top: 2px solid var(--yellow); }
+    .footer-simple a { color: var(--yellow); }
   </style>
 </head>
 <body>
-<nav class="navbar"><div class="navbar-inner"><a href="index.html" class="logo-text">EXPRESS<span>CO</span></a><div class="navbar-links"><a href="index.html#services" class="nav-link">Services</a><a href="index.html#track-section" class="nav-link">Track</a><a href="about.html" class="nav-link">About</a><a href="index.html#contact" class="nav-link">Contact</a></div><div style="display:flex;align-items:center;gap:12px"><button class="hamburger" id="hamburger"><span></span><span></span><span></span></button></div></div><div class="mobile-menu" id="mobileMenu"><a href="index.html#services" class="mobile-link">Services</a><a href="index.html#track-section" class="mobile-link">Track</a><a href="about.html" class="mobile-link">About</a><a href="index.html#contact" class="mobile-link">Contact</a></div></nav>
-<div class="page-hero">
-  <p class="breadcrumb"><a href="index.html">Home</a> › Legal</p>
-  <h1>Privacy Policy</h1>
-  <p>How we collect, use, and protect your personal information.</p>
-</div>
-<div class="page-content">
-  <span class="last-updated">Last updated: 1 February 2026</span>
 
-  <div class="toc">
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a href="index.html" class="logo-text">EXPRESS<span>CO</span></a>
+    <div class="navbar-links">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="track.html" class="nav-link">Track</a>
+      <a href="about.html" class="nav-link">About</a>
+      <a href="contact.html" class="nav-link">Contact</a>
+    </div>
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="index.html" class="mobile-link">Home</a>
+    <a href="track.html" class="mobile-link">Track</a>
+    <a href="about.html" class="mobile-link">About</a>
+
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <p class="breadcrumb"><a href="index.html">Home</a> › Legal</p>
+    <div class="hero-eyebrow">Legal</div>
+    <h1>Privacy <em>Policy</em></h1>
+    <p>How we collect, use, and protect your personal information.</p>
+  </div>
+</div>
+
+<!-- CONTENT -->
+<div class="page-content">
+
+  <span class="last-updated reveal">Last updated: 1 February 2026</span>
+
+  <div class="toc reveal reveal-delay-1">
     <h4>Contents</h4>
     <ol>
       <li><a href="#info-collect">Information We Collect</a></li>
@@ -113,70 +176,72 @@ a { text-decoration: none; color: inherit; }
     </ol>
   </div>
 
-  <p>Express CO ("we", "our", "us") is committed to protecting your personal data. This Privacy Policy explains what personal information we collect, why we collect it, how we use it, and the choices you have. By using our services, you agree to the practices described in this policy.</p>
+  <p class="reveal">Express Courier ("we", "our", "us") is committed to protecting your personal data. This Privacy Policy explains what personal information we collect, why we collect it, how we use it, and the choices you have. By using our services, you agree to the practices described in this policy.</p>
 
-  <h2 id="info-collect">1. Information We Collect</h2>
-  <h3>Information You Provide Directly</h3>
-  <p>When you use Express CO services  creating shipments, tracking parcels, contacting support, or subscribing to notifications  you may provide us with:</p>
-  <ul>
+  <h2 id="info-collect" class="reveal">1. Information We Collect</h2>
+  <h3 class="reveal">Information You Provide Directly</h3>
+  <p class="reveal">When you use Express Courier services . creating shipments, tracking parcels, contacting support, or subscribing to notifications . you may provide us with:</p>
+  <ul class="reveal">
     <li><strong>Identity data:</strong> Full name, company name</li>
     <li><strong>Contact data:</strong> Email address, phone number, postal address</li>
     <li><strong>Shipment data:</strong> Sender and recipient names and addresses, package descriptions, declared values</li>
     <li><strong>Account data:</strong> Username, password (hashed), account preferences</li>
     <li><strong>Communications:</strong> Messages sent to our customer support team</li>
-    <li><strong>Financial data:</strong> Payment card details (processed by our PCI-DSS compliant payment processor  we do not store full card numbers)</li>
+    <li><strong>Financial data:</strong> Payment card details (processed by our PCI-DSS compliant payment processor . we do not store full card numbers)</li>
   </ul>
 
-  <h3>Information Collected Automatically</h3>
-  <p>When you visit our website or use our services, we automatically collect certain technical information:</p>
-  <ul>
+  <h3 class="reveal">Information Collected Automatically</h3>
+  <p class="reveal">When you visit our website or use our services, we automatically collect certain technical information:</p>
+  <ul class="reveal">
     <li><strong>Usage data:</strong> Pages visited, features used, time on site, click patterns</li>
     <li><strong>Device data:</strong> IP address, browser type and version, operating system, device identifiers</li>
     <li><strong>Location data:</strong> Approximate geographic location derived from IP address</li>
     <li><strong>Cookie data:</strong> Session identifiers, preference cookies, analytics cookies (see Section 4)</li>
   </ul>
 
-  <h3>Information from Third Parties</h3>
-  <p>We may receive information about you from third parties including our delivery partners (confirmation of delivery, GPS location at time of delivery), payment processors (transaction confirmations), and identity verification services (for business account setup).</p>
+  <h3 class="reveal">Information from Third Parties</h3>
+  <p class="reveal">We may receive information about you from third parties including our delivery partners (confirmation of delivery, GPS location at time of delivery), payment processors (transaction confirmations), and identity verification services (for business account setup).</p>
 
-  <h2 id="how-use">2. How We Use Your Information</h2>
-  <p>We process your personal data for the following purposes, each supported by a lawful basis:</p>
-  <ul>
-    <li><strong>Delivering our services</strong> (contract performance)  processing shipments, providing tracking, managing your account</li>
-    <li><strong>Customer support</strong> (contract performance / legitimate interest)  responding to enquiries, resolving complaints, investigating lost or damaged parcels</li>
-    <li><strong>Service notifications</strong> (legitimate interest / consent)  delivery updates, exception alerts, tracking milestone emails</li>
-    <li><strong>Improving our services</strong> (legitimate interest)  analysing usage patterns, identifying bugs, improving user experience</li>
-    <li><strong>Marketing communications</strong> (consent)  promotional emails, service updates (only with your explicit consent; opt-out at any time)</li>
-    <li><strong>Legal compliance</strong> (legal obligation)  customs declarations, regulatory reporting, fraud prevention</li>
-    <li><strong>Safety and security</strong> (legitimate interest / legal obligation)  detecting and preventing fraud, abuse, and security incidents</li>
+  <h2 id="how-use" class="reveal">2. How We Use Your Information</h2>
+  <p class="reveal">We process your personal data for the following purposes, each supported by a lawful basis:</p>
+  <ul class="reveal">
+    <li><strong>Delivering our services</strong> (contract performance) . processing shipments, providing tracking, managing your account</li>
+    <li><strong>Customer support</strong> (contract performance / legitimate interest) . responding to enquiries, resolving complaints, investigating lost or damaged parcels</li>
+    <li><strong>Service notifications</strong> (legitimate interest / consent) . delivery updates, exception alerts, tracking milestone emails</li>
+    <li><strong>Improving our services</strong> (legitimate interest) . analysing usage patterns, identifying bugs, improving user experience</li>
+    <li><strong>Marketing communications</strong> (consent) . promotional emails, service updates (only with your explicit consent; opt-out at any time)</li>
+    <li><strong>Legal compliance</strong> (legal obligation) . customs declarations, regulatory reporting, fraud prevention</li>
+    <li><strong>Safety and security</strong> (legitimate interest / legal obligation) . detecting and preventing fraud, abuse, and security incidents</li>
   </ul>
 
-  <h2 id="sharing">3. How We Share Your Information</h2>
-  <p>We do not sell your personal data. We share it only as necessary to provide our services or as required by law:</p>
-  <ul>
-    <li><strong>Delivery partners and carriers</strong>  recipient name, address, and contact details necessary for delivery</li>
-    <li><strong>Customs authorities</strong>  sender/recipient details and shipment contents as required by international customs regulations</li>
-    <li><strong>Payment processors</strong>  financial data processed under their own privacy policies (Stripe, PayPal)</li>
-    <li><strong>Technology service providers</strong>  hosting, analytics, email delivery, customer support tools (all under data processing agreements)</li>
-    <li><strong>Legal authorities</strong>  when required by law, court order, or to protect the rights and safety of Express CO and our users</li>
+  <h2 id="sharing" class="reveal">3. How We Share Your Information</h2>
+  <p class="reveal">We do not sell your personal data. We share it only as necessary to provide our services or as required by law:</p>
+  <ul class="reveal">
+    <li><strong>Delivery partners and carriers</strong> . recipient name, address, and contact details necessary for delivery</li>
+    <li><strong>Customs authorities</strong> . sender/recipient details and shipment contents as required by international customs regulations</li>
+    <li><strong>Payment processors</strong> . financial data processed under their own privacy policies (Stripe, PayPal)</li>
+    <li><strong>Technology service providers</strong> . hosting, analytics, email delivery, customer support tools (all under data processing agreements)</li>
+    <li><strong>Legal authorities</strong> . when required by law, court order, or to protect the rights and safety of Express Courier and our users</li>
   </ul>
 
-  <div class="info-box"><p><strong>We never sell your data.</strong> Express CO does not and will not sell, rent, or trade your personal information to third parties for marketing purposes under any circumstances.</p></div>
+  <div class="info-box reveal">
+    <p><strong>We never sell your data.</strong> Express Courier does not and will not sell, rent, or trade your personal information to third parties for marketing purposes under any circumstances.</p>
+  </div>
 
-  <h2 id="cookies">4. Cookies and Tracking</h2>
-  <p>We use cookies and similar tracking technologies to operate our website and improve your experience. Cookies are small text files stored on your device.</p>
-  <h3>Types of Cookies We Use</h3>
-  <ul>
+  <h2 id="cookies" class="reveal">4. Cookies and Tracking</h2>
+  <p class="reveal">We use cookies and similar tracking technologies to operate our website and improve your experience. Cookies are small text files stored on your device.</p>
+  <h3 class="reveal">Types of Cookies We Use</h3>
+  <ul class="reveal">
     <li><strong>Essential cookies:</strong> Required for the website to function (session management, security). Cannot be disabled.</li>
     <li><strong>Preference cookies:</strong> Remember your settings and preferences across visits.</li>
     <li><strong>Analytics cookies:</strong> Help us understand how visitors use our site (Google Analytics, anonymised). You can opt out.</li>
     <li><strong>Marketing cookies:</strong> Used only with your consent to show relevant advertising.</li>
   </ul>
-  <p>You can manage your cookie preferences through our Cookie Settings panel (accessible via the footer) or through your browser settings. Note that disabling certain cookies may affect website functionality.</p>
+  <p class="reveal">You can manage your cookie preferences through our Cookie Settings panel (accessible via the footer) or through your browser settings. Note that disabling certain cookies may affect website functionality.</p>
 
-  <h2 id="retention">5. Data Retention</h2>
-  <p>We retain your personal data for as long as necessary to fulfil the purposes described in this policy:</p>
-  <ul>
+  <h2 id="retention" class="reveal">5. Data Retention</h2>
+  <p class="reveal">We retain your personal data for as long as necessary to fulfil the purposes described in this policy:</p>
+  <ul class="reveal">
     <li><strong>Shipment records:</strong> 7 years (required for customs and legal compliance)</li>
     <li><strong>Account data:</strong> Duration of account plus 2 years after closure</li>
     <li><strong>Customer support conversations:</strong> 3 years from date of interaction</li>
@@ -184,9 +249,9 @@ a { text-decoration: none; color: inherit; }
     <li><strong>Analytics data:</strong> 26 months (anonymised after 14 months)</li>
   </ul>
 
-  <h2 id="rights">6. Your Rights</h2>
-  <p>Under data protection law (including GDPR where applicable), you have the following rights regarding your personal data:</p>
-  <ul>
+  <h2 id="rights" class="reveal">6. Your Rights</h2>
+  <p class="reveal">Under data protection law (including GDPR where applicable), you have the following rights regarding your personal data:</p>
+  <ul class="reveal">
     <li><strong>Right of access:</strong> Request a copy of the personal data we hold about you</li>
     <li><strong>Right to rectification:</strong> Ask us to correct inaccurate or incomplete data</li>
     <li><strong>Right to erasure:</strong> Request deletion of your data (subject to legal retention requirements)</li>
@@ -195,28 +260,45 @@ a { text-decoration: none; color: inherit; }
     <li><strong>Right to object:</strong> Object to processing based on legitimate interest, including direct marketing</li>
     <li><strong>Right to withdraw consent:</strong> Withdraw any consent you have given at any time</li>
   </ul>
-  <p>To exercise any of these rights, contact us at <strong>privacy@Express CO.com</strong>. We will respond within 30 days. We may need to verify your identity before processing your request.</p>
+  <p class="reveal">To exercise any of these rights, contact us at <strong>privacy@expresscourier.com</strong>. We will respond within 30 days. We may need to verify your identity before processing your request.</p>
 
-  <h2 id="security">7. Data Security</h2>
-  <p>We implement appropriate technical and organisational measures to protect your personal data against unauthorised access, loss, or alteration. These include TLS encryption for data in transit, encryption at rest for sensitive data, role-based access controls, regular security audits, and staff training on data protection.</p>
-  <p>No system is perfectly secure. If you become aware of a security issue affecting your account, please contact us immediately at <strong>security@Express CO.com</strong>.</p>
+  <h2 id="security" class="reveal">7. Data Security</h2>
+  <p class="reveal">We implement appropriate technical and organisational measures to protect your personal data against unauthorised access, loss, or alteration. These include TLS encryption for data in transit, encryption at rest for sensitive data, role-based access controls, regular security audits, and staff training on data protection.</p>
+  <p class="reveal">No system is perfectly secure. If you become aware of a security issue affecting your account, please contact us immediately at <strong>security@expresscourier.com</strong>.</p>
 
-  <h2 id="international">8. International Data Transfers</h2>
-  <p>Express CO operates globally. Your data may be transferred to and processed in countries outside your home country, including countries that may have different data protection laws. When we transfer data internationally, we ensure appropriate safeguards are in place including Standard Contractual Clauses approved by the European Commission, or we transfer to countries with adequacy decisions.</p>
+  <h2 id="international" class="reveal">8. International Data Transfers</h2>
+  <p class="reveal">Express Courier operates globally. Your data may be transferred to and processed in countries outside your home country, including countries that may have different data protection laws. When we transfer data internationally, we ensure appropriate safeguards are in place including Standard Contractual Clauses approved by the European Commission, or we transfer to countries with adequacy decisions.</p>
 
-  <h2 id="children">9. Children's Privacy</h2>
-  <p>Express CO services are not directed at children under the age of 16. We do not knowingly collect personal data from children. If you believe we have inadvertently collected data from a child, please contact us immediately and we will delete it promptly.</p>
+  <h2 id="children" class="reveal">9. Children's Privacy</h2>
+  <p class="reveal">Express Courier services are not directed at children under the age of 16. We do not knowingly collect personal data from children. If you believe we have inadvertently collected data from a child, please contact us immediately and we will delete it promptly.</p>
 
-  <h2 id="contact-us">10. Contact Us</h2>
-  <p>If you have questions, concerns, or requests regarding this Privacy Policy or our data practices, please contact our Data Protection Officer:</p>
-  <ul>
-    <li><strong>Email:</strong> privacy@Express CO.com</li>
-    <li><strong>Post:</strong> Express CO Data Protection Officer, 12 Logistics Way, London, EC1A 1BB</li>
+  <h2 id="contact-us" class="reveal">10. Contact Us</h2>
+  <p class="reveal">If you have questions, concerns, or requests regarding this Privacy Policy or our data practices, please contact our Data Protection Officer:</p>
+  <ul class="reveal">
+    <li><strong>Email:</strong> privacy@expresscourier.com</li>
+    <li><strong>Post:</strong> Express Courier Data Protection Officer, 12 Logistics Way, London, EC1A 1BB</li>
   </ul>
-  <p>You also have the right to lodge a complaint with your local data protection supervisory authority at any time.</p>
+  <p class="reveal">You also have the right to lodge a complaint with your local data protection supervisory authority at any time.</p>
 
 </div>
-<div class="footer-simple">© 2026 ExpressCO. All rights reserved. &nbsp;·&nbsp; <a href="privacy-policy.html">Privacy Policy</a> &nbsp;·&nbsp; <a href="faq.html">FAQs</a></div>
-<script>document.getElementById('hamburger').addEventListener('click',()=>{document.getElementById('mobileMenu').classList.toggle('open');});</script>
+
+<!-- FOOTER -->
+<div class="footer-simple">
+  © 2026 Express Courier. All rights reserved. &nbsp;·&nbsp;
+  <a href="privacy-policy.html">Privacy Policy</a> &nbsp;·&nbsp;
+  <a href="faq.html">FAQs</a>
+</div>
+
+<script>
+  document.getElementById('hamburger').addEventListener('click', () => {
+    document.getElementById('mobileMenu').classList.toggle('open');
+  });
+
+  const revealEls = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+  }, { threshold: 0.08 });
+  revealEls.forEach(el => observer.observe(el));
+</script>
 </body>
 </html>
