@@ -9,8 +9,9 @@
   position: sticky;
   top: 0;
   z-index: 200;
-  box-shadow: 0 2px 24px rgba(17,17,17,0.35);
+  box-shadow: 0 2px 24px rgba(17,17,17,0.08);
 }
+
 .navbar-inner {
   max-width: 1280px;
   margin: 0 auto;
@@ -20,7 +21,9 @@
   justify-content: space-between;
   height: 68px;
 }
+
 .navbar-logo { text-decoration: none; }
+
 .logo-text {
   font-family: 'Syne', sans-serif;
   font-size: 1.65rem;
@@ -28,10 +31,16 @@
   color: #000;
   letter-spacing: -1px;
 }
-.logo-text span { color: #F5C400; }
-.navbar-links { display: flex; gap: 4px; }
+
+.logo-text span { color: #000; }
+
+.navbar-links {
+  display: flex;
+  gap: 4px;
+}
+
 .nav-link {
-  color: rgba(255,255,255,0.82);
+  color: #111;
   font-size: 0.875rem;
   font-weight: 500;
   padding: 8px 16px;
@@ -39,10 +48,15 @@
   transition: all 0.18s ease;
   letter-spacing: 0.01em;
 }
-.nav-link:hover { color: #fff; background: rgba(255,255,255,0.12); }
+
+.nav-link:hover {
+  color: #000;
+  background: rgba(0,0,0,0.05);
+}
+
 .nav-btn {
   background: #F5C400;
-  color: #111111;
+  color: #111;
   font-size: 0.85rem;
   font-weight: 700;
   padding: 9px 22px;
@@ -51,7 +65,12 @@
   transition: all 0.18s ease;
   box-shadow: 0 4px 16px rgba(245,196,0,0.30);
 }
-.nav-btn:hover { background: #d4a800; transform: translateY(-1px); }
+
+.nav-btn:hover {
+  background: #d4a800;
+  transform: translateY(-1px);
+}
+
 .hamburger {
   display: none;
   flex-direction: column;
@@ -61,32 +80,47 @@
   cursor: pointer;
   padding: 6px;
 }
+
 .hamburger span {
   display: block;
   width: 24px;
   height: 2px;
-  background: #fff;
+  background: #000; /* black hamburger */
   border-radius: 2px;
   transition: all 0.25s ease;
 }
+
+/* Mobile menu */
+
 .mobile-menu {
   display: none;
   flex-direction: column;
-  background: #1a1a1a;
-  border-top: 1px solid rgba(255,255,255,0.1);
+  background: #000;
+  border-top: 1px solid #111;
 }
-.mobile-menu.open { display: flex; }
+
+.mobile-menu.open {
+  display: flex;
+}
+
 .mobile-link {
-  color: rgba(255,255,255,0.85);
+  color: #fff;
   padding: 14px 24px;
   font-size: 0.95rem;
   font-weight: 500;
   border-bottom: 1px solid rgba(255,255,255,0.07);
-  transition: all 0.15s;
+  transition: all 0.15s ease;
 }
-.mobile-link:hover { background: rgba(255,255,255,0.08); color: #fff; }
-.mobile-admin { color: #F5C400; font-weight: 700; }
 
+.mobile-link:hover {
+  background: #111;
+  color: #fff;
+}
+
+.mobile-admin {
+  color: #F5C400;
+  font-weight: 700;
+}
 
 /* ══════════════════════════════════════════════
    HERO
