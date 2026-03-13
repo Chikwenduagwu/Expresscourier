@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Logistics Solutions . Express Courier</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --black: #111111; --yellow: #F5C400; --white: #ffffff;
+      --off-white: #f7f7f5; --grey: #888888; --border: #e8e8e4;
+      --text: #1a1a1a;
+      --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font); color: var(--text); background: var(--white); line-height: 1.65; overflow-x: hidden; }
+    a { text-decoration: none; color: inherit; }
+    .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.65s cubic-bezier(.22,1,.36,1), transform 0.65s cubic-bezier(.22,1,.36,1); }
+    .reveal.visible { opacity: 1; transform: none; }
+    .reveal-delay-1 { transition-delay: 0.08s; }
+    .reveal-delay-2 { transition-delay: 0.16s; }
+    .navbar { background: var(--white); position: sticky; top: 0; z-index: 200; border-bottom: 2px solid var(--yellow); }
+    .navbar-inner { max-width: 1280px; margin: 0 auto; padding: 0 32px; display: flex; align-items: center; justify-content: space-between; height: 68px; }
+    .navbar-links { display: flex; gap: 4px; }
+    .nav-link { color: #333; font-size: 0.875rem; font-weight: 500; padding: 8px 16px; border-radius: 6px; transition: all 0.18s; }
+    .nav-link:hover { color: var(--yellow); background: rgba(245,196,0,0.08); }
+    .hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 6px; }
+    .hamburger span { display: block; width: 24px; height: 2px; background: #000; border-radius: 2px; }
+    .mobile-menu { display: none; flex-direction: column; background: #0a0a0a; border-top: 1px solid rgba(245,196,0,0.15); }
+    .mobile-menu.open { display: flex; }
+    .mobile-link { color: rgba(255,255,255,0.82); padding: 14px 24px; font-size: 0.95rem; font-weight: 500; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .mobile-link:hover { background: rgba(245,196,0,0.07); color: var(--yellow); }
+    @media (max-width: 900px) { .navbar-links { display: none; } .hamburger { display: flex; } }
+    .page-hero { background: var(--black); padding: 100px 24px 90px; text-align: center; position: relative; overflow: hidden; }
+    .page-hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 65% 0%, rgba(245,196,0,0.1), transparent 60%); }
+    .page-hero::after {
+      content: ''; position: absolute; inset: 0;
+      background-image: linear-gradient(rgba(245,196,0,0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(245,196,0,0.035) 1px, transparent 1px);
+      background-size: 56px 56px; animation: gridMove 24s linear infinite;
+    }
+    @keyframes gridMove { 0% { background-position: 0 0; } 100% { background-position: 56px 56px; } }
+    .page-hero-inner { position: relative; z-index: 2; }
+    .breadcrumb { font-size: 0.78rem; color: rgba(255,255,255,0.38); margin-bottom: 22px; }
+    .breadcrumb a { color: rgba(255,255,255,0.52); transition: color 0.18s; }
+    .breadcrumb a:hover { color: var(--yellow); }
+    .hero-eyebrow { display: inline-block; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--yellow); background: rgba(245,196,0,0.1); border: 1px solid rgba(245,196,0,0.22); padding: 5px 14px; border-radius: 100px; margin-bottom: 24px; }
+    .page-hero h1 { font-size: clamp(2.4rem, 6vw, 3.8rem); font-weight: 800; color: var(--white); line-height: 1.1; margin-bottom: 20px; letter-spacing: -1.5px; }
+    .page-hero h1 em { color: var(--yellow); font-style: normal; }
+    .page-hero p { font-size: 1.05rem; color: rgba(255,255,255,0.55); max-width: 500px; margin: 0 auto; line-height: 1.75; }
+    .page-content { max-width: 820px; margin: 0 auto; padding: 72px 24px 100px; }
+    .service-badge { font-size: 0.8rem; color: var(--grey); background: var(--off-white); border: 1.5px solid var(--border); padding: 9px 16px; border-radius: 6px; display: inline-block; margin-bottom: 40px; }
+    .toc { background: var(--off-white); border: 1.5px solid var(--border); border-left: 4px solid var(--yellow); border-radius: 0 10px 10px 0; padding: 24px 28px; margin-bottom: 52px; }
+    .toc h4 { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--yellow); background: var(--black); padding: 4px 10px; border-radius: 4px; display: inline-block; margin-bottom: 16px; }
+    .toc ol { padding-left: 20px; }
+    .toc ol li { margin-bottom: 8px; font-size: 0.9rem; color: #555; }
+    .toc ol li a { color: var(--black); font-weight: 600; text-underline-offset: 3px; }
+    .toc ol li a:hover { color: var(--yellow); text-decoration: none; }
+    .page-content h2 { font-size: clamp(1.25rem, 3vw, 1.65rem); font-weight: 800; color: var(--black); margin: 52px 0 16px; line-height: 1.2; letter-spacing: -0.4px; padding-top: 8px; border-top: 1px solid var(--border); }
+    .page-content h2:first-of-type { border-top: none; margin-top: 0; }
+    .page-content h3 { font-size: 1rem; font-weight: 700; color: var(--black); margin: 28px 0 10px; }
+    .page-content p { font-size: 0.97rem; color: #444; margin-bottom: 18px; line-height: 1.85; }
+    .page-content ul, .page-content ol { padding-left: 22px; margin-bottom: 20px; }
+    .page-content ul li, .page-content ol li { margin-bottom: 10px; font-size: 0.93rem; color: #444; line-height: 1.75; }
+    .page-content strong { font-weight: 700; color: var(--black); }
+    .page-content a { color: var(--black); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+    .page-content a:hover { color: var(--yellow); }
+    .info-box { background: var(--off-white); border-left: 4px solid var(--yellow); border-radius: 0 8px 8px 0; padding: 18px 20px; margin: 28px 0; }
+    .info-box p { margin: 0; color: #333; font-size: 0.92rem; }
+    .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 32px 0; }
+    .stat-card { background: var(--black); border-radius: 10px; padding: 24px 20px; text-align: center; }
+    .stat-card .stat-num { font-size: 2rem; font-weight: 800; color: var(--yellow); display: block; letter-spacing: -1px; }
+    .stat-card .stat-label { font-size: 0.78rem; color: rgba(255,255,255,0.5); margin-top: 6px; display: block; }
+    @media (max-width: 600px) { .stats-row { grid-template-columns: 1fr; } }
+    .footer-simple { background: var(--black); padding: 36px 24px; text-align: center; color: rgba(255,255,255,0.38); font-size: 0.82rem; border-top: 2px solid var(--yellow); }
+    .footer-simple a { color: var(--yellow); }
+  </style>
+</head>
+<body>
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a href="index.html"><img src="assets/img/nlogo.jpg" width="auto" height="64px"/></a>
+    <div class="navbar-links">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="track.html" class="nav-link">Track</a>
+      <a href="about.html" class="nav-link">About</a>
+      <a href="contact.html" class="nav-link">Contact</a>
+    </div>
+    <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="index.html" class="mobile-link">Home</a>
+    <a href="track.html" class="mobile-link">Track</a>
+    <a href="about.html" class="mobile-link">About</a>
+  </div>
+</nav>
+
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <p class="breadcrumb"><a href="index.html">Home</a> › Services</p>
+    <div class="hero-eyebrow">Services</div>
+    <h1>Logistics <em>Solutions</em></h1>
+    <p>End-to-end supply chain management built for speed, visibility, and scale.</p>
+  </div>
+</div>
+
+<div class="page-content">
+  <span class="service-badge reveal">🚚 Ground & Multi-modal Logistics</span>
+
+  <div class="toc reveal reveal-delay-1">
+    <h4>On This Page</h4>
+    <ol>
+      <li><a href="#overview">Service Overview</a></li>
+      <li><a href="#ground">Ground Freight</a></li>
+      <li><a href="#multimodal">Multi-modal Transport</a></li>
+      <li><a href="#tracking">Real-Time Tracking</a></li>
+      <li><a href="#customs">Customs Clearance</a></li>
+      <li><a href="#coverage">Coverage & Routes</a></li>
+      <li><a href="#pricing">Pricing & SLAs</a></li>
+      <li><a href="#technology">Our Technology</a></li>
+      <li><a href="#sustainability">Sustainability</a></li>
+      <li><a href="#get-started">Get Started</a></li>
+    </ol>
+  </div>
+
+  <p class="reveal">Express Courier's Logistics Solutions deliver a fully integrated, end-to-end freight management experience. From first-mile pickup to last-mile delivery, our network of carriers, technology platforms, and logistics specialists ensures your cargo moves efficiently, reliably, and with complete visibility at every stage of the journey.</p>
+
+  <h2 id="overview" class="reveal">1. Service Overview</h2>
+  <p class="reveal">Our logistics division handles shipments of all scales . from single pallets to full truckloads and complex multi-leg consignments. We combine proprietary route optimisation software with a global carrier network to deliver the right solution for every shipment profile.</p>
+  <p class="reveal">Whether you need a one-off freight movement or a fully managed supply chain contract, our team of logistics experts designs solutions around your operational requirements and timelines.</p>
+
+
+  <h2 id="ground" class="reveal">2. Ground Freight</h2>
+  <h3 class="reveal">Full Truckload (FTL)</h3>
+  <p class="reveal">Dedicated vehicle movements for large consignments requiring exclusive use of trailer space. Ideal for time-sensitive or high-value freight that cannot share space with other cargo. We operate temperature-controlled, standard dry van, flatbed, and specialist vehicle types across our network.</p>
+  <h3 class="reveal">Less Than Truckload (LTL)</h3>
+  <p class="reveal">Cost-efficient shared freight services for smaller consignments. Our consolidation hubs across all major metropolitan areas allow us to group compatible shipments, optimise route density, and deliver competitive transit times without the cost of a full vehicle commitment.</p>
+  <ul class="reveal">
+    <li><strong>Next-day LTL:</strong> Available within major urban corridors</li>
+    <li><strong>Economy LTL:</strong> 2–5 day service for cost-sensitive shipments</li>
+    <li><strong>Oversized freight:</strong> Specialist handling for non-standard dimensions</li>
+    <li><strong>Hazardous materials:</strong> ADR-compliant transport with trained drivers</li>
+  </ul>
+
+  <h2 id="multimodal" class="reveal">3. Multi-modal Transport</h2>
+  <p class="reveal">Complex supply chains often require seamless transitions between transport modes. Our multi-modal service coordinates road, rail, sea, and air freight within a single managed solution, giving you simplified administration, a single point of accountability, and optimised cost-to-speed trade-offs.</p>
+  <ul class="reveal">
+    <li><strong>Road + Rail:</strong> Long-distance domestic routes with rail linehaul for lower emissions and cost</li>
+    <li><strong>Sea + Road:</strong> Port-to-door import and export solutions with drayage included</li>
+    <li><strong>Air + Road:</strong> Express international shipments with fast ground distribution at destination</li>
+    <li><strong>Full intermodal:</strong> Container-based solutions using standardised equipment across all modes</li>
+  </ul>
+
+  <div class="info-box reveal">
+    <p><strong>Single contract, multiple modes.</strong> Express Courier manages all carrier handoffs, documentation, and customs filings across every leg of a multi-modal movement . one invoice, one tracking platform, one point of contact.</p>
+  </div>
+
+  <h2 id="tracking" class="reveal">4. Real-Time Tracking</h2>
+  <p class="reveal">Every shipment managed by Express Courier is tracked end-to-end through our proprietary visibility platform. Live GPS data, carrier EDI feeds, and milestone event reporting are aggregated into a single dashboard accessible via web and mobile.</p>
+  <ul class="reveal">
+    <li><strong>Live GPS tracking:</strong> Vehicle-level location updates every 2 minutes</li>
+    <li><strong>Milestone alerts:</strong> Automated SMS and email notifications at key shipment events</li>
+    <li><strong>Exception management:</strong> Proactive alerts for delays, missed pickups, or route deviations</li>
+    <li><strong>API integration:</strong> Connect our tracking data directly into your ERP or WMS</li>
+    <li><strong>Proof of delivery:</strong> Electronic POD with signature capture and photographic evidence</li>
+  </ul>
+
+  <h2 id="customs" class="reveal">5. Customs Clearance</h2>
+  <p class="reveal">Cross-border logistics requires expert customs management. Our in-house customs brokerage team handles import and export declarations, tariff classification, duty calculations, and liaison with customs authorities on your behalf. We maintain licences to operate in all major trading blocs including the EU, UK, US, and ASEAN markets.</p>
+  <ul class="reveal">
+    <li><strong>Import customs entry:</strong> Full and simplified procedure declarations</li>
+    <li><strong>Export declarations:</strong> ECS and AES filing in applicable jurisdictions</li>
+    <li><strong>Duty deferment:</strong> Managed duty accounts to improve cash flow</li>
+    <li><strong>Bonded warehousing:</strong> Duty suspension facilities at key gateway locations</li>
+    <li><strong>Trade compliance advisory:</strong> Origin determination, free trade agreement qualification</li>
+  </ul>
+
+  <h2 id="coverage" class="reveal">6. Coverage & Routes</h2>
+  <p class="reveal">Our ground logistics network spans over 180 countries, with direct service corridors across Europe, North America, Asia-Pacific, the Middle East, and Sub-Saharan Africa. Transoceanic movements connect through our gateway hubs in London, Dubai, Singapore, Chicago, and Johannesburg.</p>
+  <p class="reveal">Within each region, we maintain contracted capacity agreements with local carrier partners who meet our quality, safety, and compliance standards. All partners are vetted annually and monitored continuously through our carrier performance programme.</p>
+
+  <h2 id="pricing" class="reveal">7. Pricing & SLAs</h2>
+  <p class="reveal">Pricing is based on shipment weight, dimensions, origin-destination lane, service level, and any ancillary requirements. We offer spot pricing for one-off movements and contracted rate cards for regular shipping volumes with committed service level agreements.</p>
+  <ul class="reveal">
+    <li><strong>Spot pricing:</strong> Instant online quotes for standard shipments</li>
+    <li><strong>Contract rates:</strong> Volume-based pricing with guaranteed capacity</li>
+    <li><strong>SLA tiers:</strong> Same-day, next-day, economy (2–5 day), and deferred (5–10 day)</li>
+    <li><strong>Claims handling:</strong> Cargo insurance and swift claims resolution within 14 working days</li>
+  </ul>
+
+  <h2 id="technology" class="reveal">8. Our Technology</h2>
+  <p class="reveal">Technology sits at the core of our logistics proposition. Our Transport Management System (TMS) handles automated carrier selection, load building, route optimisation, and cost allocation. Integration with third-party platforms is available through a modern REST API with comprehensive documentation.</p>
+  <ul class="reveal">
+    <li><strong>TMS portal:</strong> Book, manage, and report on all shipments in one place</li>
+    <li><strong>Route optimisation:</strong> AI-powered planning reduces mileage and carbon output</li>
+    <li><strong>EDI connectivity:</strong> X12, EDIFACT, and custom formats supported</li>
+    <li><strong>Webhook alerts:</strong> Real-time shipment event pushes to your systems</li>
+  </ul>
+
+  <h2 id="sustainability" class="reveal">9. Sustainability</h2>
+  <p class="reveal">Express Courier is committed to reducing the environmental impact of logistics. We operate one of the region's largest electric light-commercial vehicle fleets for urban deliveries and offer carbon-offset options on all shipments. Our route optimisation platform reduces unnecessary mileage across the network, and we publish an annual sustainability report tracking our progress towards net-zero targets by 2040.</p>
+  <ul class="reveal">
+    <li><strong>EV fleet:</strong> 40% of last-mile deliveries completed by electric vehicle</li>
+    <li><strong>Carbon offsetting:</strong> Verified carbon credits available on every booking</li>
+    <li><strong>Green routing:</strong> Low-emission zone compliant routing in all major cities</li>
+    <li><strong>Reporting:</strong> Per-shipment emissions data available via the tracking portal</li>
+  </ul>
+
+  <h2 id="get-started" class="reveal">10. Get Started</h2>
+  <p class="reveal">Ready to streamline your logistics operations? Our team of freight specialists is available to discuss your requirements, provide a tailored quote, and design a service solution that fits your business.</p>
+  <ul class="reveal">
+   
+  </ul>
+</div>
+
+<div class="footer-simple">
+  © 2026 Express Courier. All rights reserved. &nbsp;·&nbsp;
+  <a href="privacy-policy.html">Privacy Policy</a> &nbsp;·&nbsp;
+  <a href="faq.html">FAQs</a>
+</div>
+<script>
+  document.getElementById('hamburger').addEventListener('click', () => { document.getElementById('mobileMenu').classList.toggle('open'); });
+  const revealEls = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => { entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } }); }, { threshold: 0.08 });
+  revealEls.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
