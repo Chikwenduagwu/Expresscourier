@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cargo Express . Express Courier</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --black: #111111; --yellow: #F5C400; --white: #ffffff;
+      --off-white: #f7f7f5; --grey: #888888; --border: #e8e8e4;
+      --text: #1a1a1a;
+      --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font); color: var(--text); background: var(--white); line-height: 1.65; overflow-x: hidden; }
+    a { text-decoration: none; color: inherit; }
+    .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.65s cubic-bezier(.22,1,.36,1), transform 0.65s cubic-bezier(.22,1,.36,1); }
+    .reveal.visible { opacity: 1; transform: none; }
+    .reveal-delay-1 { transition-delay: 0.08s; }
+    .reveal-delay-2 { transition-delay: 0.16s; }
+    .navbar { background: var(--white); position: sticky; top: 0; z-index: 200; border-bottom: 2px solid var(--yellow); }
+    .navbar-inner { max-width: 1280px; margin: 0 auto; padding: 0 32px; display: flex; align-items: center; justify-content: space-between; height: 68px; }
+    .navbar-links { display: flex; gap: 4px; }
+    .nav-link { color: #333; font-size: 0.875rem; font-weight: 500; padding: 8px 16px; border-radius: 6px; transition: all 0.18s; }
+    .nav-link:hover { color: var(--yellow); background: rgba(245,196,0,0.08); }
+    .hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 6px; }
+    .hamburger span { display: block; width: 24px; height: 2px; background: #000; border-radius: 2px; }
+    .mobile-menu { display: none; flex-direction: column; background: #0a0a0a; border-top: 1px solid rgba(245,196,0,0.15); }
+    .mobile-menu.open { display: flex; }
+    .mobile-link { color: rgba(255,255,255,0.82); padding: 14px 24px; font-size: 0.95rem; font-weight: 500; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .mobile-link:hover { background: rgba(245,196,0,0.07); color: var(--yellow); }
+    @media (max-width: 900px) { .navbar-links { display: none; } .hamburger { display: flex; } }
+    .page-hero { background: var(--black); padding: 100px 24px 90px; text-align: center; position: relative; overflow: hidden; }
+    .page-hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 20% 50%, rgba(245,196,0,0.11), transparent 55%); }
+    .page-hero::after {
+      content: ''; position: absolute; inset: 0;
+      background-image: linear-gradient(rgba(245,196,0,0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(245,196,0,0.035) 1px, transparent 1px);
+      background-size: 56px 56px; animation: gridMove 24s linear infinite;
+    }
+    @keyframes gridMove { 0% { background-position: 0 0; } 100% { background-position: 56px 56px; } }
+    .page-hero-inner { position: relative; z-index: 2; }
+    .breadcrumb { font-size: 0.78rem; color: rgba(255,255,255,0.38); margin-bottom: 22px; }
+    .breadcrumb a { color: rgba(255,255,255,0.52); transition: color 0.18s; }
+    .breadcrumb a:hover { color: var(--yellow); }
+    .hero-eyebrow { display: inline-block; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--yellow); background: rgba(245,196,0,0.1); border: 1px solid rgba(245,196,0,0.22); padding: 5px 14px; border-radius: 100px; margin-bottom: 24px; }
+    .page-hero h1 { font-size: clamp(2.4rem, 6vw, 3.8rem); font-weight: 800; color: var(--white); line-height: 1.1; margin-bottom: 20px; letter-spacing: -1.5px; }
+    .page-hero h1 em { color: var(--yellow); font-style: normal; }
+    .page-hero p { font-size: 1.05rem; color: rgba(255,255,255,0.55); max-width: 500px; margin: 0 auto; line-height: 1.75; }
+    .page-content { max-width: 820px; margin: 0 auto; padding: 72px 24px 100px; }
+    .service-badge { font-size: 0.8rem; color: var(--grey); background: var(--off-white); border: 1.5px solid var(--border); padding: 9px 16px; border-radius: 6px; display: inline-block; margin-bottom: 40px; }
+    .toc { background: var(--off-white); border: 1.5px solid var(--border); border-left: 4px solid var(--yellow); border-radius: 0 10px 10px 0; padding: 24px 28px; margin-bottom: 52px; }
+    .toc h4 { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--yellow); background: var(--black); padding: 4px 10px; border-radius: 4px; display: inline-block; margin-bottom: 16px; }
+    .toc ol { padding-left: 20px; }
+    .toc ol li { margin-bottom: 8px; font-size: 0.9rem; color: #555; }
+    .toc ol li a { color: var(--black); font-weight: 600; text-underline-offset: 3px; }
+    .toc ol li a:hover { color: var(--yellow); text-decoration: none; }
+    .page-content h2 { font-size: clamp(1.25rem, 3vw, 1.65rem); font-weight: 800; color: var(--black); margin: 52px 0 16px; line-height: 1.2; letter-spacing: -0.4px; padding-top: 8px; border-top: 1px solid var(--border); }
+    .page-content h2:first-of-type { border-top: none; margin-top: 0; }
+    .page-content h3 { font-size: 1rem; font-weight: 700; color: var(--black); margin: 28px 0 10px; }
+    .page-content p { font-size: 0.97rem; color: #444; margin-bottom: 18px; line-height: 1.85; }
+    .page-content ul, .page-content ol { padding-left: 22px; margin-bottom: 20px; }
+    .page-content ul li, .page-content ol li { margin-bottom: 10px; font-size: 0.93rem; color: #444; line-height: 1.75; }
+    .page-content strong { font-weight: 700; color: var(--black); }
+    .page-content a { color: var(--black); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+    .page-content a:hover { color: var(--yellow); }
+    .info-box { background: var(--off-white); border-left: 4px solid var(--yellow); border-radius: 0 8px 8px 0; padding: 18px 20px; margin: 28px 0; }
+    .info-box p { margin: 0; color: #333; font-size: 0.92rem; }
+    .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 32px 0; }
+    .stat-card { background: var(--black); border-radius: 10px; padding: 24px 20px; text-align: center; }
+    .stat-card .stat-num { font-size: 2rem; font-weight: 800; color: var(--yellow); display: block; letter-spacing: -1px; }
+    .stat-card .stat-label { font-size: 0.78rem; color: rgba(255,255,255,0.5); margin-top: 6px; display: block; }
+    @media (max-width: 600px) { .stats-row { grid-template-columns: 1fr; } }
+    .footer-simple { background: var(--black); padding: 36px 24px; text-align: center; color: rgba(255,255,255,0.38); font-size: 0.82rem; border-top: 2px solid var(--yellow); }
+    .footer-simple a { color: var(--yellow); }
+  </style>
+</head>
+<body>
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a href="index.html"><img src="assets/img/nlogo.jpg" width="auto" height="64px"/></a>
+    <div class="navbar-links">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="track.html" class="nav-link">Track</a>
+      <a href="about.html" class="nav-link">About</a>
+      <a href="contact.html" class="nav-link">Contact</a>
+    </div>
+    <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="index.html" class="mobile-link">Home</a>
+    <a href="track.html" class="mobile-link">Track</a>
+    <a href="about.html" class="mobile-link">About</a>
+  </div>
+</nav>
+
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <p class="breadcrumb"><a href="index.html">Home</a> › Services</p>
+    <div class="hero-eyebrow">Services</div>
+    <h1>Cargo <em>Express</em></h1>
+    <p>Same-day and next-day express parcel delivery for businesses and individuals who can't afford to wait.</p>
+  </div>
+</div>
+
+<div class="page-content">
+  <span class="service-badge reveal">⚡ Express Parcel & Document Delivery</span>
+
+  <div class="toc reveal reveal-delay-1">
+    <h4>On This Page</h4>
+    <ol>
+      <li><a href="#overview">Service Overview</a></li>
+      <li><a href="#same-day">Same-Day Delivery</a></li>
+      <li><a href="#next-day">Next-Day Delivery</a></li>
+      <li><a href="#timed">Timed & Guaranteed Delivery</a></li>
+      <li><a href="#documents">Document Express</a></li>
+      <li><a href="#returns">Returns Management</a></li>
+      <li><a href="#packaging">Packaging Standards</a></li>
+      <li><a href="#tracking">Live Tracking</a></li>
+      <li><a href="#business">Business Accounts</a></li>
+      <li><a href="#contact">Book a Collection</a></li>
+    </ol>
+  </div>
+
+  <p class="reveal">Express Courier's Cargo Express service is built for speed. When time is the deciding factor, our dedicated express fleet and priority handling network ensures your parcel, document, or small consignment is collected, processed, and delivered faster than any standard service . with real-time visibility every step of the way.</p>
+
+  <h2 id="overview" class="reveal">1. Service Overview</h2>
+  <p class="reveal">Cargo Express is our premium express delivery tier, covering domestic and regional routes with same-day and timed next-day services. It is designed for urgent business documents, e-commerce parcels with guaranteed delivery promises, legal and medical time-sensitive items, and high-value goods requiring enhanced security.</p>
+  <p class="reveal">All Cargo Express shipments receive priority handling at every sort facility, dedicated courier allocation, and a service guarantee . if we miss the committed delivery window, you receive a full refund of the delivery charge.</p>
+
+  
+
+  <h2 id="same-day" class="reveal">2. Same-Day Delivery</h2>
+  <p class="reveal">Our same-day service operates across all major UK and European cities, with collection available within 60 minutes of booking confirmation. A dedicated courier is assigned to your consignment from collection to delivery . no sort facility, no co-loading, no delay.</p>
+  <h3 class="reveal">How It Works</h3>
+  <ul class="reveal">
+    <li><strong>Book by 12:00:</strong> Delivery guaranteed by 18:00 same day within standard zones</li>
+    <li><strong>Book by 09:00:</strong> AM delivery (before 13:00) available in selected cities</li>
+    <li><strong>Book anytime:</strong> On-demand same-day available 24/7 for premium rate</li>
+    <li><strong>Dedicated courier:</strong> Your item never leaves the courier's possession until delivery</li>
+  </ul>
+  <h3 class="reveal">Coverage</h3>
+  <p class="reveal">Same-day zones are defined by road distance from our nearest depot. Standard same-day covers up to 100 miles from collection point. Extended same-day (up to 250 miles) is available at premium rates with adjusted cut-off times. Our online booking tool confirms same-day eligibility in real time based on your postcode pair.</p>
+
+  <h2 id="next-day" class="reveal">3. Next-Day Delivery</h2>
+  <p class="reveal">Next-day delivery is available to all domestic and selected international destinations, with collection cut-off times up to 19:00 for next business day delivery. Weekend collection and delivery is available in metropolitan areas at standard weekend surcharge rates.</p>
+  <ul class="reveal">
+    <li><strong>Next-day by 09:00:</strong> Pre-9am guaranteed delivery to business addresses</li>
+    <li><strong>Next-day by 12:00:</strong> Pre-noon delivery, popular for B2B shipments</li>
+    <li><strong>Next-day by 17:30:</strong> Standard next-day; most cost-effective option</li>
+    <li><strong>Saturday delivery:</strong> Available at standard next-day rates in most postcode areas</li>
+    <li><strong>Sunday delivery:</strong> Available on request in major urban centres</li>
+  </ul>
+
+  <div class="info-box reveal">
+    <p><strong>Money-back guarantee.</strong> Every Cargo Express shipment carries our delivery guarantee. If we fail to deliver within the committed time window for any reason within our control, we refund the full delivery charge . no questions asked.</p>
+  </div>
+
+  <h2 id="timed" class="reveal">4. Timed & Guaranteed Delivery</h2>
+  <p class="reveal">For deliveries where punctuality is non-negotiable . such as court filings, medical samples, or event-critical materials . our Timed Delivery service commits to a specific one-hour delivery window of your choice. A dedicated courier is pre-assigned and the route is pre-planned to guarantee arrival within the window.</p>
+  <ul class="reveal">
+    <li><strong>1-hour window booking:</strong> Select your preferred delivery hour at point of booking</li>
+    <li><strong>Pre-notification:</strong> Recipient receives a call 30 minutes before arrival</li>
+    <li><strong>Signature required:</strong> Mandatory proof of delivery for all timed shipments</li>
+    <li><strong>Reattempt policy:</strong> If recipient is unavailable, we immediately contact you to arrange alternative</li>
+  </ul>
+
+  <h2 id="documents" class="reveal">5. Document Express</h2>
+  <p class="reveal">Legal contracts, signed agreements, passports, certificates, and confidential business documents require the highest level of security and discretion. Our Document Express service provides a dedicated, tamper-evident pouch and a chain-of-custody log from sender to recipient.</p>
+  <ul class="reveal">
+    <li><strong>Tamper-evident pouch:</strong> Sealed at point of collection; any tampering is visible on delivery</li>
+    <li><strong>Chain-of-custody log:</strong> Full record of every person who handles the document</li>
+    <li><strong>Confidentiality agreement:</strong> All couriers handling document express sign enhanced NDAs</li>
+    <li><strong>International document express:</strong> Partner network for global document delivery</li>
+    <li><strong>Legal filing deadline service:</strong> Court-date-stamped delivery certificates available</li>
+  </ul>
+
+  <h2 id="returns" class="reveal">6. Returns Management</h2>
+  <p class="reveal">For e-commerce businesses and retailers, Cargo Express includes a fully managed returns solution. Pre-printed returns labels, QR code drop-off, and scheduled collection returns all feed into a returns tracking portal that gives both merchant and end consumer full visibility of the return journey.</p>
+  <ul class="reveal">
+    <li><strong>Pre-printed label returns:</strong> Include in outbound parcel for customer convenience</li>
+    <li><strong>QR code returns:</strong> Customers print nothing . just scan at drop-off point</li>
+    <li><strong>Scheduled collections:</strong> Regular weekly returns collections for high-volume merchants</li>
+    <li><strong>Returns dashboard:</strong> Real-time visibility of all in-transit returns</li>
+    <li><strong>Automated notifications:</strong> Customer receives updates when return is received and processed</li>
+  </ul>
+
+  <h2 id="packaging" class="reveal">7. Packaging Standards</h2>
+  <p class="reveal">Correctly packaged items are less likely to be damaged in transit and avoid re-packaging surcharges at our sort facilities. The following minimum standards apply to all Cargo Express shipments.</p>
+  <ul class="reveal">
+    <li><strong>Box strength:</strong> Use double-walled corrugated boxes for items over 5 kg</li>
+    <li><strong>Internal cushioning:</strong> Minimum 50mm of cushioning material around the item on all sides</li>
+    <li><strong>Sealing:</strong> H-tape method with pressure-sensitive tape; no string or twine</li>
+    <li><strong>Labelling:</strong> Label affixed to the largest flat surface; no label over a seam or edge</li>
+    <li><strong>Fragile items:</strong> Must be declared at booking; additional protective packaging required</li>
+  </ul>
+
+  <h2 id="tracking" class="reveal">8. Live Tracking</h2>
+  <p class="reveal">Every Cargo Express shipment is tracked in real time from the moment of collection to the point of delivery. Our tracking platform provides sub-2-minute location updates, a live courier map, and a predicted ETA that updates dynamically as the courier progresses on the route.</p>
+  <ul class="reveal">
+    <li><strong>Live map tracking:</strong> See your courier's real-time position on the map</li>
+    <li><strong>Dynamic ETA:</strong> Estimated arrival time recalculated based on live traffic</li>
+    <li><strong>SMS & email alerts:</strong> Out-for-delivery and delivered notifications as standard</li>
+    <li><strong>Delivery photo:</strong> Photographic proof of delivery provided for all shipments</li>
+    <li><strong>Track without account:</strong> Share the tracking link with your recipient directly</li>
+  </ul>
+
+  <h2 id="business" class="reveal">9. Business Accounts</h2>
+  <p class="reveal">High-volume shippers benefit from a dedicated Cargo Express business account with access to volume discounts, monthly invoicing, multi-user account management, API booking integration, and a dedicated account manager.</p>
+  <ul class="reveal">
+    <li><strong>Volume pricing:</strong> Tiered discounts starting from 50 shipments per month</li>
+    <li><strong>30-day invoicing:</strong> Consolidated monthly invoice with itemised shipment breakdown</li>
+    <li><strong>API & webhook integration:</strong> Automate booking, tracking, and POD retrieval</li>
+    <li><strong>Multi-user access:</strong> Manage teams, cost centres, and permissions in one portal</li>
+    <li><strong>Dedicated account manager:</strong> Single point of contact for queries, complaints, and escalations</li>
+  </ul>
+
+  <h2 id="contact" class="reveal">10. Book a Collection</h2>
+  <p class="reveal">Booking a Cargo Express collection takes less than 2 minutes online. For same-day bookings, our operations team begins courier allocation immediately upon confirmation. Need help? Our customer service team is on hand seven days a week.</p>
+  <ul class="reveal">
+    <li
+  </ul>
+</div>
+
+<div class="footer-simple">
+  © 2026 Express Courier. All rights reserved. &nbsp;·&nbsp;
+  <a href="privacy-policy.html">Privacy Policy</a> &nbsp;·&nbsp;
+  <a href="faq.html">FAQs</a>
+</div>
+<script>
+  document.getElementById('hamburger').addEventListener('click', () => { document.getElementById('mobileMenu').classList.toggle('open'); });
+  const revealEls = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => { entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } }); }, { threshold: 0.08 });
+  revealEls.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
