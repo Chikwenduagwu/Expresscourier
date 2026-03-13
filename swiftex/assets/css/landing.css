@@ -5,7 +5,7 @@
 
 /* ── NAVBAR ── */
 .navbar {
-  background: #111111;
+  background: #fff;
   position: sticky;
   top: 0;
   z-index: 200;
@@ -25,7 +25,7 @@
   font-family: 'Syne', sans-serif;
   font-size: 1.65rem;
   font-weight: 500;
-  color: #fff;
+  color: #000;
   letter-spacing: -1px;
 }
 .logo-text span { color: #F5C400; }
