@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Warehousing . Express Courier</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --black: #111111; --yellow: #F5C400; --white: #ffffff;
+      --off-white: #f7f7f5; --grey: #888888; --border: #e8e8e4;
+      --text: #1a1a1a;
+      --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font); color: var(--text); background: var(--white); line-height: 1.65; overflow-x: hidden; }
+    a { text-decoration: none; color: inherit; }
+    .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.65s cubic-bezier(.22,1,.36,1), transform 0.65s cubic-bezier(.22,1,.36,1); }
+    .reveal.visible { opacity: 1; transform: none; }
+    .reveal-delay-1 { transition-delay: 0.08s; }
+    .reveal-delay-2 { transition-delay: 0.16s; }
+    .navbar { background: var(--white); position: sticky; top: 0; z-index: 200; border-bottom: 2px solid var(--yellow); }
+    .navbar-inner { max-width: 1280px; margin: 0 auto; padding: 0 32px; display: flex; align-items: center; justify-content: space-between; height: 68px; }
+    .navbar-links { display: flex; gap: 4px; }
+    .nav-link { color: #333; font-size: 0.875rem; font-weight: 500; padding: 8px 16px; border-radius: 6px; transition: all 0.18s; }
+    .nav-link:hover { color: var(--yellow); background: rgba(245,196,0,0.08); }
+    .hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 6px; }
+    .hamburger span { display: block; width: 24px; height: 2px; background: #000; border-radius: 2px; }
+    .mobile-menu { display: none; flex-direction: column; background: #0a0a0a; border-top: 1px solid rgba(245,196,0,0.15); }
+    .mobile-menu.open { display: flex; }
+    .mobile-link { color: rgba(255,255,255,0.82); padding: 14px 24px; font-size: 0.95rem; font-weight: 500; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .mobile-link:hover { background: rgba(245,196,0,0.07); color: var(--yellow); }
+    @media (max-width: 900px) { .navbar-links { display: none; } .hamburger { display: flex; } }
+    .page-hero { background: var(--black); padding: 100px 24px 90px; text-align: center; position: relative; overflow: hidden; }
+    .page-hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 80% 50%, rgba(245,196,0,0.09), transparent 55%); }
+    .page-hero::after {
+      content: ''; position: absolute; inset: 0;
+      background-image: linear-gradient(rgba(245,196,0,0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(245,196,0,0.035) 1px, transparent 1px);
+      background-size: 56px 56px; animation: gridMove 24s linear infinite;
+    }
+    @keyframes gridMove { 0% { background-position: 0 0; } 100% { background-position: 56px 56px; } }
+    .page-hero-inner { position: relative; z-index: 2; }
+    .breadcrumb { font-size: 0.78rem; color: rgba(255,255,255,0.38); margin-bottom: 22px; }
+    .breadcrumb a { color: rgba(255,255,255,0.52); transition: color 0.18s; }
+    .breadcrumb a:hover { color: var(--yellow); }
+    .hero-eyebrow { display: inline-block; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--yellow); background: rgba(245,196,0,0.1); border: 1px solid rgba(245,196,0,0.22); padding: 5px 14px; border-radius: 100px; margin-bottom: 24px; }
+    .page-hero h1 { font-size: clamp(2.4rem, 6vw, 3.8rem); font-weight: 800; color: var(--white); line-height: 1.1; margin-bottom: 20px; letter-spacing: -1.5px; }
+    .page-hero h1 em { color: var(--yellow); font-style: normal; }
+    .page-hero p { font-size: 1.05rem; color: rgba(255,255,255,0.55); max-width: 500px; margin: 0 auto; line-height: 1.75; }
+    .page-content { max-width: 820px; margin: 0 auto; padding: 72px 24px 100px; }
+    .service-badge { font-size: 0.8rem; color: var(--grey); background: var(--off-white); border: 1.5px solid var(--border); padding: 9px 16px; border-radius: 6px; display: inline-block; margin-bottom: 40px; }
+    .toc { background: var(--off-white); border: 1.5px solid var(--border); border-left: 4px solid var(--yellow); border-radius: 0 10px 10px 0; padding: 24px 28px; margin-bottom: 52px; }
+    .toc h4 { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--yellow); background: var(--black); padding: 4px 10px; border-radius: 4px; display: inline-block; margin-bottom: 16px; }
+    .toc ol { padding-left: 20px; }
+    .toc ol li { margin-bottom: 8px; font-size: 0.9rem; color: #555; }
+    .toc ol li a { color: var(--black); font-weight: 600; text-underline-offset: 3px; }
+    .toc ol li a:hover { color: var(--yellow); text-decoration: none; }
+    .page-content h2 { font-size: clamp(1.25rem, 3vw, 1.65rem); font-weight: 800; color: var(--black); margin: 52px 0 16px; line-height: 1.2; letter-spacing: -0.4px; padding-top: 8px; border-top: 1px solid var(--border); }
+    .page-content h2:first-of-type { border-top: none; margin-top: 0; }
+    .page-content h3 { font-size: 1rem; font-weight: 700; color: var(--black); margin: 28px 0 10px; }
+    .page-content p { font-size: 0.97rem; color: #444; margin-bottom: 18px; line-height: 1.85; }
+    .page-content ul, .page-content ol { padding-left: 22px; margin-bottom: 20px; }
+    .page-content ul li, .page-content ol li { margin-bottom: 10px; font-size: 0.93rem; color: #444; line-height: 1.75; }
+    .page-content strong { font-weight: 700; color: var(--black); }
+    .page-content a { color: var(--black); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+    .page-content a:hover { color: var(--yellow); }
+    .info-box { background: var(--off-white); border-left: 4px solid var(--yellow); border-radius: 0 8px 8px 0; padding: 18px 20px; margin: 28px 0; }
+    .info-box p { margin: 0; color: #333; font-size: 0.92rem; }
+    .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 32px 0; }
+    .stat-card { background: var(--black); border-radius: 10px; padding: 24px 20px; text-align: center; }
+    .stat-card .stat-num { font-size: 2rem; font-weight: 800; color: var(--yellow); display: block; letter-spacing: -1px; }
+    .stat-card .stat-label { font-size: 0.78rem; color: rgba(255,255,255,0.5); margin-top: 6px; display: block; }
+    @media (max-width: 600px) { .stats-row { grid-template-columns: 1fr; } }
+    .footer-simple { background: var(--black); padding: 36px 24px; text-align: center; color: rgba(255,255,255,0.38); font-size: 0.82rem; border-top: 2px solid var(--yellow); }
+    .footer-simple a { color: var(--yellow); }
+  </style>
+</head>
+<body>
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a href="index.html"><img src="assets/img/nlogo.jpg" width="auto" height="64px"/></a>
+    <div class="navbar-links">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="track.html" class="nav-link">Track</a>
+      <a href="about.html" class="nav-link">About</a>
+      <a href="contact.html" class="nav-link">Contact</a>
+    </div>
+    <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="index.html" class="mobile-link">Home</a>
+    <a href="track.html" class="mobile-link">Track</a>
+    <a href="about.html" class="mobile-link">About</a>
+  </div>
+</nav>
+
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <p class="breadcrumb"><a href="index.html">Home</a> › Services</p>
+    <div class="hero-eyebrow">Services</div>
+    <h1>Ware<em>housing</em></h1>
+    <p>Flexible, technology-driven storage and fulfilment solutions at strategic locations across the globe.</p>
+  </div>
+</div>
+
+<div class="page-content">
+  <span class="service-badge reveal">🏭 Storage, Fulfilment & Distribution</span>
+
+  <div class="toc reveal reveal-delay-1">
+    <h4>On This Page</h4>
+    <ol>
+      <li><a href="#overview">Service Overview</a></li>
+      <li><a href="#storage">Storage Solutions</a></li>
+      <li><a href="#fulfilment">Order Fulfilment</a></li>
+      <li><a href="#value-added">Value-Added Services</a></li>
+      <li><a href="#cold-chain">Cold Chain & Specialist Storage</a></li>
+      <li><a href="#bonded">Bonded & Customs Warehousing</a></li>
+      <li><a href="#wms">Warehouse Management System</a></li>
+      <li><a href="#locations">Facility Locations</a></li>
+      <li><a href="#security">Security & Compliance</a></li>
+      <li><a href="#contact">Enquire Now</a></li>
+    </ol>
+  </div>
+
+  <p class="reveal">Express Courier's warehousing and fulfilment network provides businesses of all sizes with scalable, strategically located storage and distribution infrastructure. Whether you need short-term overflow storage, a fully outsourced e-commerce fulfilment operation, or a complex multi-temperature distribution hub, our facilities and teams are equipped to deliver.</p>
+
+  <h2 id="overview" class="reveal">1. Service Overview</h2>
+  <p class="reveal">Our warehousing division operates over 2.4 million square feet of storage space across 14 strategically located facilities in the UK, Europe, and the Middle East. Each facility is directly connected to our transport network, enabling seamless inbound freight receipt and outbound distribution with minimal dwell time.</p>
+  <p class="reveal">Services range from simple pallet storage with pick-and-pack, through to fully managed 3PL (third-party logistics) operations where our team acts as an extension of your own warehouse and fulfilment function.</p>
+
+  
+
+  <h2 id="storage" class="reveal">2. Storage Solutions</h2>
+  <p class="reveal">We offer flexible storage configurations to suit every product type and volume requirement. Pricing is based on space used, with no long-term commitment required for short-term storage. Contract storage with guaranteed capacity allocation is available for businesses with predictable volumes.</p>
+  <h3 class="reveal">Storage Types</h3>
+  <ul class="reveal">
+    <li><strong>Pallet racking:</strong> Standard euro-pallet and block-stacked storage; ideal for bulk goods</li>
+    <li><strong>Shelving & bin storage:</strong> Optimised for small parcel and e-commerce product ranges</li>
+    <li><strong>Mezzanine storage:</strong> Multi-level storage for high-SKU-count operations</li>
+    <li><strong>Drive-in racking:</strong> High-density storage for homogeneous goods with lower picking frequency</li>
+    <li><strong>Secure caged storage:</strong> For high-value, restricted, or age-verified products</li>
+    <li><strong>Bulk floor storage:</strong> For irregular or oversized items unsuitable for racking</li>
+  </ul>
+
+  <h2 id="fulfilment" class="reveal">3. Order Fulfilment</h2>
+  <p class="reveal">Our fulfilment service handles the complete order-to-despatch cycle on your behalf. Inbound stock is received, checked, and put away; orders received from your e-commerce platform, ERP, or marketplace are automatically picked, packed, and despatched . typically within the same business day for orders placed before 15:00.</p>
+  <h3 class="reveal">Fulfilment Process</h3>
+  <ul class="reveal">
+    <li><strong>Inbound receiving:</strong> Goods-in checking against purchase orders; discrepancy reporting within 24 hours</li>
+    <li><strong>Putaway:</strong> Systematic location assignment using our WMS for optimal pick efficiency</li>
+    <li><strong>Pick & pack:</strong> RF-scanner guided picking with accuracy verification at packing station</li>
+    <li><strong>Packing:</strong> Standard Express Courier packaging or custom-branded materials (surcharge applies)</li>
+    <li><strong>Despatch:</strong> Same-day despatch for orders received before 15:00 cut-off</li>
+    <li><strong>Returns processing:</strong> Inspection, restocking, quarantine, or disposal per your policy</li>
+  </ul>
+
+  <div class="info-box reveal">
+    <p><strong>Platform integrations included.</strong> Our WMS connects directly to Shopify, WooCommerce, Amazon Seller Central, eBay, Magento, and all major ERPs including SAP, NetSuite, and Microsoft Dynamics . at no additional integration fee for standard connectors.</p>
+  </div>
+
+  <h2 id="value-added" class="reveal">4. Value-Added Services</h2>
+  <p class="reveal">Beyond storage and fulfilment, our warehousing teams provide a comprehensive range of value-added services that reduce the need for pre-production or post-production work at your own facilities. These services can be incorporated into any fulfilment contract.</p>
+  <ul class="reveal">
+    <li><strong>Kitting & assembly:</strong> Multi-component product assembly, gift sets, and promotional bundles</li>
+    <li><strong>Labelling & re-labelling:</strong> Price label application, compliance labelling, barcode re-labelling</li>
+    <li><strong>Quality inspection:</strong> Inbound and pre-despatch quality checks to your specification</li>
+    <li><strong>Repacking:</strong> Master carton breakdown, retail-ready packaging, shrink-wrapping</li>
+    <li><strong>Gift wrapping:</strong> Consumer-facing gift wrap service for direct-to-consumer orders</li>
+    <li><strong>Personalisation:</strong> On-demand printing of personalised inserts, cards, or product engraving coordination</li>
+  </ul>
+
+  <h2 id="cold-chain" class="reveal">5. Cold Chain & Specialist Storage</h2>
+  <p class="reveal">Several of our facilities include temperature-controlled storage zones certified for pharmaceutical, food, and cosmetic products. Our cold chain capability supports GDP-compliant pharmaceutical distribution and HACCP-certified food storage, with full audit trails and temperature logging.</p>
+  <ul class="reveal">
+    <li><strong>Ambient (15–25°C):</strong> Controlled ambient zones for temperature-sensitive non-refrigerated goods</li>
+    <li><strong>Chilled (2–8°C):</strong> GDP-compliant pharmaceutical cold storage and food-grade chilled</li>
+    <li><strong>Frozen (−18°C and below):</strong> Frozen food and biological sample storage</li>
+    <li><strong>Controlled temperature (CRT):</strong> 15–25°C with humidity control for pharmaceutical products</li>
+    <li><strong>Temperature monitoring:</strong> Continuous electronic monitoring with out-of-range alerts and data logging</li>
+  </ul>
+
+  <h2 id="bonded" class="reveal">6. Bonded & Customs Warehousing</h2>
+  <p class="reveal">Our bonded warehouse facilities are HMRC-approved customs warehouses (Type C and Type D), allowing goods to be stored under customs control without payment of import duties until the goods are released for free circulation or re-exported. This is particularly valuable for businesses importing from outside the UK or EU who wish to defer duty liability.</p>
+  <ul class="reveal">
+    <li><strong>Duty suspension:</strong> Import goods and defer duty and VAT until sale or release</li>
+    <li><strong>Fiscal warehousing:</strong> VAT deferral on eligible goods stored under fiscal warehouse authorisation</li>
+    <li><strong>Re-export:</strong> Goods can be re-exported from bond without payment of UK/EU import duties</li>
+    <li><strong>Processing under customs control:</strong> Light manufacturing and processing permitted under authorisation</li>
+    <li><strong>HMRC compliance:</strong> Full compliance management; we hold the warehouse authorisation on your behalf</li>
+  </ul>
+
+  <h2 id="wms" class="reveal">7. Warehouse Management System</h2>
+  <p class="reveal">All Express Courier warehouse operations are managed through our proprietary cloud-based WMS, which provides real-time inventory visibility, automated replenishment alerts, location management, and comprehensive reporting. Clients receive a secure portal login with access to their own inventory data, order status, and performance dashboards at all times.</p>
+  <ul class="reveal">
+    <li><strong>Real-time inventory:</strong> Live stock levels by SKU, location, and batch/serial number</li>
+    <li><strong>Order management:</strong> Live order status from receipt through to despatch confirmation</li>
+    <li><strong>Reporting suite:</strong> Inventory ageing, throughput, accuracy, and cost reports on demand</li>
+    <li><strong>API access:</strong> Pull live inventory data and push orders directly from your systems</li>
+    <li><strong>Alerts & notifications:</strong> Low-stock, slow-moving, and expiry date alerts configurable per SKU</li>
+  </ul>
+
+  <h2 id="locations" class="reveal">8. Facility Locations</h2>
+  <p class="reveal">Our warehousing network is positioned to minimise outbound transit times to major population centres and to provide rapid access to the UK's primary seaports and airports for import and export movements.</p>
+  <ul class="reveal">
+    <li><strong>Daventry (East Midlands):</strong> 480,000 sq ft; primary national distribution hub; motorway junction access</li>
+    <li><strong>Tilbury (Essex):</strong> 280,000 sq ft; port-side bonded facility; direct seaport access</li>
+    <li><strong>Manchester (Trafford Park):</strong> 210,000 sq ft; Northern England distribution; adjacent to Manchester Ship Canal</li>
+    <li><strong>Cologne (Germany):</strong> 190,000 sq ft; EU distribution centre; GDP-certified cold chain</li>
+    <li><strong>Dubai (Jebel Ali Free Zone):</strong> 150,000 sq ft; Middle East and South Asia gateway; free zone bonded storage</li>
+  </ul>
+
+  <h2 id="security" class="reveal">9. Security & Compliance</h2>
+  <p class="reveal">All Express Courier warehouse facilities operate to internationally recognised security and quality standards. We hold ISO 9001 quality management certification, ISO 14001 environmental management certification, and AEO (Authorised Economic Operator) status, which provides expedited customs clearance for goods moving through our facilities.</p>
+  <ul class="reveal">
+    <li><strong>CCTV:</strong> Full site coverage with 90-day recording retention</li>
+    <li><strong>Access control:</strong> Biometric or card-based access; visitor management system</li>
+    <li><strong>Fire suppression:</strong> Sprinkler systems, smoke detection, and automatic fire brigade notification</li>
+    <li><strong>Pest control:</strong> Contracted pest management; required for food and pharmaceutical storage</li>
+    <li><strong>Staff vetting:</strong> DBS checks and reference verification for all warehouse employees</li>
+    <li><strong>Certifications:</strong> ISO 9001, ISO 14001, AEO, GDP (pharmaceutical), HACCP (food), TAPA FSR (high value)</li>
+  </ul>
+
+  <h2 id="contact" class="reveal">10. Enquire Now</h2>
+  <p class="reveal">Whether you need a few pallet spaces for overflow stock or a fully managed 3PL contract for a complex product range, our warehousing team is ready to design a solution around your requirements. Get in touch for a site tour, a capacity assessment, or a detailed cost proposal.</p>
+  <ul class="reveal">
+
+  </ul>
+</div>
+
+<div class="footer-simple">
+  © 2026 Express Courier. All rights reserved. &nbsp;·&nbsp;
+  <a href="privacy-policy.html">Privacy Policy</a> &nbsp;·&nbsp;
+  <a href="faq.html">FAQs</a>
+</div>
+<script>
+  document.getElementById('hamburger').addEventListener('click', () => { document.getElementById('mobileMenu').classList.toggle('open'); });
+  const revealEls = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => { entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } }); }, { threshold: 0.08 });
+  revealEls.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
