@@ -70,7 +70,7 @@ img    { max-width: 100%; display: block; }
    NAVBAR
 ══════════════════════════════════════════════ */
 .navbar {
-  background: #111111;
+  background: #fff;
   position: sticky;
   top: 0;
   z-index: 200;
@@ -183,7 +183,7 @@ img    { max-width: 100%; display: block; }
   display: block;
   width: 20px;
   height: 2px;
-  background: #ffffff;
+  background: #000;
   border-radius: 2px;
 }
 
