@@ -3327,11 +3327,11 @@
 
   cards.forEach(card => observer.observe(card));
 })();
-// Show popup after 10s, only once per session
+// Show popup after 40s, only once per session
 setTimeout(() => {
   const popup = document.getElementById('chatBubblePopup');
   if (popup) popup.classList.add('visible');
-}, 10000);
+}, 40000);
 </script>
 
 
