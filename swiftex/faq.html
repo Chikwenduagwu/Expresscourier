@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FAQs . Express Courier</title>
+  <title>FAQs . Swift Express Courier</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -28,7 +28,7 @@
     .reveal-delay-3 { transition-delay: 0.24s; }
 
     /* ── NAVBAR ── */
-    .navbar { background: var(--black); position: sticky; top: 0; z-index: 200; border-bottom: 2px solid var(--yellow); }
+    .navbar { background: var(--white); position: sticky; top: 0; z-index: 200; border-bottom: 2px solid var(--yellow); }
     .navbar-inner { max-width: 1280px; margin: 0 auto; padding: 0 32px; display: flex; align-items: center; justify-content: space-between; height: 68px; }
     .logo-text { font-size: 1.4rem; font-weight: 800; color: var(--white); letter-spacing: -0.5px; }
     .logo-text span { color: var(--yellow); }
@@ -36,7 +36,7 @@
     .nav-link { color: rgba(255,255,255,0.72); font-size: 0.875rem; font-weight: 500; padding: 8px 16px; border-radius: 6px; transition: all 0.18s; }
     .nav-link:hover { color: var(--yellow); background: rgba(245,196,0,0.08); }
     .hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 6px; }
-    .hamburger span { display: block; width: 24px; height: 2px; background: #fff; border-radius: 2px; }
+    .hamburger span { display: block; width: 24px; height: 2px; background: #000; border-radius: 2px; }
     .mobile-menu { display: none; flex-direction: column; background: #0a0a0a; border-top: 1px solid rgba(245,196,0,0.15); }
     .mobile-menu.open { display: flex; }
     .mobile-link { color: rgba(255,255,255,0.82); padding: 14px 24px; font-size: 0.95rem; font-weight: 500; border-bottom: 1px solid rgba(255,255,255,0.06); }
@@ -158,7 +158,7 @@
 <!-- NAVBAR -->
 <nav class="navbar">
   <div class="navbar-inner">
-    <a href="index.html" class="logo-text">EXPRESS<span>CO</span></a>
+    <a href="index.html" class="logo-text"><img src="assets/img/nlogo.jpg" width="auto" height="64px"/></a>
     <div class="navbar-links">
       <a href="index.html" class="nav-link">Home</a>
       <a href="track.html" class="nav-link">Track</a>
@@ -171,9 +171,17 @@
   </div>
   <div class="mobile-menu" id="mobileMenu">
     <a href="index.html" class="mobile-link">Home</a>
-    <a href="track.html" class="mobile-link">Track</a>
+   <a href="faq.html" class="mobile-link">FAQ</a>
+    <a href="#track-section" class="mobile-link">Track</a>
     <a href="about.html" class="mobile-link">About</a>
-    <a href="contact.html" class="mobile-link">Contact</a>
+    <a href="standard-shipping.html" class="mobile-link">Standard shipping</a>
+    <a href="logistics.html" class="mobile-link">Logistics</a>
+    <a href="receiving-parcels.html" class="mobile-link">Receiving parcels</a>
+    <a href="sending-parcels.html" class="mobile-link">Sending parcels</a>
+    <a href="faq.html" class="mobile-link">FAQ</a>
+    <a href="warehousing.html" class="mobile-link">Warehousing</a>
+    <a href="cargo-express.html" class="mobile-link">Cargo Express</a>
+    <a href="air-freight.html" class="mobile-link">Air freight</a>
   </div>
 </nav>
 
