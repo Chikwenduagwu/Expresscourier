@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Air Freight . Express Courier</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --black: #111111; --yellow: #F5C400; --white: #ffffff;
+      --off-white: #f7f7f5; --grey: #888888; --border: #e8e8e4;
+      --text: #1a1a1a;
+      --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font); color: var(--text); background: var(--white); line-height: 1.65; overflow-x: hidden; }
+    a { text-decoration: none; color: inherit; }
+    .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.65s cubic-bezier(.22,1,.36,1), transform 0.65s cubic-bezier(.22,1,.36,1); }
+    .reveal.visible { opacity: 1; transform: none; }
+    .reveal-delay-1 { transition-delay: 0.08s; }
+    .reveal-delay-2 { transition-delay: 0.16s; }
+    .navbar { background: var(--white); position: sticky; top: 0; z-index: 200; border-bottom: 2px solid var(--yellow); }
+    .navbar-inner { max-width: 1280px; margin: 0 auto; padding: 0 32px; display: flex; align-items: center; justify-content: space-between; height: 68px; }
+    .navbar-links { display: flex; gap: 4px; }
+    .nav-link { color: #333; font-size: 0.875rem; font-weight: 500; padding: 8px 16px; border-radius: 6px; transition: all 0.18s; }
+    .nav-link:hover { color: var(--yellow); background: rgba(245,196,0,0.08); }
+    .hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 6px; }
+    .hamburger span { display: block; width: 24px; height: 2px; background: #000; border-radius: 2px; }
+    .mobile-menu { display: none; flex-direction: column; background: #0a0a0a; border-top: 1px solid rgba(245,196,0,0.15); }
+    .mobile-menu.open { display: flex; }
+    .mobile-link { color: rgba(255,255,255,0.82); padding: 14px 24px; font-size: 0.95rem; font-weight: 500; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .mobile-link:hover { background: rgba(245,196,0,0.07); color: var(--yellow); }
+    @media (max-width: 900px) { .navbar-links { display: none; } .hamburger { display: flex; } }
+    .page-hero { background: var(--black); padding: 100px 24px 90px; text-align: center; position: relative; overflow: hidden; }
+    .page-hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 35% 100%, rgba(245,196,0,0.12), transparent 60%); }
+    .page-hero::after {
+      content: ''; position: absolute; inset: 0;
+      background-image: linear-gradient(rgba(245,196,0,0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(245,196,0,0.035) 1px, transparent 1px);
+      background-size: 56px 56px; animation: gridMove 24s linear infinite;
+    }
+    @keyframes gridMove { 0% { background-position: 0 0; } 100% { background-position: 56px 56px; } }
+    .page-hero-inner { position: relative; z-index: 2; }
+    .breadcrumb { font-size: 0.78rem; color: rgba(255,255,255,0.38); margin-bottom: 22px; }
+    .breadcrumb a { color: rgba(255,255,255,0.52); transition: color 0.18s; }
+    .breadcrumb a:hover { color: var(--yellow); }
+    .hero-eyebrow { display: inline-block; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--yellow); background: rgba(245,196,0,0.1); border: 1px solid rgba(245,196,0,0.22); padding: 5px 14px; border-radius: 100px; margin-bottom: 24px; }
+    .page-hero h1 { font-size: clamp(2.4rem, 6vw, 3.8rem); font-weight: 800; color: var(--white); line-height: 1.1; margin-bottom: 20px; letter-spacing: -1.5px; }
+    .page-hero h1 em { color: var(--yellow); font-style: normal; }
+    .page-hero p { font-size: 1.05rem; color: rgba(255,255,255,0.55); max-width: 500px; margin: 0 auto; line-height: 1.75; }
+    .page-content { max-width: 820px; margin: 0 auto; padding: 72px 24px 100px; }
+    .service-badge { font-size: 0.8rem; color: var(--grey); background: var(--off-white); border: 1.5px solid var(--border); padding: 9px 16px; border-radius: 6px; display: inline-block; margin-bottom: 40px; }
+    .toc { background: var(--off-white); border: 1.5px solid var(--border); border-left: 4px solid var(--yellow); border-radius: 0 10px 10px 0; padding: 24px 28px; margin-bottom: 52px; }
+    .toc h4 { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--yellow); background: var(--black); padding: 4px 10px; border-radius: 4px; display: inline-block; margin-bottom: 16px; }
+    .toc ol { padding-left: 20px; }
+    .toc ol li { margin-bottom: 8px; font-size: 0.9rem; color: #555; }
+    .toc ol li a { color: var(--black); font-weight: 600; text-underline-offset: 3px; }
+    .toc ol li a:hover { color: var(--yellow); text-decoration: none; }
+    .page-content h2 { font-size: clamp(1.25rem, 3vw, 1.65rem); font-weight: 800; color: var(--black); margin: 52px 0 16px; line-height: 1.2; letter-spacing: -0.4px; padding-top: 8px; border-top: 1px solid var(--border); }
+    .page-content h2:first-of-type { border-top: none; margin-top: 0; }
+    .page-content h3 { font-size: 1rem; font-weight: 700; color: var(--black); margin: 28px 0 10px; }
+    .page-content p { font-size: 0.97rem; color: #444; margin-bottom: 18px; line-height: 1.85; }
+    .page-content ul, .page-content ol { padding-left: 22px; margin-bottom: 20px; }
+    .page-content ul li, .page-content ol li { margin-bottom: 10px; font-size: 0.93rem; color: #444; line-height: 1.75; }
+    .page-content strong { font-weight: 700; color: var(--black); }
+    .page-content a { color: var(--black); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+    .page-content a:hover { color: var(--yellow); }
+    .info-box { background: var(--off-white); border-left: 4px solid var(--yellow); border-radius: 0 8px 8px 0; padding: 18px 20px; margin: 28px 0; }
+    .info-box p { margin: 0; color: #333; font-size: 0.92rem; }
+    .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 32px 0; }
+    .stat-card { background: var(--black); border-radius: 10px; padding: 24px 20px; text-align: center; }
+    .stat-card .stat-num { font-size: 2rem; font-weight: 800; color: var(--yellow); display: block; letter-spacing: -1px; }
+    .stat-card .stat-label { font-size: 0.78rem; color: rgba(255,255,255,0.5); margin-top: 6px; display: block; }
+    @media (max-width: 600px) { .stats-row { grid-template-columns: 1fr; } }
+    .footer-simple { background: var(--black); padding: 36px 24px; text-align: center; color: rgba(255,255,255,0.38); font-size: 0.82rem; border-top: 2px solid var(--yellow); }
+    .footer-simple a { color: var(--yellow); }
+  </style>
+</head>
+<body>
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a href="index.html"><img src="assets/img/nlogo.jpg" width="auto" height="64px"/></a>
+    <div class="navbar-links">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="track.html" class="nav-link">Track</a>
+      <a href="about.html" class="nav-link">About</a>
+      <a href="contact.html" class="nav-link">Contact</a>
+    </div>
+    <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="index.html" class="mobile-link">Home</a>
+    <a href="track.html" class="mobile-link">Track</a>
+    <a href="about.html" class="mobile-link">About</a>
+  </div>
+</nav>
+
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <p class="breadcrumb"><a href="index.html">Home</a> › Services</p>
+    <div class="hero-eyebrow">Services</div>
+    <h1>Air <em>Freight</em></h1>
+    <p>Fast, reliable international air cargo solutions connecting you to every corner of the globe.</p>
+  </div>
+</div>
+
+<div class="page-content">
+  <span class="service-badge reveal">✈️ International Air Cargo</span>
+
+  <div class="toc reveal reveal-delay-1">
+    <h4>On This Page</h4>
+    <ol>
+      <li><a href="#overview">Service Overview</a></li>
+      <li><a href="#express">Express Air</a></li>
+      <li><a href="#standard">Standard Air Freight</a></li>
+      <li><a href="#charter">Charter & Dedicated Freighter</a></li>
+      <li><a href="#dangerous-goods">Dangerous Goods</a></li>
+      <li><a href="#special-cargo">Special Cargo</a></li>
+      <li><a href="#routes">Key Routes & Hubs</a></li>
+      <li><a href="#documentation">Documentation & Compliance</a></li>
+      <li><a href="#tracking">Shipment Visibility</a></li>
+      <li><a href="#contact">Contact & Bookings</a></li>
+    </ol>
+  </div>
+
+  <p class="reveal">Express Courier Air Freight provides urgent and time-critical cargo services connecting businesses to markets across all six continents. With direct relationships with over 60 airline partners and access to more than 500 airports worldwide, we deliver the speed and reliability your supply chain demands.</p>
+
+  <h2 id="overview" class="reveal">1. Service Overview</h2>
+  <p class="reveal">Air freight remains the fastest mode of international cargo transport. Whether you need a single urgent consignment delivered overnight or recurring high-value shipments managed on a contracted basis, our air freight specialists design the optimal solution for your timeline and budget.</p>
+  <p class="reveal">All air freight services include door-to-door management: we handle pickup, export customs, airline booking and documentation, import clearance, and final-mile delivery . all under a single service contract.</p>
+
+ 
+
+  <h2 id="express" class="reveal">2. Express Air</h2>
+  <p class="reveal">Our Express Air service guarantees next-flight-out booking and priority loading for time-critical consignments. We monitor every flight leg and proactively rebook on alternative services in the event of delay, ensuring your cargo arrives at the earliest opportunity.</p>
+  <ul class="reveal">
+    <li><strong>Next-flight-out booking:</strong> Departure within 4 hours of cargo acceptance in most hubs</li>
+    <li><strong>Priority loading:</strong> Confirmed loading guarantee with your airline booking</li>
+    <li><strong>24/7 monitoring:</strong> Dedicated operations desk tracking every express shipment</li>
+    <li><strong>Service guarantee:</strong> Rebooking at no additional cost in the event of carrier delay</li>
+  </ul>
+
+  <h2 id="standard" class="reveal">3. Standard Air Freight</h2>
+  <p class="reveal">For shipments where transit time of 3–5 days is acceptable, our Standard Air Freight service provides an economical alternative to express options. Cargo is consolidated with compatible consignments where applicable, reducing cost without compromising on the security and handling standards we apply to all shipments.</p>
+  <ul class="reveal">
+    <li><strong>Consolidated (LCL-air):</strong> Cost-effective groupage for smaller consignments</li>
+    <li><strong>Direct (FCL-air):</strong> Full ULD bookings for larger volumes needing faster handling</li>
+    <li><strong>Deferred air:</strong> Priority sea-to-air connections for budget-conscious intercontinental freight</li>
+    <li><strong>Minimum chargeable weight:</strong> 1 kg; maximum per-piece limits apply by airline</li>
+  </ul>
+
+  <div class="info-box reveal">
+    <p><strong>Volumetric weight applies.</strong> Air freight is charged on actual or volumetric weight (length × width × height in cm ÷ 5,000), whichever is greater. Our quoting tool calculates this automatically . contact us for guidance on optimising packaging to reduce chargeable weight.</p>
+  </div>
+
+  <h2 id="charter" class="reveal">4. Charter & Dedicated Freighter</h2>
+  <p class="reveal">When commercial capacity is unavailable, insufficient, or when cargo cannot be co-loaded with other freight, Express Courier can arrange dedicated freighter charters through our network of charter brokers and aircraft operators. Charter solutions are available for everything from turboprop aircraft to wide-body freighters.</p>
+  <ul class="reveal">
+    <li><strong>Part-charter (ACMI wet lease):</strong> Share charter costs with other compatible cargo</li>
+    <li><strong>Full freighter charter:</strong> Exclusive use of an aircraft for maximum flexibility</li>
+    <li><strong>On-board courier (OBC):</strong> Human-accompanied hand-carry for the most critical items</li>
+    <li><strong>Humanitarian charter:</strong> Emergency response capacity available on short notice</li>
+  </ul>
+
+  <h2 id="dangerous-goods" class="reveal">5. Dangerous Goods</h2>
+  <p class="reveal">Express Courier holds full IATA Dangerous Goods (DG) certification across our air freight operations. Our DG specialists classify, document, package, and handle hazardous materials in strict accordance with IATA Dangerous Goods Regulations (DGR), ICAO Technical Instructions, and applicable carrier-specific restrictions.</p>
+  <ul class="reveal">
+    <li><strong>Classification:</strong> Expert classification across all 9 IATA hazard classes</li>
+    <li><strong>Packing & labelling:</strong> Compliant packaging and DG labelling services</li>
+    <li><strong>Documentation:</strong> Shippers Declaration for Dangerous Goods (SDDG) preparation</li>
+    <li><strong>Restricted articles:</strong> Guidance on airline and country-specific prohibitions and exemptions</li>
+    <li><strong>Lithium batteries:</strong> Section II and Section IA compliance management</li>
+  </ul>
+
+  <h2 id="special-cargo" class="reveal">6. Special Cargo</h2>
+  <p class="reveal">Certain cargo types require enhanced handling, specialist equipment, or specific aircraft configurations. Express Courier has dedicated teams experienced in managing the full spectrum of special cargo categories.</p>
+  <ul class="reveal">
+    <li><strong>Perishables & pharmaceuticals:</strong> Temperature-controlled handling, GDP-compliant cold chain management</li>
+    <li><strong>Live animals:</strong> IATA LAR-compliant transport with welfare monitoring</li>
+    <li><strong>Valuables:</strong> High-security handling and armoured vehicle collection/delivery</li>
+    <li><strong>Outsized cargo:</strong> AOG (Aircraft on Ground) parts and industrial equipment</li>
+    <li><strong>Human remains:</strong> Sensitive, compliant repatriation services</li>
+    <li><strong>Art & antiques:</strong> White-glove handling with specialist crating</li>
+  </ul>
+
+  <h2 id="routes" class="reveal">7. Key Routes & Hubs</h2>
+  <p class="reveal">Our strongest trade lane coverage spans transatlantic (UK/Europe to North America), transpacific (Asia-Pacific to North America), and Eurasian (Europe to Asia) corridors. We maintain blocked-space agreements with major carriers on these lanes to guarantee capacity even during peak periods.</p>
+  <ul class="reveal">
+    <li><strong>London Heathrow (LHR):</strong> Primary European gateway; daily flights to 60+ destinations</li>
+    <li><strong>Dubai (DXB/DWC):</strong> Middle East and South Asia hub; 24-hour operations</li>
+    <li><strong>Hong Kong (HKG):</strong> Asia-Pacific consolidation centre; access to mainland China</li>
+    <li><strong>Chicago O'Hare (ORD):</strong> North American gateway; domestic distribution included</li>
+    <li><strong>Johannesburg (JNB):</strong> Sub-Saharan Africa gateway; onward connections to 30+ African cities</li>
+  </ul>
+
+  <h2 id="documentation" class="reveal">8. Documentation & Compliance</h2>
+  <p class="reveal">Air freight involves extensive documentation requirements. Our documentation team manages the preparation, review, and submission of all required paperwork, reducing the risk of customs holds or carrier rejection at origin or destination.</p>
+  <ul class="reveal">
+    <li><strong>Air Waybill (AWB):</strong> Issuance of master and house AWBs as applicable</li>
+    <li><strong>Commercial invoice & packing list review:</strong> Checking for accuracy and customs compliance</li>
+    <li><strong>Certificates of origin:</strong> Including preferential origin documentation for trade agreements</li>
+    <li><strong>Import/export licences:</strong> Guidance on controlled goods requiring government permits</li>
+    <li><strong>CITES documentation:</strong> For wildlife and protected species products</li>
+  </ul>
+
+  <h2 id="tracking" class="reveal">9. Shipment Visibility</h2>
+  <p class="reveal">Real-time air cargo visibility is provided through our unified tracking platform. Flight status, customs clearance milestones, and final-mile progress are all visible in a single interface. Automated alerts keep you informed at every stage without needing to log in.</p>
+  <ul class="reveal">
+    <li><strong>Flight tracking:</strong> Live flight status with estimated arrival updates</li>
+    <li><strong>Customs milestones:</strong> Export release and import clearance notifications</li>
+    <li><strong>Delivery confirmation:</strong> Electronic proof of delivery with timestamp</li>
+    <li><strong>Exception alerts:</strong> Immediate notification of any deviation from planned routing</li>
+  </ul>
+
+  <h2 id="contact" class="reveal">10. Contact & Bookings</h2>
+  <p class="reveal">Our air freight team operates around the clock to accommodate the global nature of aviation schedules. Bookings can be made online, via our API, or by contacting your dedicated account manager directly.</p>
+  <ul class="reveal">
+   
+  </ul>
+</div>
+
+<div class="footer-simple">
+  © 2026 Express Courier. All rights reserved. &nbsp;·&nbsp;
+  <a href="privacy-policy.html">Privacy Policy</a> &nbsp;·&nbsp;
+  <a href="faq.html">FAQs</a>
+</div>
+<script>
+  document.getElementById('hamburger').addEventListener('click', () => { document.getElementById('mobileMenu').classList.toggle('open'); });
+  const revealEls = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => { entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } }); }, { threshold: 0.08 });
+  revealEls.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
