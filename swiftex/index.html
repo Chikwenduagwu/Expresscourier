@@ -1498,6 +1498,33 @@
   }
   .ss-card { opacity: 1; transform: none; }
 }
+
+    .location-box{
+  display:flex;
+  align-items:flex-start;
+  gap:14px;
+  max-width:300px;
+  font-family:system-ui, -apple-system, sans-serif;
+  color:#222;
+}
+
+.location-icon{
+  width:28px;
+  height:28px;
+  flex-shrink:0;
+  color:#ff5a1f; /* change color if needed */
+}
+
+.location-icon svg{
+  width:100%;
+  height:100%;
+}
+
+.location-text p{
+  margin:2px 0;
+  font-size:15px;
+  line-height:1.4;
+}
   </style>
 </head>
 <body>
@@ -2876,6 +2903,21 @@
         </a>
       </div>
     </div>
+
+    <div class="location-box">
+  <div class="location-icon">
+    <svg viewBox="0 0 24 24" fill="none">
+      <path d="M12 22s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12z" stroke="currentColor" stroke-width="1.8"/>
+      <circle cx="12" cy="10" r="2.8" stroke="currentColor" stroke-width="1.8"/>
+    </svg>
+  </div>
+
+  <div class="location-text">
+    <p>45 King Street</p>
+    <p>Manchester M2 6DE</p>
+    <p>United Kingdom</p>
+  </div>
+</div>
     <div class="footer-cols">
       <div class="footer-col au" style="animation-delay:180ms">
         <h5>Helpful Links</h5>
@@ -2889,7 +2931,7 @@
       <div class="footer-col au" style="animation-delay:280ms">
         <h5>Company</h5>
         <ul>
-          <li><a href="about.html">About Express CO</a></li>
+          <li><a href="about.html">About Swift Express CO</a></li>
           <li><a href="privacy-policy.html">Privacy Policy</a></li>
           <li><a href="faq.html">FAQs</a></li>
           <li><a href="sending-parcels.html">Sending Parcels</a></li>
