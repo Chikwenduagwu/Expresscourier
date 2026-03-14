@@ -1499,31 +1499,77 @@
   .ss-card { opacity: 1; transform: none; }
 }
 
-    .location-box{
-  display:flex;
-  align-items:flex-start;
-  gap:14px;
-  max-width:300px;
-  font-family:system-ui, -apple-system, sans-serif;
-  color:#222;
+/* container */
+
+.address-card{
+  width:100%;
+  max-width:420px;
+  margin:auto;
+  padding:32px 28px;
+  border-radius:16px;
+  background:#ffffff;
+  border:1px solid rgba(0,0,0,0.08);
+  box-shadow:0 10px 30px rgba(0,0,0,0.05);
+  text-align:center;
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
 }
 
-.location-icon{
-  width:28px;
-  height:28px;
-  flex-shrink:0;
-  color:#ff5a1f; /* change color if needed */
+/* svg icon */
+
+.address-icon{
+  width:40px;
+  height:40px;
+  margin:0 auto 16px auto;
+  color:#ff5a1f;
 }
 
-.location-icon svg{
+.address-icon svg{
   width:100%;
   height:100%;
 }
 
-.location-text p{
-  margin:2px 0;
+/* divider */
+
+.divider{
+  width:100%;
+  height:1px;
+  background:rgba(0,0,0,0.08);
+  margin-bottom:18px;
+}
+
+/* text */
+
+.address-text p{
+  margin:4px 0;
   font-size:15px;
-  line-height:1.4;
+  color:#333;
+  line-height:1.5;
+}
+
+.company{
+  font-weight:600;
+  font-size:16px;
+  margin-bottom:6px;
+  color:#111;
+}
+
+/* responsive */
+
+@media (max-width:600px){
+
+  .address-card{
+    padding:24px 20px;
+    border-radius:14px;
+  }
+
+  .address-text p{
+    font-size:14px;
+  }
+
+  .company{
+    font-size:15px;
+  }
+
 }
   </style>
 </head>
@@ -2904,19 +2950,26 @@
       </div>
     </div>
 
-    <div class="location-box">
-  <div class="location-icon">
+ <div class="address-card">
+
+  <div class="address-icon">
     <svg viewBox="0 0 24 24" fill="none">
-      <path d="M12 22s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12z" stroke="currentColor" stroke-width="1.8"/>
-      <circle cx="12" cy="10" r="2.8" stroke="currentColor" stroke-width="1.8"/>
+      <path d="M12 22s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12z"
+        stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      <circle cx="12" cy="10" r="2.8"
+        stroke="currentColor" stroke-width="1.8"/>
     </svg>
   </div>
 
-  <div class="location-text">
+  <div class="divider"></div>
+
+  <div class="address-text">
+    <p class="company">Swift Express Courier Ltd</p>
     <p>45 King Street</p>
     <p>Manchester M2 6DE</p>
     <p>United Kingdom</p>
   </div>
+
 </div>
     <div class="footer-cols">
       <div class="footer-col au" style="animation-delay:180ms">
