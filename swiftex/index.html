@@ -1501,65 +1501,58 @@
 
 /* container */
 
-.address-card{
+.address-block{
   width:100%;
   max-width:420px;
-  margin:auto;
-  padding:32px 28px;
-  border-radius:16px;
-  background:#ffffff;
-  border:1px solid rgba(0,0,0,0.08);
-  box-shadow:0 10px 30px rgba(0,0,0,0.05);
-  text-align:center;
-  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:12px;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
 }
 
-/* svg icon */
+/* icon */
 
-.address-icon{
-  width:40px;
-  height:40px;
-  margin:0 auto 16px auto;
-  color:#ff5a1f;
+.location-icon{
+  width:36px;
+  height:36px;
+  color:#f5b400;
 }
 
-.address-icon svg{
+.location-icon svg{
   width:100%;
   height:100%;
 }
 
-/* divider */
+/* yellow divider */
 
-.divider{
-  width:100%;
-  height:1px;
-  background:rgba(0,0,0,0.08);
-  margin-bottom:18px;
+.address-line{
+  width:60px;
+  height:4px;
+  background:#f5b400;
+  border-radius:2px;
 }
 
 /* text */
 
 .address-text p{
-  margin:4px 0;
+  margin:2px 0;
   font-size:15px;
-  color:#333;
   line-height:1.5;
+  color:#222;
 }
 
 .company{
   font-weight:600;
   font-size:16px;
-  margin-bottom:6px;
-  color:#111;
 }
 
 /* responsive */
 
 @media (max-width:600px){
 
-  .address-card{
-    padding:24px 20px;
-    border-radius:14px;
+  .address-block{
+    max-width:100%;
   }
 
   .address-text p{
@@ -2950,18 +2943,17 @@
       </div>
     </div>
 
- <div class="address-card">
+ <div class="address-block">
 
-  <div class="address-icon">
+  <div class="location-icon">
     <svg viewBox="0 0 24 24" fill="none">
       <path d="M12 22s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12z"
-        stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-      <circle cx="12" cy="10" r="2.8"
-        stroke="currentColor" stroke-width="1.8"/>
+      stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      <circle cx="12" cy="10" r="3" stroke="currentColor" stroke-width="2"/>
     </svg>
   </div>
 
-  <div class="divider"></div>
+  <div class="address-line"></div>
 
   <div class="address-text">
     <p class="company">Swift Express Courier Ltd</p>
