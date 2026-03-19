@@ -1564,6 +1564,143 @@
   }
 
 }
+
+        /* ===== LANGUAGE WIDGET — SQUARE STYLE ===== */
+.lang-widget {
+    position: fixed;
+    left: 16px;
+    bottom: 90px;
+    z-index: 99999;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.lang-current {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #1a202c;
+    color: #fff;
+    padding: 13px 18px;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.35);
+    font-weight: 700;
+    font-size: 16px;
+    min-width: 130px;
+    border: 2px solid rgba(255,255,255,0.08);
+    user-select: none;
+    transition: background 0.2s;
+}
+
+.lang-current:hover {
+    background: #2d3748;
+}
+
+.lang-current img {
+    width: 28px;
+    height: 19px;
+    object-fit: cover;
+    border-radius: 3px;
+    flex-shrink: 0;
+}
+
+.lang-caret {
+    margin-left: auto;
+    font-size: 10px;
+    opacity: 0.6;
+    transition: transform 0.2s;
+}
+
+.lang-widget.open .lang-caret {
+    transform: rotate(180deg);
+}
+
+/* DROPDOWN — opens upward */
+.lang-dropdown {
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 0;
+    background: #1a202c;
+    border-radius: 12px;
+    overflow-y: auto;
+    max-height: 380px;
+    width: 220px;
+    display: none;
+    box-shadow: 0 -8px 32px rgba(0,0,0,0.4);
+    border: 1px solid rgba(255,255,255,0.08);
+    scrollbar-width: thin;
+    scrollbar-color: #4a5568 transparent;
+}
+
+.lang-dropdown::-webkit-scrollbar { width: 5px; }
+.lang-dropdown::-webkit-scrollbar-thumb { background: #4a5568; border-radius: 10px; }
+
+.lang-dropdown.open {
+    display: block;
+    animation: dropUp 0.18s ease-out;
+}
+
+@keyframes dropUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.lang-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 16px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    color: #e2e8f0;
+    transition: background 0.15s;
+    border-radius: 0;
+}
+
+.lang-item:first-child { border-radius: 12px 12px 0 0; }
+.lang-item:last-child  { border-radius: 0 0 12px 12px; }
+
+.lang-item:hover {
+    background: rgba(255,255,255,0.08);
+    color: #fff;
+}
+
+.lang-item img {
+    width: 26px;
+    height: 17px;
+    object-fit: cover;
+    border-radius: 3px;
+    flex-shrink: 0;
+}
+
+/* HIDE GOOGLE UI COMPLETELY */
+#google_translate_element {
+    display: none !important;
+    visibility: hidden !important;
+}
+
+.goog-te-banner-frame,
+.goog-te-banner-frame.skiptranslate,
+.skiptranslate,
+#goog-gt-tt,
+.goog-tooltip,
+.goog-tooltip-content,
+.goog-te-balloon-frame,
+.goog-te-menu-frame,
+.goog-te-spinner-pos {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    height: 0 !important;
+    overflow: hidden !important;
+}
+
+body.translated-ltr,
+body.translated-rtl {
+    margin-top: 0 !important;
+    top: 0 !important;
+}
   </style>
 </head>
 <body>
@@ -3079,6 +3216,132 @@
 
   </div>
 </div>
+
+<!--secccccc-->
+<!-- 🌐 PREMIUM LANGUAGE SWITCHER -->
+<div class="lang-widget">
+  <div class="lang-current" id="langCurrent">
+    <img src="https://flagcdn.com/w20/gb.png">
+    <span>English</span>
+    <span class="lang-caret">▼</span>
+  </div>
+
+  <div class="lang-dropdown" id="langDropdown">
+    <div class="lang-item" data-lang="en"><img src="https://flagcdn.com/w20/gb.png"> English</div>
+    <div class="lang-item" data-lang="af"><img src="https://flagcdn.com/w20/za.png"> Afrikaans</div>
+    <div class="lang-item" data-lang="sq"><img src="https://flagcdn.com/w20/al.png"> Albanian</div>
+    <div class="lang-item" data-lang="am"><img src="https://flagcdn.com/w20/et.png"> Amharic</div>
+    <div class="lang-item" data-lang="ar"><img src="https://flagcdn.com/w20/sa.png"> Arabic</div>
+    <div class="lang-item" data-lang="hy"><img src="https://flagcdn.com/w20/am.png"> Armenian</div>
+    <div class="lang-item" data-lang="az"><img src="https://flagcdn.com/w20/az.png"> Azerbaijani</div>
+    <div class="lang-item" data-lang="eu"><img src="https://flagcdn.com/w20/es.png"> Basque</div>
+    <div class="lang-item" data-lang="be"><img src="https://flagcdn.com/w20/by.png"> Belarusian</div>
+    <div class="lang-item" data-lang="bn"><img src="https://flagcdn.com/w20/bd.png"> Bengali</div>
+    <div class="lang-item" data-lang="bs"><img src="https://flagcdn.com/w20/ba.png"> Bosnian</div>
+    <div class="lang-item" data-lang="bg"><img src="https://flagcdn.com/w20/bg.png"> Bulgarian</div>
+    <div class="lang-item" data-lang="ca"><img src="https://flagcdn.com/w20/es.png"> Catalan</div>
+    <div class="lang-item" data-lang="ceb"><img src="https://flagcdn.com/w20/ph.png"> Cebuano</div>
+    <div class="lang-item" data-lang="zh-CN"><img src="https://flagcdn.com/w20/cn.png"> Chinese (Simplified)</div>
+    <div class="lang-item" data-lang="zh-TW"><img src="https://flagcdn.com/w20/tw.png"> Chinese (Traditional)</div>
+    <div class="lang-item" data-lang="co"><img src="https://flagcdn.com/w20/fr.png"> Corsican</div>
+    <div class="lang-item" data-lang="hr"><img src="https://flagcdn.com/w20/hr.png"> Croatian</div>
+    <div class="lang-item" data-lang="cs"><img src="https://flagcdn.com/w20/cz.png"> Czech</div>
+    <div class="lang-item" data-lang="da"><img src="https://flagcdn.com/w20/dk.png"> Danish</div>
+    <div class="lang-item" data-lang="nl"><img src="https://flagcdn.com/w20/nl.png"> Dutch</div>
+    <div class="lang-item" data-lang="eo"><img src="https://flagcdn.com/w20/eu.png"> Esperanto</div>
+    <div class="lang-item" data-lang="et"><img src="https://flagcdn.com/w20/ee.png"> Estonian</div>
+    <div class="lang-item" data-lang="fi"><img src="https://flagcdn.com/w20/fi.png"> Finnish</div>
+    <div class="lang-item" data-lang="fr"><img src="https://flagcdn.com/w20/fr.png"> French</div>
+    <div class="lang-item" data-lang="fy"><img src="https://flagcdn.com/w20/nl.png"> Frisian</div>
+    <div class="lang-item" data-lang="gl"><img src="https://flagcdn.com/w20/es.png"> Galician</div>
+    <div class="lang-item" data-lang="ka"><img src="https://flagcdn.com/w20/ge.png"> Georgian</div>
+    <div class="lang-item" data-lang="de"><img src="https://flagcdn.com/w20/de.png"> German</div>
+    <div class="lang-item" data-lang="el"><img src="https://flagcdn.com/w20/gr.png"> Greek</div>
+    <div class="lang-item" data-lang="gu"><img src="https://flagcdn.com/w20/in.png"> Gujarati</div>
+    <div class="lang-item" data-lang="ht"><img src="https://flagcdn.com/w20/ht.png"> Haitian Creole</div>
+    <div class="lang-item" data-lang="ha"><img src="https://flagcdn.com/w20/ng.png"> Hausa</div>
+    <div class="lang-item" data-lang="haw"><img src="https://flagcdn.com/w20/us.png"> Hawaiian</div>
+    <div class="lang-item" data-lang="he"><img src="https://flagcdn.com/w20/il.png"> Hebrew</div>
+    <div class="lang-item" data-lang="hi"><img src="https://flagcdn.com/w20/in.png"> Hindi</div>
+    <div class="lang-item" data-lang="hmn"><img src="https://flagcdn.com/w20/cn.png"> Hmong</div>
+    <div class="lang-item" data-lang="hu"><img src="https://flagcdn.com/w20/hu.png"> Hungarian</div>
+    <div class="lang-item" data-lang="is"><img src="https://flagcdn.com/w20/is.png"> Icelandic</div>
+    <div class="lang-item" data-lang="ig"><img src="https://flagcdn.com/w20/ng.png"> Igbo</div>
+    <div class="lang-item" data-lang="id"><img src="https://flagcdn.com/w20/id.png"> Indonesian</div>
+    <div class="lang-item" data-lang="ga"><img src="https://flagcdn.com/w20/ie.png"> Irish</div>
+    <div class="lang-item" data-lang="it"><img src="https://flagcdn.com/w20/it.png"> Italian</div>
+    <div class="lang-item" data-lang="ja"><img src="https://flagcdn.com/w20/jp.png"> Japanese</div>
+    <div class="lang-item" data-lang="jv"><img src="https://flagcdn.com/w20/id.png"> Javanese</div>
+    <div class="lang-item" data-lang="kn"><img src="https://flagcdn.com/w20/in.png"> Kannada</div>
+    <div class="lang-item" data-lang="kk"><img src="https://flagcdn.com/w20/kz.png"> Kazakh</div>
+    <div class="lang-item" data-lang="km"><img src="https://flagcdn.com/w20/kh.png"> Khmer</div>
+    <div class="lang-item" data-lang="rw"><img src="https://flagcdn.com/w20/rw.png"> Kinyarwanda</div>
+    <div class="lang-item" data-lang="ko"><img src="https://flagcdn.com/w20/kr.png"> Korean</div>
+    <div class="lang-item" data-lang="ku"><img src="https://flagcdn.com/w20/iq.png"> Kurdish</div>
+    <div class="lang-item" data-lang="ky"><img src="https://flagcdn.com/w20/kg.png"> Kyrgyz</div>
+    <div class="lang-item" data-lang="lo"><img src="https://flagcdn.com/w20/la.png"> Lao</div>
+    <div class="lang-item" data-lang="la"><img src="https://flagcdn.com/w20/va.png"> Latin</div>
+    <div class="lang-item" data-lang="lv"><img src="https://flagcdn.com/w20/lv.png"> Latvian</div>
+    <div class="lang-item" data-lang="lt"><img src="https://flagcdn.com/w20/lt.png"> Lithuanian</div>
+    <div class="lang-item" data-lang="lb"><img src="https://flagcdn.com/w20/lu.png"> Luxembourgish</div>
+    <div class="lang-item" data-lang="mk"><img src="https://flagcdn.com/w20/mk.png"> Macedonian</div>
+    <div class="lang-item" data-lang="mg"><img src="https://flagcdn.com/w20/mg.png"> Malagasy</div>
+    <div class="lang-item" data-lang="ms"><img src="https://flagcdn.com/w20/my.png"> Malay</div>
+    <div class="lang-item" data-lang="ml"><img src="https://flagcdn.com/w20/in.png"> Malayalam</div>
+    <div class="lang-item" data-lang="mt"><img src="https://flagcdn.com/w20/mt.png"> Maltese</div>
+    <div class="lang-item" data-lang="mi"><img src="https://flagcdn.com/w20/nz.png"> Maori</div>
+    <div class="lang-item" data-lang="mr"><img src="https://flagcdn.com/w20/in.png"> Marathi</div>
+    <div class="lang-item" data-lang="mn"><img src="https://flagcdn.com/w20/mn.png"> Mongolian</div>
+    <div class="lang-item" data-lang="my"><img src="https://flagcdn.com/w20/mm.png"> Myanmar (Burmese)</div>
+    <div class="lang-item" data-lang="ne"><img src="https://flagcdn.com/w20/np.png"> Nepali</div>
+    <div class="lang-item" data-lang="no"><img src="https://flagcdn.com/w20/no.png"> Norwegian</div>
+    <div class="lang-item" data-lang="ny"><img src="https://flagcdn.com/w20/mw.png"> Nyanja (Chichewa)</div>
+    <div class="lang-item" data-lang="or"><img src="https://flagcdn.com/w20/in.png"> Odia (Oriya)</div>
+    <div class="lang-item" data-lang="ps"><img src="https://flagcdn.com/w20/af.png"> Pashto</div>
+    <div class="lang-item" data-lang="fa"><img src="https://flagcdn.com/w20/ir.png"> Persian</div>
+    <div class="lang-item" data-lang="pl"><img src="https://flagcdn.com/w20/pl.png"> Polish</div>
+    <div class="lang-item" data-lang="pt"><img src="https://flagcdn.com/w20/pt.png"> Portuguese</div>
+    <div class="lang-item" data-lang="pa"><img src="https://flagcdn.com/w20/in.png"> Punjabi</div>
+    <div class="lang-item" data-lang="ro"><img src="https://flagcdn.com/w20/ro.png"> Romanian</div>
+    <div class="lang-item" data-lang="ru"><img src="https://flagcdn.com/w20/ru.png"> Russian</div>
+    <div class="lang-item" data-lang="sm"><img src="https://flagcdn.com/w20/ws.png"> Samoan</div>
+    <div class="lang-item" data-lang="gd"><img src="https://flagcdn.com/w20/gb-sct.png"> Scots Gaelic</div>
+    <div class="lang-item" data-lang="sr"><img src="https://flagcdn.com/w20/rs.png"> Serbian</div>
+    <div class="lang-item" data-lang="st"><img src="https://flagcdn.com/w20/ls.png"> Sesotho</div>
+    <div class="lang-item" data-lang="sn"><img src="https://flagcdn.com/w20/zw.png"> Shona</div>
+    <div class="lang-item" data-lang="sd"><img src="https://flagcdn.com/w20/pk.png"> Sindhi</div>
+    <div class="lang-item" data-lang="si"><img src="https://flagcdn.com/w20/lk.png"> Sinhala</div>
+    <div class="lang-item" data-lang="sk"><img src="https://flagcdn.com/w20/sk.png"> Slovak</div>
+    <div class="lang-item" data-lang="sl"><img src="https://flagcdn.com/w20/si.png"> Slovenian</div>
+    <div class="lang-item" data-lang="so"><img src="https://flagcdn.com/w20/so.png"> Somali</div>
+    <div class="lang-item" data-lang="es"><img src="https://flagcdn.com/w20/es.png"> Spanish</div>
+    <div class="lang-item" data-lang="su"><img src="https://flagcdn.com/w20/id.png"> Sundanese</div>
+    <div class="lang-item" data-lang="sw"><img src="https://flagcdn.com/w20/ke.png"> Swahili</div>
+    <div class="lang-item" data-lang="sv"><img src="https://flagcdn.com/w20/se.png"> Swedish</div>
+    <div class="lang-item" data-lang="tl"><img src="https://flagcdn.com/w20/ph.png"> Tagalog (Filipino)</div>
+    <div class="lang-item" data-lang="tg"><img src="https://flagcdn.com/w20/tj.png"> Tajik</div>
+    <div class="lang-item" data-lang="ta"><img src="https://flagcdn.com/w20/in.png"> Tamil</div>
+    <div class="lang-item" data-lang="tt"><img src="https://flagcdn.com/w20/ru.png"> Tatar</div>
+    <div class="lang-item" data-lang="te"><img src="https://flagcdn.com/w20/in.png"> Telugu</div>
+    <div class="lang-item" data-lang="th"><img src="https://flagcdn.com/w20/th.png"> Thai</div>
+    <div class="lang-item" data-lang="tr"><img src="https://flagcdn.com/w20/tr.png"> Turkish</div>
+    <div class="lang-item" data-lang="tk"><img src="https://flagcdn.com/w20/tm.png"> Turkmen</div>
+    <div class="lang-item" data-lang="uk"><img src="https://flagcdn.com/w20/ua.png"> Ukrainian</div>
+    <div class="lang-item" data-lang="ur"><img src="https://flagcdn.com/w20/pk.png"> Urdu</div>
+    <div class="lang-item" data-lang="ug"><img src="https://flagcdn.com/w20/cn.png"> Uyghur</div>
+    <div class="lang-item" data-lang="uz"><img src="https://flagcdn.com/w20/uz.png"> Uzbek</div>
+    <div class="lang-item" data-lang="vi"><img src="https://flagcdn.com/w20/vn.png"> Vietnamese</div>
+    <div class="lang-item" data-lang="cy"><img src="https://flagcdn.com/w20/gb-wls.png"> Welsh</div>
+    <div class="lang-item" data-lang="xh"><img src="https://flagcdn.com/w20/za.png"> Xhosa</div>
+    <div class="lang-item" data-lang="yi"><img src="https://flagcdn.com/w20/il.png"> Yiddish</div>
+    <div class="lang-item" data-lang="yo"><img src="https://flagcdn.com/w20/ng.png"> Yoruba</div>
+    <div class="lang-item" data-lang="zu"><img src="https://flagcdn.com/w20/za.png"> Zulu</div>
+  </div>
+</div>
+
+<!-- Hidden Google Translate -->
+<div id="google_translate_element"></div>
+ 
 <!-- /CHAT WIDGET -->
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
@@ -3421,6 +3684,112 @@ setTimeout(() => {
 }, 40000);
 </script>
 
+      <script>
+function googleTranslateElementInit() {
+    new google.translate.TranslateElement(
+        { pageLanguage: 'en', autoDisplay: false },
+        'google_translate_element'
+    );
+}
+
+// Suppress Google Translate banner without triggering mutation loops
+function suppressGoogleBanner() {
+    const banner = document.querySelector('.goog-te-banner-frame');
+    if (banner) {
+        banner.style.display = 'none';
+        banner.style.height = '0';
+    }
+    if (document.body.style.top && document.body.style.top !== '0px') {
+        document.body.style.top = '0px';
+    }
+    if (document.body.style.marginTop && document.body.style.marginTop !== '0px') {
+        document.body.style.marginTop = '0px';
+    }
+}
+
+setInterval(suppressGoogleBanner, 800);
+window.addEventListener('load', suppressGoogleBanner);
+
+// Load Google Translate script
+const gtScript = document.createElement("script");
+gtScript.src = "//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
+document.body.appendChild(gtScript);
+
+// ---- Dropdown logic ----
+const langWidget   = document.querySelector(".lang-widget");
+const langCurrent  = document.getElementById("langCurrent");
+const langDropdown = document.getElementById("langDropdown");
+
+// Hide widget on load, reveal after 10s
+langWidget.style.opacity = "0";
+langWidget.style.pointerEvents = "none";
+langWidget.style.transition = "opacity 0.5s ease";
+setTimeout(() => {
+    langWidget.style.opacity = "1";
+    langWidget.style.pointerEvents = "auto";
+}, 10000);
+
+function applyLanguage(lang, flag, label, save) {
+    // Update button display
+    langCurrent.innerHTML = `<img src="${flag}"><span>${label}</span><span class="lang-caret">▼</span>`;
+
+    // Save to localStorage
+    if (save) {
+        localStorage.setItem('preferred_lang', JSON.stringify({ lang, flag, label }));
+    }
+
+    // Trigger Google Translate
+    const tryTranslate = setInterval(() => {
+        const select = document.querySelector(".goog-te-combo");
+        if (select) {
+            select.value = lang;
+            select.dispatchEvent(new Event("change"));
+            clearInterval(tryTranslate);
+            setTimeout(suppressGoogleBanner, 600);
+        }
+    }, 300);
+}
+
+// Restore saved language on page load
+window.addEventListener('load', () => {
+    const saved = localStorage.getItem('preferred_lang');
+    if (saved) {
+        try {
+            const { lang, flag, label } = JSON.parse(saved);
+            if (lang && lang !== 'en') {
+                applyLanguage(lang, flag, label, false);
+            }
+        } catch(e) {}
+    }
+});
+
+langCurrent.addEventListener("click", (e) => {
+    e.stopPropagation();
+    const isOpen = langDropdown.classList.contains("open");
+    langDropdown.classList.toggle("open", !isOpen);
+    langWidget.classList.toggle("open", !isOpen);
+});
+
+document.querySelectorAll(".lang-item").forEach(item => {
+    item.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const lang  = item.getAttribute("data-lang");
+        const flag  = item.querySelector("img").src;
+        const label = item.innerText.trim();
+
+        applyLanguage(lang, flag, label, true);
+
+        langDropdown.classList.remove("open");
+        langWidget.classList.remove("open");
+    });
+});
+
+// Close when clicking outside
+document.addEventListener("click", () => {
+    langDropdown.classList.remove("open");
+    langWidget.classList.remove("open");
+});
+</script>
 
   
 </body>
